@@ -1,0 +1,142 @@
+﻿@model Ums.Models.Security.RegisterModel
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row">
+    <div class="login col-md-6">
+        <div class="login-loading">
+            <img src="~/Styles/images/loading.svg" />
+        </div>
+        <label class="block-title">Đăng ký tài khoản</label>
+        @using (Html.BeginForm("Register", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+            @Html.HiddenFor(i => i.UserKey)
+            @Html.HiddenFor(i => i.UserType)
+            @Html.HiddenFor(i => i.Avatar)
+            @Html.HiddenFor(m => m.Capcha)
+            <div class="block-content">
+                <div class="register-buttons">
+                    <h4>Đăng ký qua MXH</h4>
+                    <div id="social-register">
+                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                        <div class="fb-login-button">
+                            <fb:login-button size="large" scope="public_profile,email" onlogin="checkLoginState();">Đăng nhập</fb:login-button>
+                        </div>
+                    </div>
+                    <h4>Đăng ký trực tiếp</h4>
+                    <div id="social-register">
+                        <button id="btn-direct" type="button" class="btn btn-sm btn-primary">Đăng ký bằng email</button>
+                    </div>
+                    <hr />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group login-panel">
+                            <label id="lblUsername">Email</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group login-panel">
+                            <label>Mật khẩu</label>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group login-panel">
+                            <label>Nhập lại mật khẩu</label>
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group login-panel">
+                            <label id="lblUsername">Họ và tên</label>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group login-panel">
+                            <label id="lblUsername">Số điện thoại</label>
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group login-panel">
+                    <div id="google-capcha" class="g-recaptcha"></div>
+                    <br />
+                    <input id="btn-submit" type="submit" value="Tạo tài khoản" class="btn btn-danger" />
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-register">Trở lại đăng nhập</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<meta name="google-signin-client_id" content="@Ums.App.Provider.SettingProvider.GetValue("GOOGLE_OAUTH_CLIENT_ID")">
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
+<script>
+    function onloadCallback() {
+        var capcha = grecaptcha.render('google-capcha', {
+            'sitekey': '@Ums.App.Provider.SettingProvider.GetValue("GOOGLE_CAPCHA_SITE_KEY")',
+            'callback': function () {
+                $("#Capcha").val(grecaptcha.getResponse(capcha));
+            }
+        });
+    }
+    $("#btn-submit").click(function () {
+        if ($("#Capcha").val() == "") {
+            alert("Vui lòng kiểm tra bảo mật!");
+            return false;
+        }
+        return true;
+    });
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        $("#UserKey").val(profile.getId());
+        $("#Name").val(profile.getName());
+        $("#Avatar").val(profile.getImageUrl());
+        $("#Email").val(profile.getEmail());
+        $("#Email").prop("readonly", true);
+        $("#UserType").val("GOOGLE");
+        gapi.load('auth2', function () { gapi.auth2.init(); });
+        gapi.auth2.getAuthInstance().signOut();
+    }
+
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            $(".login-loading").css("display", "flex");
+            $.get("@Html.Raw(Ums.App.Provider.SettingProvider.GetValue("FACEBOOK_LOGIN_VALIDATE"))" + response.authResponse.accessToken).done(function (r) {
+                $("#UserKey").val(r.id);
+                $("#Name").val(r.name);
+                $("#Avatar").val(r.picture.data.url);
+                $("#Email").val(r.email);
+                $("#Email").prop("readonly", true);
+                $("#UserType").val("FACEBOOK");
+                $(".login-loading").css("display", "none");
+            });
+        });
+    }
+
+    $("#btn-direct").click(function () {
+        $("input[type=text],input[type=hidden]").val("");
+        $("#Email").prop("readonly", false);
+        $("#UserType").val("GUEST");
+    });
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '@Ums.App.Provider.SettingProvider.GetValue("FACEBOOK_APP_ID")',
+            cookie: true,
+            xfbml: true,
+            version: 'v8.0'
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+</script>

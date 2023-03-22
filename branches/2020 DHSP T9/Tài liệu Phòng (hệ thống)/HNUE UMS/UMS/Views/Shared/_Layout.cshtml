@@ -1,0 +1,100 @@
+﻿@using Ums.App.Base
+@using Ums.App.Provider
+@using Ums.Core.Common
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>@ViewBag.Title @SettingProvider.GetValue(Settings.APP_NAME)</title>
+    @Styles.Render("~/content/style")
+    @Scripts.Render("~/bundles/script")
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.5.2/css/colReorder.bootstrap4.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.bootstrap4.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js"></script>
+
+    <script>
+        $(function () {
+            var mainWidth = $(window).height() - $(".header").height();
+            $(".body-content").height(mainWidth);
+            $(".navigation").slimScroll({ height: mainWidth });
+        });
+    </script>
+</head>
+<body>
+    <div class="header container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <a href="/" class="logo">
+                     <img src="~/Styles/images/2bs.jpg" style="width:40px;"/>
+                    <span class="appname">@SettingProvider.GetValue(Settings.APP_NAME)</span>
+                    <span class="title">@SettingProvider.GetValue(Settings.COMPANY_NAME)</span>
+                </a>
+            </div>
+            <div class="col-4 text-right accpanel">
+                <a href="@Url.Action("Info", "Account")"><i class="fa fa-user-circle" aria-hidden="true"></i> @(WorkContext.Staff?.Name ?? "Undefined")</a>
+                <a class="btnlogout" onclick="return confirm('Bạn có chắc không?')" href="@Url.Action("Logoff", "Account")"><i class="fa fa-sign-out" aria-hidden="true"></i> Thoát</a>
+            </div>
+        </div>
+    </div>
+    <div class="maincontent-2">
+        <div class="leftpanel">
+            <div class="navigation">
+                <ul id="mainnav" class="collapsed">
+                    @Html.Raw(WorkContext.GetMenu())
+                </ul>
+            </div>
+            <div class="hidebutton">
+                <a href="javascript:void(0)"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="body-content">
+            <div class="container-fluid">
+                @if (!string.IsNullOrEmpty(ViewBag.Title))
+                {
+                    <h3 class="pagetitle">@Html.Raw(ViewBag.PageIcon) @ViewBag.Title</h3>
+                }
+                @RenderBody()
+                <hr />
+                <div class="text-center">
+                    <p>&copy; @DateTime.Now.Year @SettingProvider.GetValue(Settings.COMPANY_NAME)</p>
+                    <p>Email: @SettingProvider.GetValue(Settings.COMPANY_EMAIL) - Phone: @SettingProvider.GetValue(Settings.COMPANY_PHONE) - Fax: @SettingProvider.GetValue(Settings.COMPANY_FAX) - Website: @SettingProvider.GetValue(Settings.COMPANY_WEBSITE)</p>
+                    <p>@SettingProvider.GetValue(Settings.TECHNICAL_SUPPORT)</p>
+                    <p>UMS @("v" + WorkContext.AppVersion)</p>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="myModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Html.Raw(ViewBag.PageIcon) @ViewBag.Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <img id="poploading" src="/Styles/images/loading.svg" />
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

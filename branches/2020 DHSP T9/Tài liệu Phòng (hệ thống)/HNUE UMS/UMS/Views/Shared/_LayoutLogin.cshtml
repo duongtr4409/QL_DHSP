@@ -1,0 +1,41 @@
+﻿@using Ums.App.Base
+@using Ums.App.Provider
+@using Ums.Core.Common
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Đăng nhập - Hệ thống quản lý giờ giảng - Trường ĐHSP Hà Nội</title>
+    @Styles.Render("~/content/style")
+    @Scripts.Render("~/bundles/script")
+</head>
+<body>
+    <div class="header container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <a href="/" class="logo">
+                    <img src="~/Styles/images/2bs.jpg" style="width: 40px"/>
+                    <span class="appname">@SettingProvider.GetValue(Settings.APP_NAME)</span>
+                    <span class="title">@SettingProvider.GetValue(Settings.COMPANY_NAME)</span>
+                </a>
+            </div>
+            <div class="col-4 text-right accpanel"></div>
+        </div>
+    </div>
+    <div class="fullbackground login-content">
+        <div class="container">
+            @RenderBody()
+            <div class="row">
+                <div class="footer login-footer">
+                    <p>&copy; @DateTime.Now.Year @SettingProvider.GetValue(Settings.COMPANY_NAME)</p>
+                    <p>Email: @SettingProvider.GetValue(Settings.COMPANY_EMAIL) - Phone: @SettingProvider.GetValue(Settings.COMPANY_PHONE) - Fax: @SettingProvider.GetValue(Settings.COMPANY_FAX) - Website: @SettingProvider.GetValue(Settings.COMPANY_WEBSITE)</p>
+                    <p>@SettingProvider.GetValue(Settings.TECHNICAL_SUPPORT)</p>
+                    <p>UMS @("v" + WorkContext.AppVersion)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

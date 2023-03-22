@@ -1,0 +1,202 @@
+﻿@{
+    Layout = "~/Views/Shared/_Embed.cshtml";
+}
+<div class="row">
+    <div class="col-md-2">
+        <label>Năm học</label>
+        <select id="YearId" name="YearId" class="form-control">
+            @foreach (var i in ViewBag.Years)
+            {
+                <option value="@i.Id">@i.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label>Đơn vị</label>
+        <select id="DepartmentId" name="DepartmentId" class="form-control">
+            <option value="0">---Tất cả---</option>
+            @foreach (var i in ViewBag.Departments)
+            {
+                <option value="@i.Id">@i.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label>Hệ ĐT</label>
+        <select id="GradeId" name="GradeId" class="form-control">
+            <option value="0">---Tất cả---</option>
+            @foreach (var i in ViewBag.Grades)
+            {
+                <option value="@i.Id">@i.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label>Tác vụ</label>
+        <br />
+        <button id="btnStatistic" class="btn btn-primary">Thống kê giờ giảng</button>
+    </div>
+</div>
+<h3>Thống kê giờ giảng</h3>
+<table id="tableData" class="tablesorter-ice">
+    <thead>
+        <tr>
+            <th rowspan="3" class="text-center sorter-false">TT</th>
+            <th rowspan="3" class="text-center">Khoa</th>
+            <th rowspan="3" class="text-center">Họ và tên</th>
+            <th colspan="5" class="text-center">Giảng dạy</th>
+            <th colspan="4" class="text-center">Nghiên cứu khoa học</th>
+            <th colspan="3" class="text-center">Nhiệm vụ khác</th>
+            <th colspan="2" class="text-center">Tổng</th>
+            <th rowspan="3" class="text-center">Vượt</th>
+            <th rowspan="3" class="text-center">HT Nhiệm vụ</th>
+        </tr>
+        <tr>
+            <th rowspan="2" class="text-center">Nghĩa vụ<br></th>
+            <th rowspan="2" class="text-center">Thực tế<br></th>
+            <th colspan="2" class="text-center">Thực hiện<br></th>
+            <th rowspan="2" class="text-center">Bù giờ</th>
+            <th rowspan="2" class="text-center">Nghĩa vụ<br></th>
+            <th rowspan="2" class="text-center">Thực hiện<br></th>
+            <th rowspan="2" class="text-center">Bảo lưu<br></th>
+            <th rowspan="2" class="text-center">Bù giờ<br></th>
+            <th rowspan="2" class="text-center">Nghĩa vụ<br></th>
+            <th rowspan="2" class="text-center">Thực hiện<br></th>
+            <th rowspan="2" class="text-center">Bù giờ<br></th>
+            <th rowspan="2" class="text-center">Nghĩa vụ<br></th>
+            <th rowspan="2" class="text-center">Thực hiện<br></th>
+        </tr>
+        <tr>
+            <th class="text-center">Giờ tính vượt</th>
+            <th class="text-center">Đã trả tiền</th>
+        </tr>
+        <tr>
+            <th class="text-center">0</th>
+            <th class="text-center">1</th>
+            <th class="text-center">2</th>
+            <th class="text-center">3</th>
+            <th class="text-center">4</th>
+            <th class="text-center">5</th>
+            <th class="text-center">6</th>
+            <th class="text-center">7</th>
+            <th class="text-center">8</th>
+            <th class="text-center">9</th>
+            <th class="text-center">10</th>
+            <th class="text-center">11</th>
+            <th class="text-center">12</th>
+            <th class="text-center">13</th>
+            <th class="text-center">14</th>
+            <th class="text-center">15</th>
+            <th class="text-center">16</th>
+            <th class="text-center">17</th>
+            <th class="text-center">18</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+        <tr style="font-weight: bold">
+            <td class="text-center" colspan="3">Tổng</td>
+            <td class="text-center cal" id="c1"></td>
+            <td class="text-center cal" id="c2"></td>
+            <td class="text-center cal" id="c3"></td>
+            <td class="text-center cal" id="c4"></td>
+            <td class="text-center cal" id="c5"></td>
+            <td class="text-center cal" id="c6"></td>
+            <td class="text-center cal" id="c7"></td>
+            <td class="text-center cal" id="c8"></td>
+            <td class="text-center cal" id="c9"></td>
+            <td class="text-center cal" id="c10"></td>
+            <td class="text-center cal" id="c11"></td>
+            <td class="text-center cal" id="c12"></td>
+            <td class="text-center cal" id="c13"></td>
+            <td class="text-center cal" id="c14"></td>
+            <td class="text-center" id="overtime"></td>
+            <td class="text-center" id="doneundone"></td>
+        </tr>
+        <tr style="font-weight: bold">
+            <td class="text-center" colspan="3">Vượt/HT</td>
+            <td class="text-center" colspan="5" id="t1"></td>
+            <td class="text-center" colspan="4" id="t2"></td>
+            <td class="text-center" colspan="3" id="t3"></td>
+            <td class="text-center" colspan="3"></td>
+            <td class="text-center" id="done"></td>
+        </tr>
+        <tr style="font-weight: bold">
+            <td class="text-center" colspan="3">Thiếu/Không HT</td>
+            <td class="text-center" colspan="5" id="b1"></td>
+            <td class="text-center" colspan="4" id="b2"></td>
+            <td class="text-center" colspan="3" id="b3"></td>
+            <td class="text-center" colspan="3"></td>
+            <td class="text-center" id="undone"></td>
+        </tr>
+    </tfoot>
+</table>
+<div id="loading" class="text-center" style="display: none">
+    <img src="~/Styles/images/loading.gif" style="height: 60px" />
+</div>
+<script>
+    $("#btnStatistic").click(function() {
+        $("#tableData tbody,#tableData tfoot td.cal,#t4").html("");
+        $("#loading").show();
+        $.get("@Url.Action("GetStatistic")?yearId=" + $("#YearId").val() + "&gradeId=" + $("#GradeId").val() + "&departmentId=" + $("#DepartmentId").val()).done(function(r) {
+            var totaloverteaching = 0, totaloverresearching = 0, totaloverworking = 0;
+            var totalbteaching = 0, totalbresearching = 0, totalbworking = 0, overtime = 0, done1 = 0, undone1 = 0;
+            r = JSON.parse(r);
+            for (var i = 0; i < r.length; i++) {
+                $('<tr>' +
+                    '<td class="text-center">' + (i + 1) + '</td>' +
+                    '<td><b>' + r[i].Department.Name + "</b>" + (r[i].Grade.Id > 0 ? '<br/>[' +r[i].Grade.Name + "]" : "") + '</td>' +
+                    '<td>'+ r[i].Staff.Title.Name +'<br/><b>' + r[i].Staff.Degree.Name + ". " + r[i].Staff.Name + "</b></td>" +
+                    '<td class="text-center c1">' + r[i].TeachDuty + '</td>' +
+                    '<td class="text-center c2">' + r[i].TeachReal + '</td>' +
+                    '<td class="text-center c3">' + r[i].TeachDone + '</td>' +
+                    '<td class="text-center c4">' + r[i].TeachPaid + '</td>' +
+                    '<td class="text-center c5">' + r[i].TeachComplement + '</td>' +
+                    '<td class="text-center c6">' + r[i].ResearchDuty + '</td>' +
+                    '<td class="text-center c7">' + r[i].ResearchReserved + '</td>' +
+                    '<td class="text-center c8">' + r[i].ResearchDone + '</td>' +
+                    '<td class="text-center c9">' + r[i].ResearchComplement + '</td>' +
+                    '<td class="text-center c10">' + r[i].WorkDuty + '</td>' +
+                    '<td class="text-center c11">' + r[i].WorkDone + '</td>' +
+                    '<td class="text-center c12">' + r[i].WorkComplement + '</td>' +
+                    '<td class="text-center c12">' + r[i].TotalDuty + '</td>' +
+                    '<td class="text-center c14">' + r[i].TotalDone + '</td>' +
+                    '<td class="text-center c15">' + r[i].OverTime + '</td>' +
+                    '<td class="text-center">' + (r[i].Done ? '✅' : "") + '</td>' +
+                    '</tr>').appendTo("#tableData tbody");
+                totaloverteaching += (r[i].TeachDone - r[i].TeachDuty) > 0 ? 1 : 0;
+                totaloverresearching += (r[i].ResearchDone - r[i].ResearchDuty) > 0 ? 1 : 0;
+                totaloverworking += (r[i].WorkDone - r[i].WorkDuty) > 0 ? 1 : 0;
+                totalbteaching += (r[i].TeachDone - r[i].TeachDuty) < 0 ? 1 : 0;
+                totalbresearching += (r[i].ResearchDone - r[i].ResearchDuty) < 0 ? 1 : 0;
+                totalbworking += (r[i].WorkDone - r[i].WorkDuty) < 0 ? 1 : 0;
+                overtime += r[i].OverTime > 0 ? r[i].OverTime : 0;
+                if (r[i].Done) {
+                    done1 += 1;
+                } else {
+                    undone1 += 1;
+                }
+            }
+            $("#tableData tfoot td.cal").each(function() {
+                var cls = $(this).attr("id");
+                var total = 0;
+                $("." + cls).each(function() {
+                    total += parseFloat($(this).html());
+                });
+                $(this).html(total.toFixed(2));
+            });
+            $("#overtime").html((Math.round(overtime * 2) / 2).toFixed(2));
+            $("#t1").html(totaloverteaching);
+            $("#t2").html(totaloverresearching);
+            $("#t3").html(totaloverworking);
+            $("#b1").html(totalbteaching);
+            $("#b2").html(totalbresearching);
+            $("#b3").html(totalbworking);
+            $("#done").html(done1);
+            $("#undone").html(undone1);
+            $("#doneundone").html(done1 + undone1);
+            $("#loading").hide();
+            $("#tableData").tablesorter({ headers: { 0: { sorter: false } } });
+        });
+    });
+</script>

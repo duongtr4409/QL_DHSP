@@ -1,0 +1,281 @@
+.dashboardView {
+    width: 100%;
+    color: #000000;
+    background: #fff;
+    padding-left: 10px;
+}
+.dashboardView i {user-select: none}
+.dashboardContent {
+    vertical-align: top;
+    display: inline-block;
+    width: calc(100% - 260px); /* tru di sidebar width*/
+}
+.CFilter {
+    height: 56px;
+    font-size: 18px;
+    padding: 12px 1px 6px 4px;
+    color: rgba(0, 0, 0, 0.85);
+}
+.CFilter i {
+    font-size: medium;
+}
+.CFilter i:hover {
+    background: lightcyan;
+}
+.CFilter select {
+    width: 80px;
+    font-size: 14px;
+    height: 35px;
+    border-radius: 3px;
+    border: solid 1px #d3d3d3b3;
+    outline: none;
+}
+.CFilter > div > span {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.CTable {
+    /*height: calc(100% - 56px);*/
+    /*padding: 12px 12px 6px 12px;*/
+}
+.CTable table {
+    height: calc(100vh - 121px);
+    /* #### 121 = 45px(top bar) + 56px(filter) + 20px(row T2, T3)*/
+    width: 100%;
+    table-layout: fixed;
+}
+.CTable tr.border-top-none td {border-top: none}
+.CTable tr.border-bottom-none td {
+    border-bottom: none;
+    height: 20px;
+}
+.CTable td {
+    border: solid 1px #d3d3d3b3;
+    vertical-align: top;
+    text-align: center;
+    overflow-y: auto;
+}
+.CTable .CTable-day td {
+    text-align: left;
+    padding-left: 15px;
+}
+.CTable .CTable-day .dayName {
+    padding-left: 9px;
+}
+.CTable .dayNumber {
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-block;
+    font-size: 16px;
+    width: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+}
+.CTable .CTable-day-week .dayNumber {
+    text-align: center;
+    font-size: 22px;
+    width: 35px;
+    line-height: 35px;
+}
+.CTable .dayNumber:hover {background: rgb(230, 231, 234);}
+.CTable .dayData {
+    height: calc(100% - 25px);
+}
+.CTable .CTable-day-week .dayData {
+    height: 100%;
+}
+.CTable .dayDataItem {
+    margin: 4px 8px 4px 0;
+    border-radius: 4px;
+    height: 20px;
+    text-align: left;
+    padding: 0 16px 0 6px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+}.CTable .CTable-day-week .dayDataItem {
+     padding: 0;
+ }
+.CTable .dayDataText {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+    display: block;
+}
+.CTable .CTable-day-week .dayDataItem {
+    height: auto;
+    margin: 8px 8px 8px 0;
+}
+.CTable .CTable-day-week .dayDataText {
+    overflow: unset;
+    white-space: unset;
+    text-overflow: unset;
+    padding: 6px;
+}
+
+.CTable td.is-today .dayNumber {
+    font-weight: 600;
+    color: #039be5;
+}
+.dashboardSidebar {
+    vertical-align: top;
+    display: inline-block;
+    width: 260px;
+    padding: 12px 5px 12px 10px;
+    height: calc(100vh - 65px);
+}
+.dashboardSidebar .dashboardSidebar-scroll {
+    padding-right: 5px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+/*.dashboardSidebar .dashboardSidebar-scroll:hover{overflow-y: auto}*/
+.dashboardSidebar h3 { color: #000000; }
+.dashboardSidebar > div {padding-bottom: 20px}
+.SCalender {height: 235px}
+.SFilter {padding-bottom: 20px}
+.SFilter > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+.SFilter .ant-select {
+    width: 160px;
+    height: 30px;
+}
+.SStatistic {}
+.SStatistic .SStatistic-total span {
+    line-height: 0;
+    font-size: 36px;
+    padding-left: 22px;
+    color: dodgerblue;
+}
+
+.SStatistic-label-data {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+}
+.SStatistic-label {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.SStatistic-label-i {
+    display: inline-block;
+    padding-left: 12px;
+}
+
+
+.dashboard-calender-date-content table{
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+}
+.dashboard-calender-date-content thead {
+    background: #ebecf0;
+}
+.dashboard-calender-date-content td{cursor: pointer}
+.dashboard-calender-date-content td:hover{background-color: rgba(9,30,66,.08);}
+.dashboard-calender-date-content td.is-empty {
+    cursor: default;
+    background-color: rgb(249, 249, 249);;
+}
+.dashboard-calender-date-content td.is-selected {
+    background-color: #039be5;
+    color: #fff !important;
+}
+.dashboard-calender-date-content td.is-today {
+    color: #039be5;
+    font-weight: 600;
+}
+.dashboard-calender-date-content tbody tr {height: 24px}
+.dashboard-calender-date-content td, .dashboard-calender-date-content th {
+    vertical-align: top;
+    border: 1px solid #dfe1e6;
+    padding: 0;
+    text-align: center;
+}
+.dashboard-calender-date-content .div-calendar-action {
+    padding: 6px 0 18px 0;
+    position: relative;
+}
+.dashboard-calender-date-content .div-calendar {user-select: none;}
+.dashboard-calender-date-content .div-calendar-action span.prev {
+    cursor: pointer;
+    text-decoration: underline;
+    position: absolute;
+    width: 30px;
+}
+.dashboard-calender-date-content .div-calendar-action span.next {
+    cursor: pointer;
+    text-decoration: underline;
+    position: absolute;
+    width: 30px;
+    text-align: right;
+    right: 0;
+}
+.dashboard-calender-date-content .div-calendar-action span.prev:hover ,
+.dashboard-calender-date-content .div-calendar-action span.next:hover {
+    background: lightcyan;
+}
+.dashboard-calender-date-content .div-calendar-action select {
+    border: none;
+    appearance:none;
+    cursor: pointer;
+    text-decoration: underline;
+    outline: none;
+}
+.dashboard-calender-date-content .div-calendar-action select.month {
+    margin: 0 5px 0 72px;
+}
+
+/* width --------------------------------------------------- scroll*/
+.dayData::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+.dayData::-webkit-scrollbar-track {
+    background: #dadbe2;
+    border-radius: 10px;
+}
+/* Handle */
+.dayData::-webkit-scrollbar-thumb {
+    background: #bfc4cd;
+    border-radius: 10px;
+}
+/* Handle on hover */
+.dayData::-webkit-scrollbar-thumb:hover {
+    /*background: #555;*/
+}
+
+/* sidebar --------------------------------------------------- scroll*/
+.dashboardSidebar-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+.dashboardSidebar-scroll::-webkit-scrollbar-track {
+    background: #dadbe2;
+    border-radius: 10px;
+}
+/* Handle */
+.dashboardSidebar-scroll::-webkit-scrollbar-thumb {
+    background: #bfc4cd;
+    border-radius: 10px;
+}
+/* Handle on hover */
+.dashboardSidebar-scroll::-webkit-scrollbar-thumb:hover {
+    /*background: #555;*/
+}
+
+.dashboard-dropdown-tree-select-cq{
+    left: calc(100vw - 350px) !important;
+    width: 350px !important;
+}

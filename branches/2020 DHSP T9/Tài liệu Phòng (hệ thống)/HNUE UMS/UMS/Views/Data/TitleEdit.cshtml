@@ -1,0 +1,90 @@
+﻿@using Resources
+@model Ums.Models.Data.TitleModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("TitleEdit", "Data", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-3">
+                <label>@Actions.Code</label>
+                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>@Actions.Type</label>
+                @Html.DropDownListFor(m => m.TitleTypeId, Model.TitleTypes, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>@Actions.Name</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-2">
+                <label>@Actions.ShortName</label>
+                @Html.TextBoxFor(m => m.ShortName, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 1</label>
+                @Html.TextBoxFor(m => m.Level1, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 2</label>
+                @Html.TextBoxFor(m => m.Level2, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 3</label>
+                @Html.TextBoxFor(m => m.Level3, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 4</label>
+                @Html.TextBoxFor(m => m.Level4, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 5</label>
+                @Html.TextBoxFor(m => m.Level5, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 6</label>
+                @Html.TextBoxFor(m => m.Level6, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 7</label>
+                @Html.TextBoxFor(m => m.Level7, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 8</label>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.Level8, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 9</label>
+                @Html.TextBoxFor(m => m.Level9, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 10</label>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.Level10, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 11</label>
+                @Html.TextBoxFor(m => m.Level11, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>HSL 12</label>
+                @Html.TextBoxFor(m => m.Level12, new { @class = "form-control" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("600px", "450px");
+</script>

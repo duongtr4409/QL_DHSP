@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row">
+    <div class="login col-12 col-md-6 col-lg-4">
+        <label class="block-title">Đăng nhập</label>
+        <div class="text-center">
+            <div class="message">@ViewBag.Message</div>
+            <a type="button" class="btn btn-success" id="btnLogin" href="@Url.Action("OAuth")">
+                <span class="slogin"><img src="~/Styles/images/2bs.jpg" style="width: 40px;" /> Đăng nhập bằng 2BSID <i class="fa fa-sign-out"></i></span>
+                <span class="llogin" style="display:none"><img src='/Styles/images/loading.gif' /> Đang xử lý...</span>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    $("#btnLogin").click(function () {
+        $(".slogin").hide();
+        $(".llogin").show();
+    });
+</script>

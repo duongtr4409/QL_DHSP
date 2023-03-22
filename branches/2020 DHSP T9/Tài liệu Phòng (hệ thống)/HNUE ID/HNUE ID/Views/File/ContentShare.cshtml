@@ -1,0 +1,27 @@
+﻿@model Ums.Models.File.ContentShareModel
+@using Resources
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ContentShare", "File", FormMethod.Post, new { role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.FileId)
+    <div class="form-group">
+        <label>Chia sẻ</label>
+        <input type="text" name="UserIds" id="UserIds" class="form-control" />
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("500px", "350px");
+    $(function () {
+        var rs = $('#UserIds').magicSuggest({
+            displayField: "value",
+            data: '@Url.Action("GetRunner")'
+        });
+        rs.setValue(@Html.Raw(ViewBag.Users));
+    });
+</script>

@@ -1,0 +1,22 @@
+﻿@model Ums.Models.File.FileContentModel
+@using Resources
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ContentEdit", "File", FormMethod.Post, new { role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ParentId)
+    <div class="form-group">
+        <label>@Actions.Name</label>
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+        <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("300px", "250px");
+</script>

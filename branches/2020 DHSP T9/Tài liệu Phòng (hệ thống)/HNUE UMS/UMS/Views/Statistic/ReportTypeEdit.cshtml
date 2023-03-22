@@ -1,0 +1,51 @@
+﻿@using Resources
+@model Ums.Models.Statistic.ReportTypeModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ReportTypeEdit", "Statistic", FormMethod.Post, new {@id = "formData", role = "form"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="form-group">
+        <label>Tên</label>
+        @Html.TextBoxFor(m => m.Name, new {@class = "form-control"})
+    </div>
+    <div class="form-group">
+        <label>Mã</label>
+        @Html.TextBoxFor(m => m.Template, new {@class = "form-control"})
+    </div>
+    <div class="form-group">
+        <label>Mẫu báo cáo</label>
+        <div>
+            <input type="hidden" name="File" id="File" value="@Model.File"/>
+            <div id="progress"><a href="@(Model.File)">@(Model.File)</a>
+            </div>
+            <div id="progressBar"></div>
+            <input type="file" name="file">
+        </div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+        <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+        <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("500px", "420px");
+    $('input[type=file]').change(function () {
+        $(this).simpleUpload("@Url.Action("JsUpload","Upload")?path=ReportTemplates", {
+            allowedExts: ["xlsx", "doc", "docx"],
+            progress: function (progress) {
+                $('#progress').html("Đang tải lên: " + Math.round(progress) + "%");
+            },
+            success: function (data) {
+                $('#File').val(data.data);
+                $('#progress').html("Tải lên thành công! [" + data.data + "]");
+            },
+            error: function (error) {
+                $('#progress').html("Tải lên không thành công! " + error.name + ": " + error.message);
+            }
+        });
+    });
+</script>

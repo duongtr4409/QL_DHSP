@@ -1,0 +1,64 @@
+﻿@using Resources
+@model Ums.Models.Personnel.VacationModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("VacationEdit", "Personnel", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Đơn vị</label>
+                <select name="DepartmentId" id="DepartmentId" class="form-control" required="">
+                    @foreach (var d in ViewBag.Departments)
+                    {
+                        <option @(Model.DepartmentId == d.Id ? "selected=''" : "") value="@d.Id">@d.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-8">
+                <label>Cán bộ</label>
+                <select name="StaffId" id="StaffId" class="form-control" required="" min="1"></select>
+            </div>
+            <div class="form-group col-4">
+                <label>Loại</label>
+                <select name="TypeId" id="TypeId" class="form-control" required="">
+                    @foreach (var d in ViewBag.Types)
+                    {
+                        <option @(Model.TypeId == d.Id ? "selected=''" : "") value="@d.Id">@d.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-4">
+                <label>Ngày bắt đầu</label>
+                @Html.TextBoxFor(i => i.Start, new { @class = "form-control datepicker" })
+            </div>
+            <div class="form-group col-4">
+                <label>Ngày kết thúc</label>
+                @Html.TextBoxFor(i => i.End, new { @class = "form-control datepicker" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("650px", "400px");
+    $(function() {
+        function updateLecturers() {
+            $("#StaffId").html("<option value='0'>---Chọn giảng viên---</option>");
+            $.get("@Url.Action("GetStaves")?departmentId=" + $("#DepartmentId").val()).done(function (r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option " + (r[i].Id === @Model.StaffId ? "selected" : "") + " value='" + r[i].Id + "'>" + r[i].Name + " [" + r[i].Degree + "]</option>").appendTo("#StaffId");
+                }
+            });
+        }
+        $("#DepartmentId").change(function () { updateLecturers(); });
+        updateLecturers();
+    });
+</script>

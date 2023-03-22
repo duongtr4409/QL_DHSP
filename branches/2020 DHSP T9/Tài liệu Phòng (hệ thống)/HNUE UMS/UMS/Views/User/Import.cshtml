@@ -1,0 +1,116 @@
+﻿<div class="filters">
+    @if (string.IsNullOrEmpty(ViewBag.File))
+    {
+        <a href="~/Content/Template/user-import.xlsx" class="btn btn-primary">Tải mẫu Import</a>
+        <div class="progress"></div>
+        <input type="file" />
+    }
+    else
+    {
+        <button id="btnImport" file="@ViewBag.File" type="button" class="btn btn-success"><i class="fa fa-save"></i> Import</button>
+    }
+</div>
+<table class="table table-striped table-bordered table-short table-hover">
+    <thead>
+        <tr>
+            <th>USER ID</th>
+            <th>USER TYPE</th>
+            <th>USERNAME</th>
+            <th>EMAIL</th>
+            <th>PASSWORD</th>
+            <th>NAME</th>
+            <th>PHONE</th>
+            <th>BIRTHDAY</th>
+            <th>GENDER</th>
+            <th>ADDRESS</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    $('table.table').DataTable(
+        {
+            processing: true,
+            serverSide: true,
+            filter: false,
+            order: [[1, "asc"]],
+            orderMulti: false,
+            pageLength: 25,
+            iDisplayLength: 25,
+            aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+            dom: '<"clear"><"top"f>rt<"bottom"ilp><"clear">',
+            ajax: { url: '@Url.Action("GetImport")?file=@ViewBag.File', type: "GET", contentType: "application/json" },
+            columns: [
+                {
+                    "data": "Id",
+                    "className": "text-center",
+                    "bSortable": false,
+                    "width": "50px"
+                },
+                {
+                    "data": "UserType",
+                    "bSortable": true
+                },
+                {
+                    "data": "Username",
+                    "bSortable": true
+                },
+                {
+                    "data": "Email",
+                    "bSortable": true
+                },
+                {
+                    "data": "Password",
+                    "bSortable": true
+                },
+                {
+                    "data": "Name",
+                    "bSortable": true
+                },
+                {
+                    "data": "Birthday",
+                    "bSortable": true
+                },
+                {
+                    "data": "Gender",
+                    "bSortable": true
+                },
+                {
+                    "data": "Phone",
+                    "bSortable": true
+                },
+                {
+                    "data": "Address",
+                    "bSortable": true
+                }
+            ]
+        });
+
+    $("#btnImport").click(function () {
+        if (confirm("Bạn chắc chắn muốn nhập dữ liệu?")) {
+            $.post("@Url.Action("StartImport")?file=" + $(this).attr("file")).done(function (r) {
+                alert("Import dữ liệu thành công!");
+            });
+        }
+    });
+
+    $('input[type=file]').change(function () {
+        $(this).simpleUpload("@Url.Action("JsUpload", "Upload")?path=Users", {
+            allowedExts: ["xlsx"],
+            maxFileSize: 5000000,
+            start: function () {
+                $('.progress').html("");
+            },
+            progress: function (progress) {
+                $('.progress').html("Uploaded :" + Math.round(progress) + "%");
+            },
+            success: function (data) {
+                if (data.success) {
+                    window.location.href = "@Url.Action("Import")?file=" + data.data;
+                } else {
+                    $('.progress').html(data.message);
+                }
+            }
+        });
+    });
+</script>

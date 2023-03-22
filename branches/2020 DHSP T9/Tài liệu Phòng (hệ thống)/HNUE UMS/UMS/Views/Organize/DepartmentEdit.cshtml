@@ -1,0 +1,90 @@
+﻿@using Resources
+@using Ums.Core.Domain.Data
+@model Ums.Models.Organize.DepartmentModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("DepartmentEdit", "Organize", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-3">
+                <label>Mã đơn vị</label>
+                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Mã đồng bộ</label>
+                @Html.TextBoxFor(m => m.SyncCode, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-6">
+                <label>@Actions.Type</label>
+                @Html.DropDownListFor(m => m.TypeId, Model.Types, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-9">
+                <label>@Actions.Name</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>@Actions.ShortName</label>
+                @Html.TextBoxFor(m => m.ShortName, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-6">
+                <label>@Actions.Phone</label>
+                @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-6">
+                <label>@Actions.Email</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-12">
+                <label>@Actions.Address</label>
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>@Actions.PositionGroup</label>
+                <select id="PositionGroupId" class="form-control">
+                    @foreach (PositionGroup g in ViewBag.Groups)
+                    {
+                        <option value="@g.Id">@g.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-4">
+                <label>@Actions.Position</label>
+                <select name="PositionId" id="PositionId" class="form-control"></select>
+            </div>
+            <div class="form-group col-4">
+                <label>@Actions.Max (0: Không giới hạn)</label>
+                <input type="number" id="Max" name="Max" value="0" class="form-control number" />
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("700px", "550px");
+    $("#PositionGroupId").change(function() {
+        $("#PositionId").html("");
+        $.get("@Url.Action("GetPositions")?groupId=" + $(this).val()).done(function(r) {
+            for (var i in r) {
+                if (r.hasOwnProperty(i)) {
+                    $("<option value='" + r[i].Id + "'>" + r[i].Name +"</option>").appendTo("#PositionId");
+                }
+            }
+            if (@Model.Id > 0) {
+                $("#PositionId").val(@ViewBag.PositionId);
+            }
+        });
+    });
+    if (@Model.Id > 0) {
+        $("#PositionGroupId").val(@ViewBag.GroupId);
+        $("#Max").val(@ViewBag.Max);
+    }
+    $("#PositionGroupId").change();
+</script>

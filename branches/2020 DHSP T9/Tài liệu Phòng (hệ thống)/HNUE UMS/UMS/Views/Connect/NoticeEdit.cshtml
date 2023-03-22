@@ -1,0 +1,52 @@
+﻿@model Ums.Models.Connect.NoticeModel
+@using Resources
+@using Ums.Models.Common
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("NoticeEdit", "Connect", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="form-group">
+            <label>@Actions.Name</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>@Actions.ReceivingGroup</label>
+            <div>
+                @foreach (IdNameModel i in ViewBag.Roles)
+                {
+                    <div style="width: 33%; float: left"><input name="role[]" @(Model.RoleIds.Contains(i.Id) ? "checked='checked'" : "") value="@i.Id" type="checkbox" /> @i.Name</div>
+                }
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>@Actions.Content</label>
+            @Html.TextAreaFor(m => m.Content)
+        </div>
+        <div class="form-group">
+            <label>@Actions.Public</label>
+            @Html.CheckBoxFor(m => m.Public, new { style = "margin-top: 10px" })
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>
+<script>
+    window.parent.setmodalsize("70%", "750px");
+    $(function () {
+        CKEDITOR.replace('Content', {
+            filebrowserUploadUrl: '@Url.Action("EditorUpload", "Upload")',
+            height: 450,
+            width: "100%",
+            tabSpaces: 4
+        });
+    });
+</script>

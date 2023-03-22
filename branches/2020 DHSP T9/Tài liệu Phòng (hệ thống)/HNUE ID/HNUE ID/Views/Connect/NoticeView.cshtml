@@ -1,0 +1,12 @@
+﻿@model Ums.Core.Domain.Connect.Notice
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="container-fluid">
+    @Html.Raw(Model.Content.Replace("href=\"/", "href=\"//qlnt.hnue.edu.vn/"))
+</div>
+
+<script>
+    window.parent.setmodalsize("70%", "750px");
+</script>

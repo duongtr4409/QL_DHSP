@@ -1,0 +1,81 @@
+﻿@using Resources
+@model Ums.Models.Personnel.StaffPositionModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("PositionEdit", "Personnel", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-6">
+                <label>Đơn vị</label>
+                <select name="DepartmentId" id="DepartmentId" class="form-control" min="1">
+                    <option value="0">---Chọn đơn vị---</option>
+                    @foreach (var d in ViewBag.Departments)
+                {
+                        <option @(Model.DepartmentId == d.Id ? "selected=''" : "") value="@d.Id">@d.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-6">
+                <label>Cán bộ</label>
+                <select name="StaffId" id="StaffId" class="form-control" required="" min="1"></select>
+            </div>
+            <div class="form-group col-6">
+                <label>Nhóm chức vụ</label>
+                <select name="CategoryId" id="CategoryId" class="form-control" min="1">
+                    <option value="0">---Chọn nhóm---</option>
+                    @foreach (var d in ViewBag.Categories)
+                {
+                        <option @(Model.CategoryId == d.Id ? "selected=''" : "") value="@d.Id">@d.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-6">
+                <label>Chức vụ</label>
+                <select name="PositionId" id="PositionId" class="form-control" min="1"></select>
+            </div>
+            <div class="form-group col-6">
+                <label>Ngày bắt đầu</label>
+                @Html.TextBoxFor(i => i.Start, new { @class = "form-control datepicker" })
+            </div>
+            <div class="form-group col-6">
+                <label>Ngày kết thúc</label>
+                @Html.TextBoxFor(i => i.End, new { @class = "form-control datepicker" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("550px", "380px");
+    $(function() {
+        function updateLecturers() {
+            $("#StaffId").html("<option value='0'>---Chọn cán bộ---</option>");
+            $.get("@Url.Action("GetStaves")?departmentId=" + $("#DepartmentId").val()).done(function (r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option " + (r[i].Id === @Model.StaffId ? "selected" : "") + " value='" + r[i].Id + "'>" + r[i].Name + " [" + r[i].Degree + "]</option>").appendTo("#StaffId");
+                }
+            });
+        }
+        $("#DepartmentId").change(function () { updateLecturers(); });
+        updateLecturers();
+
+        function updatePositions() {
+            $("#PositionId").html("<option value='0'>---Chọn chức vụ---</option>");
+            $.get("@Url.Action("GetPositionData")?categoryId=" + $("#CategoryId").val()).done(function (r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option " + (r[i].Id === @Model.PositionId ? "selected" : "") + " value='" + r[i].Id + "'>" + r[i].Name + "</option>").appendTo("#PositionId");
+                }
+            });
+        }
+        $("#CategoryId").change(function () { updatePositions(); });
+        updatePositions();
+    });
+</script>

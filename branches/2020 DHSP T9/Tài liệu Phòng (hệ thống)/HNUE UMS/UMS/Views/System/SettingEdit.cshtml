@@ -1,0 +1,71 @@
+﻿@using Resources
+@using Ums.Core.Common
+@model Ums.Models.System.SettingModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("SettingEdit", "System", FormMethod.Post, new {  @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="form-group">
+            <label>@Actions.Key</label>
+            @Html.TextBoxFor(m => m.Key, new { @class = "form-control" })
+        </div>
+        @if (Model.Key == Settings.LOGO_URL)
+        {
+            <div class="form-group">
+                <label>@Actions.Upload</label>
+                <div>
+                    @Html.HiddenFor(m => m.Value, new { @class = "form-control" })
+                    <div id="image">
+                        <img src="@(Model.Value)" style="max-width: 300px" />
+                    </div>
+                    <div id="progress"></div>
+                    <input type="file" name="file">
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label>@Actions.Value</label>
+                @Html.TextAreaFor(m => m.Value, new { @class = "form-control" })
+            </div>
+        }
+        <div class="form-group">
+            <label>@Actions.Desc</label>
+            @Html.TextAreaFor(m => m.Desc, new { @class = "form-control" })
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("800px", "420px");
+    $(function () {
+        $('input[type=file]').change(function () {
+            $(this).simpleUpload("@Url.Action("JsUpload","Upload")?path=Logo", {
+                allowedExts: ["jpg", "jpeg", "png"],
+                maxFileSize: 5000000,
+                start: function () {
+                    $('#progress').html("");
+                },
+                progress: function (progress) {
+                    $('#progress').html("Uploaded :" + Math.round(progress) + "%");
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $("#image img").attr("src", data.data);
+                        $("#Value").val(data.data);
+                    } else {
+                        $('#progress').html(data.message);
+                    }
+                }
+            });
+        });
+    });
+</script>

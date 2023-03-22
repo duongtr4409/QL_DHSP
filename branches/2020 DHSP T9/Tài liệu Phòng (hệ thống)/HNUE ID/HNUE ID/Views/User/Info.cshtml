@@ -1,0 +1,50 @@
+﻿@using Ums.App.Base
+@using Ums.App.Helper
+
+<div class="row">
+    <div class="col-8 m-auto">
+        <br />
+        <br />
+        <h3 class="text-center">THÔNG TIN TÀI KHOẢN</h3>
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td>Ảnh <span id="progress"></span></td>
+                <td style="position:relative">
+                    <img id="avatar" src="@WorkContext.UserInfo.Avatar" style="max-height:80px" />
+                    <a style="position:absolute;top:10px;right:10px" title="Sửa thông tin" class="btn btn-default" href="@Url.Action("InfoEdit")"><i class="fa fa-edit"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:30%">Họ tên</td>
+                <td>@WorkContext.UserInfo.Name</td>
+            </tr>
+            <tr>
+                <td>Loại tài khoản</td>
+                <td>@WorkContext.UserInfo.UserType</td>
+            </tr>
+            @if (WorkContext.UserInfo.UserType == "STAFF")
+            {
+                <tr>
+                    <td>Đơn vị</td>
+                    <td>@(WorkContext.UserInfo.Staff?.Department?.Name)</td>
+                </tr>
+            }
+            <tr>
+                <td>Ngày sinh</td>
+                <td>@(WorkContext.UserInfo.Birthday?.ToAppDate())</td>
+            </tr>
+            <tr>
+                <td>Điện thoại</td>
+                <td>@WorkContext.UserInfo.Phone</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ</td>
+                <td>@WorkContext.UserInfo.Address</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>@WorkContext.UserInfo.Email</td>
+            </tr>
+        </table>
+    </div>
+</div>

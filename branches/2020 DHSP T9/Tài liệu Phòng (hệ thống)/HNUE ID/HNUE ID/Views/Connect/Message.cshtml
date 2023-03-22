@@ -1,0 +1,105 @@
+﻿<div class="message-container">
+    <div class="message-left">
+        <div class="message-search">
+            <input type="text" id="txbSearch" placeholder="Tìm kiếm..." />
+            <button id="btnSearch" type="button"><i class="fa fa-search"></i></button>
+        </div>
+        <div class="message-user"></div>
+    </div>
+    <div class="message-right">
+        <div class="chat-user">
+            <img class="chat-user-avartar" src="" />
+            <div class="chat-info">
+                <div class="chat-user-name"></div>
+                <div class="chat-user-type"></div>
+            </div>
+            <input type="hidden" id="chat-user-id" />
+        </div>
+        <div class="chat-box"></div>
+        <div class="send-box">
+            <textarea id="txbMessage" placeholder="Tin nhắn..."></textarea>
+            <button id="btnSend" type="button"><i class="fa fa-send"></i> Gửi</button>
+        </div>
+    </div>
+</div>
+<script>
+    $("#btnSend").click(function () {
+        var message = $("#txbMessage").val().trim();
+        if (message != "") {
+            $.post("@Url.Action("SendMessage")?message=" + message + "&toId=" + $("#chat-user-id").val()).done(function () { $("#txbMessage").val(""); });
+            if ($("#txbSearch").val().trim() != "") {
+                $("#txbSearch").val("");
+                getUsers();
+            }
+        }
+    });
+
+    function getUsers() {
+        $.get("@Url.Action("GetUsers")").done(function (r) {
+            for (var i = 0; i < r.length; i++) {
+                if ($(".user-item[user-id=" + r[i].Id + "]").length < 1) {
+                    $(`<div class='user-item' user-id='${r[i].Id}' data-position='${i}'><img class='user-avatar' src='${r[i].Avatar}'/><div class='user-info'><span class='user-name'>${r[i].Name}</span><span class='user-type'>${r[i].UserType} [${r[i].Email}]</span></div></div>`).appendTo(".message-user");
+                } else {
+                    $(".user-item[user-id=" + r[i].Id + "]").attr("data-sort", i);
+                }
+            }
+            var result = $('.user-item').sort(function (a, b) {
+                var contentA = parseInt($(a).data('sort'));
+                var contentB = parseInt($(b).data('sort'));
+                return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+            });
+            $('.message-user').html(result);
+        });
+    }
+    getUsers();
+    setInterval(getUsers, 3000);
+
+    $("#btnSearch").click(function () {
+        $(".message-user").html("");
+        if ($("#txbSearch").val().trim() != "") {
+            $.get("@Url.Action("SearchUsers")?keyword=" + $("#txbSearch").val()).done(function (r) {
+                for (var i = 0; i < r.length; i++) {
+                    $(`<div class='user-item' user-id='${r[i].Id}'><img class='user-avatar' src='${r[i].Avatar}'/><div class='user-info'><span class='user-name'>${r[i].Name}</span><span UrlrlUrls='user-type'>${r[i].UserType} [${r[i].Email}]</span></div></div>`).appendTo(".message-user");
+                }
+            });
+        }
+    });
+    var messageInterval = null;
+    $(document).on("click", ".user-item:not(.active)", function () {
+        $(".message-right").css("display", "flex");
+        $(".chat-user-avartar").attr("src", $(this).find(".user-avatar").attr("src"));
+        $(".chat-user-name").html($(this).find(".user-name").html());
+        $(".chat-user-type").html($(this).find(".user-type").html());
+        var toId = $(this).attr("user-id");
+        $("#chat-user-id").val(toId);
+        $(".chat-box").html("");
+
+        $(".user-item").removeClass("active");
+        $(this).addClass("active");
+
+        if (messageInterval != null) {
+            clearInterval(messageInterval);
+        }
+        messageInterval = setInterval(function () {
+            var lastId = $(".chat-box > div:last-child").attr("message-id") ?? 0;
+            $.get("@Url.Action("GetMessages")?userId=" + toId + "&lastId=" + lastId).done(function (r) {
+                for (var i = 0; i < r.length; i++) {
+                    $(`<div message-id='${r[i].Id}' class='user-message ${r[i].FromId == toId ? 'guest' : 'owner'}'><img class='message-avatar' src='${r[i].Avatar}' /><div class='message-info'><div class='from-name'>${r[i].Name}</div><pre class='message-content'>${r[i].Content}</pre><div class='message-time'>${r[i].Date}</div></div></div>`).appendTo(".chat-box");
+                }
+                if (r.length > 0) {
+                    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
+                }
+            });
+        }, 500);
+    });
+    $("#txbMessage").keyup(function (e) {
+        if (e.keyCode == 13) {
+            $("#btnSend").click();
+        }
+    });
+    $("#txbSearch").keyup(function (e) {
+        if (e.keyCode == 13) {
+            $("#btnSearch").click();
+        }
+    });
+</script>

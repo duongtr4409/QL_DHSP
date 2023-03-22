@@ -1,0 +1,88 @@
+﻿@model Ums.Models.Sync.ResearchingSyncModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ResearchingEdit", "Sync", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Data)
+    @Html.HiddenFor(m => m.YearId)
+    <div class="row">
+        <div class="form-group col-12">
+            <select id="slcYear" class="form-control filter" value="@ViewBag.YearId">
+                <option value="0">---Năm học---</option>
+                @foreach (var i in ViewBag.Years)
+                {
+                    <option @(ViewBag.YearId == i.Id ? "selected='selected'" : "") value="@i.Id">@i.Name</option>
+                }
+            </select>
+            <select id="slcDepartment" class="form-control filter" value="@ViewBag.DepartmentId">
+                <option value="0">---Khoa/Bộ môn phụ trách---</option>
+                @foreach (var i in ViewBag.Departments)
+                {
+                    <option @(ViewBag.DepartmentId == i.Id ? "selected='selected'" : "") value="@i.Id">@i.Name</option>
+                }
+            </select>
+            <button type="button" id="btnGet" class="btn btn-primary"><i class="fa fa-download"></i> Lấy dữ liệu</button>
+        </div>
+        <div class="form-group col-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center"><input type="checkbox" id="ckbAll" /></th>
+                        <th>Tên nhiệm vụ</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-center">Số thành viên</th>
+                        <th class="text-center">Năm bắt đầu</th>
+                        <th class="text-center">Giảng viên</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="text-center col-12">
+            <button type="submit" id="btnSync" class="btn btn-primary"><i class="fa fa-refresh"></i> Đồng bộ</button>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("90%", "90vh");
+    $("#btnSync").click(function () {
+        if ($(document).find(".ckb-item:checked").length == 0) {
+            alert("Vui lòng chọn nhiệm vụ đồng bộ!");
+            return false;
+        }
+        return true;
+    });
+    $("#btnGet").click(function () {
+        $("tbody").html("");
+        var btn = $(this).html();
+        $("#btnGet").html("Đang tải...");
+        $.get("@Url.Action("SyncResearching")?yearId=" + $("#slcYear").val() + "&departmentId=" + $("#slcDepartment").val()).done(function (r) {
+            if (r.length == 0) {
+                $("<tr><td colspan='20' class='text-center'>Không có bản ghi nào trả lại</td></tr>").appendTo("tbody");
+            } else {
+                $("#Data").val(JSON.stringify(r));
+                for (var i = 0; i < r.length; i++) {
+                    $(`<tr>
+                        <td class="text-center"><input class='ckb-item' name='selected[]' type='checkbox' ${r[i].IsOk ? "" : "disabled"} value='${r[i].Id}'/></td>
+                        <td>${r[i].Conversion ?? "[Chưa xác định]"}<br/><b>${r[i].Name}</b></td>
+                        <td class="text-center">${r[i].Quantity}</td>
+                        <td class="text-center">${r[i].Members}</td>
+                        <td class="text-center">${r[i].StartYear}</td>
+                        <td class="text-center">${r[i].Staff ?? "[Chưa xác định]"}</td>
+                        <td>${r[i].IsOk ? "Đủ điều kiện" : r[i].Message}</td>
+                        </tr>`).appendTo("tbody");
+                }
+            }
+            $("#btnGet").html(btn);
+        }).fail(function () {
+            alert("Kết nối thất bại. Vui lòng kiểm tra lại!");
+            $("#btnGet").html(btn);
+        });
+    });
+    $("#ckbAll").click(function () {
+        $(document).find(".ckb-item:not(:disabled)").prop("checked", $(this).prop("checked"));
+    });
+</script>

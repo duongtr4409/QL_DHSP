@@ -1,0 +1,88 @@
+﻿@using Ums.App.Base
+@using Ums.App.Provider
+@using Ums.Core.Common
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>@ViewBag.Title @SettingProvider.GetValue(Settings.APP_NAME)</title>
+    @Styles.Render("~/content/style")
+    @Scripts.Render("~/bundles/script")
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <meta name="google-signin-client_id" content="@Ums.App.Provider.SettingProvider.GetValue("GOOGLE_OAUTH_CLIENT_ID")">
+</head>
+<body>
+    <div class="layout-header">
+        <a href="/" class="logo">
+            <img src="~/Styles/images/2bs.jpg" style="width: 40px"/>
+            <div class="logo-right">
+                <span class="appname">2BS ID</span>
+                <span class="title">@SettingProvider.GetValue(Settings.COMPANY_NAME)</span>
+            </div>
+        </a>
+        <div class="accpanel">
+            <div>
+                <a href="@Url.Action("Info", "User")"><i class="fa fa-user-circle" aria-hidden="true"></i> @(WorkContext.UserInfo.GetDisplayName())</a>
+                <a class="btnlogout" href="@Url.Action("LogOff", "Account")"><i class="fa fa-sign-out" aria-hidden="true"></i> Thoát</a>
+            </div>
+        </div>
+    </div>
+    <div class="maincontent">
+        <div class="leftpanel">
+            <div class="left-menu">
+                <a href="@Url.Action("Index", "Dashboard")">Trang chủ</a>
+                <a href="@Url.Action("Info", "User")">Trang cá nhân</a>
+                <a href="@Url.Action("Security", "User")">Bảo mật</a>
+                <a href="@Url.Action("Notice", "Connect")">Bản tin</a>
+                <a href="@Url.Action("Message", "Connect")">Nhắn tin</a>
+                <a href="@Url.Action("Content", "File")">Tệp cá nhân</a>
+            </div>
+        </div>
+        <div class="body-content">
+            @RenderBody()
+            <hr />
+            <div class="text-center">
+                <p>&copy; @DateTime.Now.Year @SettingProvider.GetValue(Settings.COMPANY_NAME)</p>
+                <p>Email: @SettingProvider.GetValue(Settings.COMPANY_EMAIL) - Phone: @SettingProvider.GetValue(Settings.COMPANY_PHONE) - Fax: @SettingProvider.GetValue(Settings.COMPANY_FAX) - Website: @SettingProvider.GetValue(Settings.COMPANY_WEBSITE)</p>
+                <p>@SettingProvider.GetValue(Settings.TECHNICAL_SUPPORT)</p>
+                <p>2BS ID @("v" + WorkContext.AppVersion)</p>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="myModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Html.Raw(ViewBag.PageIcon) @ViewBag.Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <img id="poploading" src="/Styles/images/loading.svg" />
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(".btnlogout").click(function () {
+            if (confirm('Bạn có chắc không?')) {
+                gapi.auth2.getAuthInstance().signOut();
+                $.get("@Url.Action("Logoff", "Account")").done(function () { window.location.href = "/"; });
+            }
+        });
+
+        function onLoad() {
+            gapi.load('auth2', function () {
+                gapi.auth2.init();
+            });
+        }
+
+        $(function () {
+            alert(window.location.href.split['?'][0])
+        })
+    </script>
+</body>
+</html>

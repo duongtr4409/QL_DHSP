@@ -1,0 +1,115 @@
+﻿<div class="container-fluid">
+    <select id="slcYear" class="form-control filter">
+        <option value="0">---Năm học---</option>
+        @foreach (var i in ViewBag.Years)
+        {
+            <option @(ViewBag.YearId == i.Id ? "selected='selected'" : "") value="@i.Id">@i.Name</option>
+        }
+    </select>
+    <select id="slcDepartments" class="form-control filter">
+        <option value="0">---Khoa/Bộ môn phụ trách---</option>
+        @foreach (var i in ViewBag.Departments)
+        {
+            <option @(ViewBag.DepartmentId == i.Id ? "selected='selected'" : "") value="@i.Id">@i.Name</option>
+        }
+    </select>
+    <select id="slcGrade" class="form-control filter">
+        <option value="0">---Hệ đào tạo---</option>
+        @foreach (var i in ViewBag.Grades)
+        {
+            <option @(ViewBag.GradeId == i.Id ? "selected='selected'" : "") value="@i.Id">@i.Name</option>
+        }
+    </select>
+    <a href="@Url.Action("StandardEdit")?departmentId=@ViewBag.DepartmentId&gradeId=@ViewBag.GradeId&yearId=@ViewBag.YearId" class="btn btn-primary" onclick="return showmodal(this)"><i class="fa fa-refresh"></i> Đồng bộ dữ liệu</a>
+    <div class="clear"></div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên nhiệm vụ</th>
+                <th>Giảng cho</th>
+                <th class="text-center">Thời lượng</th>
+                <th class="text-center">Sĩ số</th>
+                <th>Thời gian</th>
+                <th class="text-center">Giảng viên</th>
+                <th class="text-center w50"><i class="fa fa-trash" aria-hidden="true"></i></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $(".filter").change(function () {
+            window.location.href = '@Url.Action("Standard")?yearId=' + $("#slcYear").val() + "&gradeId=" + $("#slcGrade").val() + "&departmentId=" + $("#slcDepartments").val();
+        });
+        $("#btnAdd").click(function () {
+            showmodalurl('@Url.Action("Standard")?' + window.location.href.split('?')[1]);
+        });
+        $('table.table').DataTable(
+            {
+                processing: true,
+                serverSide: true,
+                filter: false,
+                orderMulti: false,
+                order: [[0, "desc"]],
+                pageLength: 25,
+                iDisplayLength: 25,
+                aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+                dom: '<"top"f>rt<"bottom"ilp><"clear">',
+                ajax: { url: '@Url.Action("GetStandard")?departmentId=@ViewBag.DepartmentId&gradeId=@ViewBag.GradeId&yearId=@ViewBag.YearId', type: "GET", contentType: "application/json" },
+                columns: [
+                    {
+                        "data": "Id",
+                        "className": "text-center",
+                        "bSortable": false,
+                        "width": "50px"
+                    },
+                    {
+                        "data": "Name",
+                        "bSortable": true,
+                        render: function (d, m, n) {
+                            var r = d;
+                            if (n.Paid) {
+                                r += "[Đã trả tiền trực tiếp]";
+                            }
+                            return r;
+                        }
+                    },
+                    {
+                        "data": "ForDepartment",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "LessonTime",
+                        "className": "text-center"
+                    },
+                    {
+                        "data": "Size",
+                        "className": "text-center"
+                    },
+                    {
+                        "data": "TeachingTime"
+                    },
+                    {
+                        "data": "Lecturer",
+                        render: function (d, m, n) {
+                            var r = d;
+                            if (n.Invited) {
+                                r += "<br/>[Mời giảng]";
+                            }
+                            return r;
+                        }
+                    },
+                    {
+                        "data": "Id",
+                        "bSortable": false,
+                        "className": "text-center",
+                        "render": function (data) {
+                            return '<a href="@Url.Action("TeachingTaskDelete")?id=' + data + '" onclick="return confirm(\'Bạn có chắc không?\')"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        }
+                    }
+                ]
+            });
+    });
+</script>

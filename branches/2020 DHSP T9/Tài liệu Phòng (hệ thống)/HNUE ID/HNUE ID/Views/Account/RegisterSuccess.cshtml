@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row">
+    <div class="login col-md-6">
+        <label class="block-title">Trân trọng cảm ơn!</label>
+        <div class="block-content">
+            <h3>Bạn đã đăng ký tài khoản thành công!</h3>
+            <a href="@Url.Action("Login", "Account")?returnUrl=@ViewBag.ReturnUrl" class="btn btn-primary">Trở lại đăng nhập</a>
+        </div>
+    </div>
+</div>

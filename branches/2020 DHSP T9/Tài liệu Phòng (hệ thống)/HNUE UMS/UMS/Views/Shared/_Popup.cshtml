@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @Styles.Render("~/content/style")
+    @Scripts.Render("~/bundles/script")
+</head>
+<body>
+    <div class="container-fluid maincontent">
+        @RenderBody()
+        @if (Request.QueryString["message"] != null)
+        {
+            <script>
+                alert("@Html.Raw(Request.QueryString["message"])");
+            </script>
+        }
+    </div>
+    <script>window.parent.closeloading();</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+﻿@using Ums.App.Base
+<div class="row">
+    <div class="col-8 m-auto">
+        <br />
+        <br />
+        <h3 class="text-center">THÔNG TIN BẢO MẬT</h3>
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td style="width:30%">Họ tên</td>
+                <td>@WorkContext.UserInfo.Name</td>
+            </tr>
+            <tr>
+                <td>Loại tài khoản</td>
+                <td>@WorkContext.UserInfo.UserType</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <input type="email" id="email" style="width: 80%; float: left; margin-right: 5px" class="form-control" value="@(WorkContext.UserInfo.Email)" />
+                    <button type="button" class="btn btn-primary" id="btnSave">Lưu</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Tên đăng nhập</td>
+                <td>@(WorkContext.UserInfo.Username)</td>
+            </tr>
+            <tr>
+                <td>Mật khẩu cũ</td>
+                <td><input type="password" id="oldPassword" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td>Mật khẩu mới</td>
+                <td><input type="password" id="newPassword" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td>Nhập lại mật khẩu mới</td>
+                <td><input type="password" id="confirmPassword" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-right" id="change">
+                    <i style="color: orangered; display: none">Mật khẩu nhắc lại không khớp</i>
+                    <button id="btnChange" type="button" class="btn btn-primary">Đổi mật khẩu</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#btnSave").click(function () {
+            var email = $("#email").val();
+            var emailRegex = /^[a-zA-Z0-9._-]+@@hnue.edu.vn$/i;
+            if (!emailRegex.test(email)) {
+                alert("Bạn vui lòng khai báo đúng định dạng email của trường ĐHSPHN, ví dụ: example@hnue.edu.vn");
+                return;
+            }
+            $.post("@Url.Action("SaveEmail","Account")?email=" + email).done(function (r) {
+                if (r.Result === 1) {
+                    alert("Đã lưu! Bạn có thể sử dụng tài khoản email này để đăng nhập");
+                    $("#btnSave").remove();
+                } else {
+                    alert(r.Message);
+                }
+            });
+        });
+        $("#btnChange").click(function () {
+            var o = $("#oldPassword").val();
+            var n = $("#newPassword").val();
+            var c = $("#confirmPassword").val();
+            if (o === "") {
+                alert("Vui lòng khai báo mật khẩu cũ.");
+                return false;
+            }
+            if (n === "") {
+                alert("Vui lòng nhập mật khẩu mới.");
+                return false;
+            }
+            if (n !== c) {
+                alert("Nhắc lại mật khẩu không chính xác.");
+                return false;
+            }
+            if (!confirm('Bạn có chắc muốn thay đổi không?')) return false;
+            $.post("@Url.Action("ChangePassword")", { oldPassword: o, newPassword: n }).done(function (r) {
+                if (r === 3) alert("Mật khẩu không thể là ký tự trắng.");
+                if (r === 2) alert("Mật cũ không chính xác.");
+                if (r === 1) {
+                    $("#change").html("Đổi mật khẩu thành công!");
+                    $("#oldPassword").val("");
+                    $("#newPassword").val("");
+                    $("#confirmPassword").val("");
+                    $("#btnChange").remove();
+                }
+            });
+            return true;
+        });
+    });
+</script>

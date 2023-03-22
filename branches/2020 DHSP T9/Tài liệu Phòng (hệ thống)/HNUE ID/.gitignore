@@ -1,0 +1,12 @@
+HNUE ID/bin/
+HNUE ID/obj/
+packages/
+Tms.Core/bin/
+Tms.Core/obj/
+Tms.Models/bin/
+Tms.Models/obj/
+Tms.Service/bin/
+Tms.Service/obj/
+Tms.Web/bin/
+Tms.Web/obj/
+HNUE ID/Files/

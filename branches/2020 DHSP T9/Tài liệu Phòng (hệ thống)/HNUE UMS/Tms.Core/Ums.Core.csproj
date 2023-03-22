@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ECC33F68-853D-4128-A428-D2D34588C171}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ums.Core</RootNamespace>
+    <AssemblyName>Ums.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hnue.Helper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UMS\Bin\Hnue.Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BaseEntity.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\Settings.cs" />
+    <Compile Include="Data\IRepository.cs" />
+    <Compile Include="Data\Repository.cs" />
+    <Compile Include="Domain\Conversion\ConversionTeachingType.cs" />
+    <Compile Include="Domain\Data\Semester.cs" />
+    <Compile Include="Domain\Data\TitleType.cs" />
+    <Compile Include="Domain\Data\PositionGroup.cs" />
+    <Compile Include="Domain\Conversion\ConversionWorkingCategory.cs" />
+    <Compile Include="Domain\Conversion\ConversionTeachingCategory.cs" />
+    <Compile Include="Domain\Data\Classify.cs" />
+    <Compile Include="Domain\Connect\Feedback.cs" />
+    <Compile Include="Domain\Connect\Notice.cs" />
+    <Compile Include="Domain\Conversion\ConversionStandard.cs" />
+    <Compile Include="Domain\Conversion\ConversionResearching.cs" />
+    <Compile Include="Domain\OAuth\OAuthApplication.cs" />
+    <Compile Include="Domain\Personnel\StaffClassify.cs" />
+    <Compile Include="Domain\Report\ReportData.cs" />
+    <Compile Include="Domain\Security\Session.cs" />
+    <Compile Include="Domain\Students\DiemNamHoc.cs" />
+    <Compile Include="Domain\Students\StandardFaculty.cs" />
+    <Compile Include="Domain\Students\StandardStudent.cs" />
+    <Compile Include="Domain\System\Application.cs" />
+    <Compile Include="Domain\Task\TaskReserved.cs" />
+    <Compile Include="Domain\Report\ReportType.cs" />
+    <Compile Include="Domain\Personnel\Vacation.cs" />
+    <Compile Include="Domain\Personnel\VacationType.cs" />
+    <Compile Include="Domain\Conversion\ConversionResearchingCategory.cs" />
+    <Compile Include="Domain\Conversion\ConversionWorking.cs" />
+    <Compile Include="Domain\System\Role.cs" />
+    <Compile Include="Domain\System\Function.cs" />
+    <Compile Include="Domain\System\RoleGrade.cs" />
+    <Compile Include="Domain\System\RoleFunction.cs" />
+    <Compile Include="Domain\System\SystemSetting.cs" />
+    <Compile Include="Domain\System\UserRole.cs" />
+    <Compile Include="Domain\System\SystemCategory.cs" />
+    <Compile Include="Domain\Users\UserType.cs" />
+    <Compile Include="Domain\Users\UserGroup.cs" />
+    <Compile Include="Domain\Users\User.cs" />
+    <Compile Include="Entities\Security\OAuthUser.cs" />
+    <Compile Include="Entities\Shared\IdId.cs" />
+    <Compile Include="Entities\Shared\ApiResponse.cs" />
+    <Compile Include="Entities\Shared\StringPair.cs" />
+    <Compile Include="Entities\Mailing\Receiver.cs" />
+    <Compile Include="Entities\Shared\IdName.cs" />
+    <Compile Include="Domain\Task\TaskResearching.cs" />
+    <Compile Include="Domain\Task\TaskWorking.cs" />
+    <Compile Include="Entities\Statistic\FacultyAverage.cs" />
+    <Compile Include="Entities\Statistic\FacultyComplementRatio.cs" />
+    <Compile Include="Entities\Statistic\ResearchingUnApproved.cs" />
+    <Compile Include="Entities\Statistic\StaffStatistic.cs" />
+    <Compile Include="Entities\System\DbStat.cs" />
+    <Compile Include="Entities\Task\DutyTime.cs" />
+    <Compile Include="Types\TitleTypes.cs" />
+    <Compile Include="Domain\Data\Degree.cs" />
+    <Compile Include="Domain\Personnel\StaffPosition.cs" />
+    <Compile Include="Domain\Organize\Department.cs" />
+    <Compile Include="Types\DepartmentTypes.cs" />
+    <Compile Include="Domain\Data\Position.cs" />
+    <Compile Include="Domain\Conversion\ConversionTeaching.cs" />
+    <Compile Include="Domain\Personnel\Staff.cs" />
+    <Compile Include="Domain\Task\TaskTeaching.cs" />
+    <Compile Include="Domain\Data\Title.cs" />
+    <Compile Include="Domain\Data\Grade.cs" />
+    <Compile Include="Domain\Data\Year.cs" />
+    <Compile Include="Domain\System\StaffUser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

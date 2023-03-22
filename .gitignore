@@ -348,3 +348,14 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+**/node-modules/
+**/branches/2020 DHSP T9/Tài liệu Hoành (sau đại học)/qlncs.hune.edu.vn/qlncs.hune.edu.vn/.git/objects/pack/pack-4dc220d24d6d9d99d27b6a3bddf62e054ad9d3ae.pack
+**/branches/2020 DHSP T9/Tài liệu Hoành (sau đại học)/qlncs.hune.edu.vn.rar
+**/branches/2020 DHSP T9/Tài liệu Hoạt (QL Khoa Hoc)/Required.zip
+**/branches/2020 DHSP T9/Tài liệu Hoạt (QL Khoa Hoc)/Source code/Client.rar
+**/branches/2020 DHSP T9/Tài liệu Hoạt (QL Khoa Hoc)/Source code/Server.zip
+**/branches/2020 DHSP T9/Tài liệu web/ĐH Sư Phạm - Website.fig
+**/Đại Học Sư Phạm.rar
+**/.svn/
+.svn/

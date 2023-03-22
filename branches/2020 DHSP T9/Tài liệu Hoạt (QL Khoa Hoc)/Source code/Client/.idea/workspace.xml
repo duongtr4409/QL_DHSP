@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b8605103-6fbb-4df1-b25e-72ac4f2611c1" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProjectId" id="1iZvDp47euhQbWMThrPtjc54uLg" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b8605103-6fbb-4df1-b25e-72ac4f2611c1" name="Default Changelist" comment="" />
+      <created>1602127812861</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602127812861</updated>
+      <workItem from="1602127846429" duration="12891000" />
+      <workItem from="1602153724760" duration="17393000" />
+      <workItem from="1602466492975" duration="105874000" />
+      <workItem from="1602811065748" duration="155416000" />
+      <workItem from="1603848357696" duration="84521000" />
+      <workItem from="1604055096322" duration="2233000" />
+      <workItem from="1604282124126" duration="45226000" />
+      <workItem from="1604394219842" duration="101777000" />
+      <workItem from="1604669644363" duration="95383000" />
+      <workItem from="1605163359664" duration="74825000" />
+      <workItem from="1605494995351" duration="11457000" />
+      <workItem from="1605577002509" duration="588000" />
+      <workItem from="1605583015293" duration="1310000" />
+      <workItem from="1605842079352" duration="3421000" />
+      <workItem from="1606105650719" duration="1279000" />
+      <workItem from="1606299632048" duration="979000" />
+      <workItem from="1606301562738" duration="395000" />
+      <workItem from="1607305388469" duration="75255000" />
+      <workItem from="1607563739447" duration="29576000" />
+      <workItem from="1607917395619" duration="184566000" />
+      <workItem from="1608710262686" duration="8279000" />
+      <workItem from="1608782674183" duration="5641000" />
+      <workItem from="1608871706357" duration="3546000" />
+      <workItem from="1609208631175" duration="743000" />
+      <workItem from="1609298538122" duration="107000" />
+      <workItem from="1609299469154" duration="82000" />
+      <workItem from="1609382114258" duration="673000" />
+      <workItem from="1609406190383" duration="395000" />
+      <workItem from="1609749339447" duration="1038000" />
+      <workItem from="1609829359768" duration="20437000" />
+      <workItem from="1610071653743" duration="2878000" />
+      <workItem from="1610359714756" duration="238000" />
+      <workItem from="1610434433234" duration="616000" />
+      <workItem from="1610721235282" duration="267000" />
+      <workItem from="1611564283662" duration="677000" />
+      <workItem from="1611568891313" duration="3117000" />
+      <workItem from="1611572428238" duration="3186000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/node_modules/exceljs/index.d.ts" />
+      </list>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1602748838673">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602748838673" />
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1605519158169">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605519158169" />
+    <state x="461" y="161" key="SettingsEditor" timestamp="1603764635619">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="161" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1603764635619" />
+    <state x="656" y="257" width="737" height="526" key="find.popup" timestamp="1605337590936">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="257" width="737" height="526" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605337590936" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1603191612955">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1603191612955" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1604715530081">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1604715530081" />
+  </component>
+</project>

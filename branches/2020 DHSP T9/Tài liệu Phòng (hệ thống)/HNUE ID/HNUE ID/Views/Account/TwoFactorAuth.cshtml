@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row">
+    <div class="login col-md-4">
+        <div class="login-loading">
+            <img src="~/Styles/images/loading.svg" />
+        </div>
+        <label class="block-title">Đăng nhập</label>
+        <a href="#" class="btnForgotPassword">Quên mật khẩu?</a>
+        @using (Html.BeginForm("TwoFactorAuth", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+            <div class="block-content">
+                <div class="form-group login-panel">
+                    <label id="lblUsername">Vui lòng nhập mã bảo mật đã được gửi đến tài khoản email: @ViewBag.Data.email</label>
+                </div>
+                <div class="form-group login-panel">
+                    <label id="lblUsername">Mã cán bộ (hoặc email)</label>
+                    <input name="Key" class="form-control" type="text" />
+                </div>
+                <div class="form-group login-panel">
+                    <input id="btn-submit" type="submit" value="Đăng nhập" class="btn btn-primary" />
+                    <a href="@Url.Action("Login",new{ViewBag.ReturnUrl })" class="btn btn-default">Trở lại đăng nhập</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

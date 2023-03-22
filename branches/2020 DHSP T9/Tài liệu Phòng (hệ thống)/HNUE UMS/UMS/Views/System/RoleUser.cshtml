@@ -1,0 +1,126 @@
+﻿@using Resources
+@using Ums.Core.Domain.Organize
+@using Ums.Core.Domain.System
+@{
+    var j = 1;
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#home">@Actions.Account</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">@Actions.User</a></li>
+    </ul>
+    <br />
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <table class="table table-bordered">
+                <tr>
+                    <th class="text-center w50">@Actions.TT</th>
+                    <th>@Actions.Department</th>
+                    <th>@Actions.Name</th>
+                    <th>@Actions.Email</th>
+                    <th class="text-center w50"><i class="fa fa-trash" aria-hidden="true"></i></th>
+                </tr>
+                @foreach (UserRole u in ViewBag.Enrolleds)
+                {
+                    <tr>
+                        <td class="text-center">@(j++)</td>
+                        <td>@(u.User?.Staff?.Department?.Name)</td>
+                        <td>@(u.User?.Staff?.Name)</td>
+                        <td>@(u.User?.Email)</td>
+                        <td class="text-center"><i id="@u.Id" class="fa fa-trash" aria-hidden="true"></i></td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div id="menu1" class="tab-pane fade">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-3">
+                        <select id="slcDepartment" class="form-control">
+                            <option value="0">@Actions.ChooseDepartment</option>
+                            @foreach (Department i in ViewBag.Departments)
+                            {
+                                <option value="@i.Id">@i.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" class="form-control" id="txbKeyword" placeholder="@Actions.Keyword" />
+                    </div>
+                    <div class="col-2">
+                        <button id="btnSearch" class="btn btn-default">@Html.Raw(Actions.SearchIcon)</button>
+                        <button id="btnAdds" class="btn btn-primary">@Html.Raw(Actions.Add)</button>
+                    </div>
+                    <div class="col-1">
+                        <img id="imgloading" style="display: none; height: 37px" src="~/Styles/images/loading.svg" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <table id="tblUser" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center w50">@Html.Raw(Actions.Checkbox)</th>
+                        <th class="text-center w50">@Actions.TT</th>
+                        <th>@Actions.Name</th>
+                        <th>@Actions.Email</th>
+                        <th class="text-center w50"><i class="fa fa-plus" aria-hidden="true"></i></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    window.parent.setmodalsize("1000px", "700px");
+    $(function () {
+        $("#btnSearch").click(function() {
+            $("#imgloading").show();
+            $("#tblUser tbody").html("");
+            $.get("@Url.Action("GetRoleUser")?roleId=@ViewBag.RoleId&departmentId=" + $("#slcDepartment").val() + "&keyword=" + $("#txbKeyword").val()).done(function(r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<tr>" +
+                        "<td class='text-center'><input type='checkbox' id='" + r[i].Id + "'/></td>" +
+                        "<td class='text-center'>" + (i + 1) + "</td>" +
+                        "<td>" + r[i].Name + "</td>" +
+                        "<td>" + r[i].Email + "</td>" +
+                        "<td class='text-center'><i class='fa fa-plus btnAdd' id='" + r[i].Id + "'></i></td>" +
+                        "</tr>").appendTo("#tblUser tbody");
+                }
+                $("#imgloading").hide();
+            });
+        });
+        $(".ckbAll").change(function () {
+            var checked = $(this).is(":checked");
+            $("#tblUser tbody input").each(function () {
+                $(this).prop("checked", checked);
+            });
+        });
+        $(document).on("click", ".btnAdd", function () {
+            $("#imgloading").show();
+            $.post("@Url.Action("AddRoleUser")?roleId=@ViewBag.RoleId&userId=" + $(this).attr("id")).done(function () {
+                window.location.reload();
+            });
+        });
+        $(document).on("click", "#btnAdds", function () {
+            $("#imgloading").show();
+            var ids = "";
+            $("#tblUser tbody input:checked").each(function () {
+                ids += $(this).attr("id") + "-";
+            });
+            $.post("@Url.Action("AddRoleUsers")?roleId=@ViewBag.RoleId&userIds=" + ids).done(function () {
+                window.location.reload();
+            });
+        });
+        $(".fa-trash").click(function () {
+            if (confirm("@Html.Raw(Actions.Confirm)")) {
+                $("#imgloading").show();
+                $.post("@Url.Action("RemoveRoleUser")?userRoleId=" + $(this).attr("id")).done(function () {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+</script>

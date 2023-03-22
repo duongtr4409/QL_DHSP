@@ -1,0 +1,151 @@
+﻿@using Resources
+@using Ums.Core.Entities.Shared
+<div class="row">
+    <div class="col-10">
+        <select id="drdDepartment" name="drdDepartment" class="form-control filter">
+            <option value="0">--Tất cả đơn vị---</option>
+            @foreach (IdName d in ViewBag.Departments)
+            {
+                <option value="@d.Id" @(ViewBag.DepartmentId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdTitle" name="drdTitle" class="form-control filter">
+            <option value="0">--Tất cả chức danh---</option>
+            @foreach (IdName d in ViewBag.Titles)
+            {
+                <option value="@d.Id" @(ViewBag.TitleId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdRetired" class="form-control filter">
+            <option value="0">--Nghỉ hưu---</option>
+            <option value="1" @(ViewBag.Retired == 1 ? "selected='selected'" : "")>@Actions.Retired</option>
+            <option value="2" @(ViewBag.Retired == 2 ? "selected='selected'" : "")>@Actions.IsWorking</option>
+        </select>
+        <select id="drdMoved" class="form-control filter">
+            <option value="0">--Chuyển công tác---</option>
+            <option value="1" @(ViewBag.Moved == 1 ? "selected='selected'" : "")>@Actions.Moved</option>
+            <option value="2" @(ViewBag.Moved == 2 ? "selected='selected'" : "")>@Actions.IsWorking</option>
+        </select>
+        <input id="Keyword" value="@ViewBag.Keyword" class="form-control" style="width: 200px; float: left; margin-right: 5px" placeholder="Từ khóa..." />
+        <button id="btnFitler" class="btn btn-default">Tìm kiếm</button>
+    </div>
+    <div class="col-2 text-right">
+        <a href="@Url.Action("StaffEdit", new {deId = ViewBag.DepartmentId})" class="btn btn-primary" onclick="return showmodal(this)">@Html.Raw(Resources.Actions.Add)</a>
+    </div>
+</div>
+<table class="table table-striped table-bordered table-short table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th class="text-center">Mã</th>
+            <th>Tên</th>
+            <th class="text-center">Giới</th>
+            <th class="text-center">Ngày sinh</th>
+            <th class="text-center">Chức danh</th>
+            <th class="text-center">Học hàm, học vị</th>
+            <th class="text-center">Năm bắt đầu CT</th>
+            <th>Chức vụ</th>
+            <th class="text-center w50"><i class="fa fa-pencil" aria-hidden="true"></i></th>
+            <th class="text-center w50"><i class="fa fa-trash" aria-hidden="true"></i></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    $(function () {
+        function filter() {
+            window.location.href = "@Url.Action("Staff")?departmentId=" + $("#drdDepartment").val() + "&moved=" + $("#drdMoved").val()+ "&retired=" + $("#drdRetired").val()+ "&titleId=" + $("#drdTitle").val() + "&keyword=" + $("#Keyword").val();
+        }
+        $(".filter").change(function () {
+            filter();
+        });
+        $("#btnFitler").click(function () {
+            filter();
+        });
+        $('table.table').DataTable(
+        {
+            processing: true,
+            serverSide: true,
+            filter: false,
+            orderMulti: false,
+            order: [[0, "asc"]],
+            pageLength: 25,
+            bStateSave: true,
+            iDisplayLength: 25,
+            aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+            dom: '<"top"f>rt<"bottom"ilp><"clear">',
+            ajax: { url: '@Url.Action("GetStaff")?departmentId=@ViewBag.DepartmentId&moved=@ViewBag.Moved&retired=@ViewBag.Retired&titleId=@ViewBag.TitleId&keyword=@Url.Encode(ViewBag.Keyword)', type: "GET", contentType: "application/json" },
+            columns: [
+                {
+                    "data": "Id",
+                    "className": "text-center",
+                    "bSortable": false,
+                    "width": "50px"
+                },
+                {
+                    "data": "Code",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Name",
+                    "bSortable": true,
+                    render: function(data, m, n) {
+                        if (n.IsMoved) {
+                            return "<b>"+data + "</b><br/><i>Chuyển CT từ: " + n.RMDate + "</i>";
+                        }
+                        if (n.IsRetired) {
+                            return "<b>" + data + "</b><br/><i>Nghỉ hưu từ: " + n.RMDate + "</i>";
+                        }
+                        return "<b>" + data + "</b>";
+                    }
+                },
+                {
+                    "data": "Gender",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Birthday",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Title",
+                    "className": "text-center",
+                    "bSortable": false
+                },
+                {
+                    "data": "Degree",
+                    "className": "text-center",
+                    "bSortable": false
+                },
+                {
+                    "data": "StartYear",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Positions",
+                    "bSortable": false
+                },
+                {
+                    "data": "Id",
+                    "bSortable": false,
+                    "className": "text-center",
+                    "render": function(data) {
+                        return '<a href="@Url.Action("StaffEdit")?id=' + data + '" onclick="return showmodal(this)"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                    }
+                },
+                {
+                    "data": "Id",
+                    "bSortable": false,
+                    "className": "text-center",
+                    "render": function(data) {
+                        return '<a href="@Url.Action("StaffDelete")?id=' + data + '" onclick="@Resources.Actions.Confirm"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                    }
+                }
+            ]
+        });
+    });
+</script>

@@ -1,0 +1,180 @@
+﻿@model Ums.Models.Security.LoginModel
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row">
+    <div class="login col-md-5">
+        <div class="login-loading">
+            <img src="~/Styles/images/loading.svg" />
+        </div>
+        <label class="block-title">Đăng nhập</label>
+        <a href="#" class="btnForgotPassword">Quên mật khẩu?</a>
+        @using (Html.BeginForm("Login", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @*@Html.HiddenFor(m => m.Capcha)*@
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+            <div class="block-content">
+                <div id="type-options" class="form-group">
+                    <label>Bạn là?</label>
+                    <div class="form-control login-type">
+                        <span class="ckb-login"><input type="radio" name="Type" value="STAFF" checked="checked" class="ckb-first" /> Cán bộ</span>
+                        <span class="ckb-login"><input type="radio" name="Type" value="LDAP" /> Cán bộ (LDAP)</span>
+                        <span class="ckb-login"><input type="radio" name="Type" value="STANDARD_STUDENT" /> Sinh viên đại học</span>
+                        <span class="ckb-login"><input type="radio" name="Type" value="MASTER_STUDENT" /> Học viên cao học</span>
+                        <span class="ckb-login"><input type="radio" name="Type" value="GUEST" /> Khách</span>
+                    </div>
+                </div>
+                <div class="form-group login-panel">
+                    <label id="lblUsername">Mã cán bộ (hoặc email)</label>
+                    <input name="Username" type="text" id="Username" class="form-control" />
+                    @*@Html.TextBoxFor(m => m.Username, new { @class = "form-control" })*@
+                </div>
+                <div class="form-group login-panel">
+                    <label>Mật khẩu</label>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                </div>
+                <div class="form-group password-recover">
+                    <div class="form-group">
+                        <label>Nhập email đã khai báo</label>
+                        <input type="email" id="recoverEmail" class="form-control" />
+                    </div>
+                    <button type="button" id="btnRecover" class="btn btn-warning" style="width: 100%">Lấy mật khẩu</button>
+                </div>
+                <div class="form-group login-panel">
+                    @*<div id="google-capcha" class="g-recaptcha"></div>
+                    <br />*@
+                    <button id="btn-submit" type="submit" value="Đăng nhập" class="btn btn-primary">
+                        <span class="b-login">Đăng nhập</span>
+                        <span class="l-login" style="display:none">
+                            <img src="~/Styles/images/loading.gif" /> Đang đăng nhập...
+                        </span>
+                    </button>
+                    <a href="@Url.Action("Register", "Account")?returnUrl=@Url.Encode(ViewBag.ReturnUrl)" class="btn btn-register">Đăng ký</a>
+                    <div id="social-login">
+                        <hr />
+                        <div class="social-button">
+                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                            <div class="fb-login-button">
+                                <fb:login-button size="large" scope="public_profile,email" onlogin="checkLoginState();">Đăng nhập</fb:login-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@*<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>*@
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="@Ums.App.Provider.SettingProvider.GetValue("GOOGLE_OAUTH_CLIENT_ID")">
+
+<script>
+    function onloadCallback() {
+        var capcha = grecaptcha.render('google-capcha', {
+            'sitekey': '@Ums.App.Provider.SettingProvider.GetValue("GOOGLE_CAPCHA_SITE_KEY")',
+            'callback': function () {
+                $("#Capcha").val(grecaptcha.getResponse(capcha));
+            }
+        });
+    }
+    $("#btn-submit").click(function () {
+        //if ($("#Capcha").val() == "") {
+        //    alert("Vui lòng kiểm tra bảo mật!");
+        //    return false;
+        //}
+        $(".b-login").hide();
+        $(".l-login").show();
+        return true;
+    });
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '@Ums.App.Provider.SettingProvider.GetValue("FACEBOOK_APP_ID")',
+            cookie: true,
+            xfbml: true,
+            version: 'v8.0'
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            $(".login-loading").css("display", "flex");
+            $.post("@Url.Action("FacebookLogin")?token=" + response.authResponse.accessToken).done(function (r) {
+                if (r.success) {
+                    window.location.href = "@Html.Raw(ViewBag.ReturnUrl)";
+                }
+                $(".login-loading").css("display", "none");
+            });
+        });
+    }
+
+    function onSignIn(googleUser) {
+        $(".login-loading").css("display", "flex");
+        var id_token = googleUser.getAuthResponse().id_token;
+        $.post("@Url.Action("GoogleLogin")?token=" + id_token).done(function (r) {
+            if (r.success) {
+                window.location.href = "@Html.Raw(ViewBag.ReturnUrl)";
+            }
+            $(".login-loading").css("display", "none");
+        });
+    }
+
+    $("#btnRecover").click(function () {
+        if ($("#recoverEmail").val().trim() === "") {
+            alert("Vui lòng nhập email đã khai báo.");
+            return false;
+        }
+        $.post("@Url.Action("InitRecoverPassword")?email=" + $("#recoverEmail").val().trim()).done(function (r) {
+            alert("Một email khởi tạo lại mật khẩu đã được gửi tới hòm thư của bạn. Vui lòng kiểm tra thư và làm theo hướng dẫn để lấy lại mật khẩu.");
+            window.location.href = "/";
+        });
+    });
+    $(".btnForgotPassword").click(function () {
+        $(".password-recover").toggleClass("show");
+        $(".login-panel").toggleClass("hide");
+        $("#type-options").toggleClass("hide");
+        if ($(this).html() !== "[Trở lại]") {
+            $(this).html("[Trở lại]");
+        } else {
+            $(this).html("[Lấy lại mật khẩu]");
+        }
+    });
+    $("input[name=Type]").click(function () {
+        switch ($(this).val()) {
+            case "STAFF": {
+                $("#lblUsername").html("Mã cán bộ (hoặc email)");
+                $("#social-login").hide();
+                $(".btn-register").hide();
+            }
+                break;
+            case "LDAP": {
+                $("#lblUsername").html("Tên đăng nhập");
+                $("#social-login").hide();
+                $(".btn-register").hide();
+            }
+                break;
+            case "STANDARD_STUDENT": {
+                $("#lblUsername").html("Mã sinh viên");
+                $("#social-login").hide();
+                $(".btn-register").hide();
+            }
+                break;
+            case "GUEST": {
+                $("#lblUsername").html("Email");
+                $("#social-login").show();
+                $(".btn-register").show();
+            }
+        }
+    });
+    $(".ckb-first").click();
+</script>

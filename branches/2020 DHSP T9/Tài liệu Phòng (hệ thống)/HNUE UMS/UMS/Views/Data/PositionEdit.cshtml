@@ -1,0 +1,53 @@
+﻿@using Resources
+@model Ums.Models.Data.PositionModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("PositionEdit", "Data", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-4">
+                <label>@Actions.Group</label>
+                @Html.DropDownListFor(m => m.CategoryId, Model.Categories, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-8">
+                <label>@Actions.Name</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>@Actions.Ratio</label>
+                @Html.TextBoxFor(m => m.Ratio, new { @class = "form-control" })
+            </div>
+            <div class="form-groupv col-3">
+                <label>@Actions.Allowance</label>
+                @Html.TextBoxFor(m => m.Allowance, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>@Actions.Quota</label>
+                @Html.TextBoxFor(m => m.Quota, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>@Actions.Public</label>
+                <div class="form-control">
+                    @Html.CheckBoxFor(m => m.IsPublic)
+                </div>
+            </div>
+            <div class="form-group col-12">
+                <label>@Actions.Note</label>
+                @Html.TextAreaFor(m => m.Desc, new { @class = "form-control" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    window.parent.setmodalsize("700px", "390px");
+</script>

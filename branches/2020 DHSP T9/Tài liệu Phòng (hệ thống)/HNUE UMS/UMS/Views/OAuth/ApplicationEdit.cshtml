@@ -1,0 +1,34 @@
+﻿@using Resources
+@model Ums.Core.Domain.OAuth.OAuthApplication
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ApplicationEdit", "OAuth", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="form-group col-xs-9">
+            <label>@Actions.Name</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-3">
+            <label>Hoạt động</label>
+            <div class="form-control">
+                @Html.CheckBoxFor(i => i.Enabled) Cho phép
+            </div>
+        </div>
+        <div class="form-group col-xs-12">
+            <label>Token</label>
+            @Html.TextBoxFor(m => m.Token, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+        <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+        <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("600px", "400px");
+</script>

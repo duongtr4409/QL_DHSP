@@ -1,0 +1,95 @@
+﻿@using Ums.Core.Domain.Data
+@using Ums.Core.Domain.Report
+<div class="row">
+    <div class="col-12">
+        <select id="drdYear" class="form-control filter">
+            <option value="0">--Năm học---</option>
+            @foreach (Year d in ViewBag.Years)
+            {
+                <option value="@d.Id" @(ViewBag.YearId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdType" class="form-control filter">
+            <option value="0">--Loại báo cáo---</option>
+            @foreach (ReportType d in ViewBag.Types)
+            {
+                <option value="@d.Id" @(ViewBag.TypeId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+    </div>
+</div>
+<table class="table table-striped table-bordered table-short table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">TT</th>
+            <th>Tên</th>
+            <th class="text-center">Người tạo</th>
+            <th class="text-center">Ngày cập nhật</th>
+            <th class="text-center w50"><i class="fa fa-lock" aria-hidden="true"></i></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    $(function () {
+        $(".filter").change(function () {
+            window.location.href = "@Url.Action("Report")?yearId=" + $("#drdYear").val() + "&typeId=" + $("#drdType").val();
+        });
+        $('table.table').DataTable(
+            {
+                processing: true,
+                serverSide: true,
+                filter: false,
+                orderMulti: false,
+                bAutoWidth: false,
+                pageLength: 25,
+                order: [[0, "desc"]],
+                iDisplayLength: 25,
+                aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+                dom: '<"top"f>rt<"bottom"ilp><"clear">',
+                ajax: {
+                    url: '@Url.Action("GetReports")?yearId=@ViewBag.YearId&typeId=@ViewBag.TypeId',
+                    type: "GET",
+                    contentType: "application/json"
+                },
+                columns: [
+                    {
+                        "data": "Id",
+                        "className": "text-center",
+                        "width": "50px"
+                    },
+                    {
+                        "data": "Name",
+                        "bSortable": true,
+                        render: function(d,m,n) {
+                            return "<b>" + d + "</b><br/><pre style='font-size:13px'>" + n.Desc + "</pre>";
+                        }
+                    },
+                    {
+                        "data": "Creator",
+                        "className": "text-center",
+                        "bSortable": false
+                    },
+                    {
+                        "data": "Updated",
+                        "className": "text-center",
+                        "bSortable": false
+                    },
+                    {
+                        "data": "Id",
+                        "bSortable": false,
+                        "className": "text-center",
+                        "render": function (data, m, n) {
+                            if (n.Locked) {
+                                return "<i class='fa fa-lock lock-toggle' style='color:red;cursor:pointer' id='" + data + "'></i>";
+                            }
+                            return "<i class='fa fa-unlock lock-toggle' style='color:green;cursor:pointer' id='" + data +"'></i>";
+                        }
+                    }
+                ]
+            });
+    });
+    $(document).on("click", ".lock-toggle", function() {
+        $.post("@Url.Action("LockToggle")?id=" + $(this).attr("id")).done(function() { window.location.reload() });
+    });
+</script>

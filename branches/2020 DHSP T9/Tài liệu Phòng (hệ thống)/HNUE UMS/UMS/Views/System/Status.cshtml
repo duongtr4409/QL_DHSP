@@ -1,0 +1,80 @@
+﻿<table class="table table-striped table-bordered table-short table-hover">
+    <thead>
+        <tr>
+            <th>TABLE</th>
+            <th>SCHEMA</th>
+            <th>RECORDS</th>
+            <th>TotalSpaceKB</th>
+            <th>TotalSpaceMB</th>
+            <th>UsedSpaceKB</th>
+            <th>UsedSpaceMB</th>
+            <th>UnusedSpaceKB</th>
+            <th>UnusedSpaceMB</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    $(function () {
+        $('table.table').DataTable(
+            {
+                processing: true,
+                serverSide: true,
+                filter: false,
+                order: [[1, "asc"]],
+                orderMulti: false,
+                pageLength: 1000,
+                iDisplayLength: 1000,
+                aLengthMenu: [[1000], [25, 50, 100]],
+                dom: '<"table-buttons"B><"clear"><"top"f>rt<"bottom"ilp><"clear">',
+                buttons: ['copy', 'excel', 'pdf', 'print'],
+                ajax: { url: '@Url.Action("GetStatus")', type: "GET", contentType: "application/json" },
+                columns: [
+                    {
+                        "data": "TableName",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "SchemaName",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "Rows",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "TotalSpaceKB",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "TotalSpaceMB",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "UsedSpaceKB",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "UsedSpaceMB",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "UnusedSpaceKB",
+                        "className": "text-center",
+                        "bSortable": true
+                    },
+                    {
+                        "data": "UnusedSpaceMB",
+                        "className": "text-center",
+                        "bSortable": true
+                    }
+                ]
+            });
+    });
+</script>

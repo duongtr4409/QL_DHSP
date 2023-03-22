@@ -1,0 +1,59 @@
+﻿@model Ums.Models.File.FileContentModel
+
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("ContentEdit", "File", FormMethod.Post, new { role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ParentId)
+    <div class="form-group">
+        <label id="progress">Tải lên</label>
+        <br />
+        <input type="file" multiple />
+        <br />
+        <div class="files"></div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</button>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("500px", "400px");
+    $('input[type=file]').change(function () {
+        $(this).simpleUpload("@Url.Action("JsUpload","Upload")?path=File/Content/", {
+            allowedExts: ["jpg", "jpeg", "png", "zip", "rar", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "txt", "mp3", "mp4", "flv", "vsd"],
+            maxFileSize: 5000000,
+            start: function () {
+                $('#progress').html("");
+            },
+            progress: function (progress) {
+                $('#progress').html("Tải lên: " + Math.round(progress) + "%");
+            },
+            success: function (data) {
+                if (data.success) {
+                    $(`<div class='file-item'><input type='text' name='name[]' value='${data.data.name}'/><input value='${data.data.file}' type='hidden' name='file[]'/><i class='fa fa-remove'></div></div>`).appendTo(".files");
+                } else {
+                    $('#progress').html(data.message);
+                }
+            }
+        });
+    });
+    $(document).on("click", ".fa-remove", function () {
+        $(this).parent().remove();
+    });
+</script>
+<style>
+    .file-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-top: 5px;
+    }
+
+        .file-item input {
+            flex-basis: 0;
+            flex-grow: 1;
+        }
+</style>

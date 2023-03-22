@@ -1,0 +1,43 @@
+.logoSol {
+    width: 45px;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 440px) {
+    .logoSol {
+        width: 30px;
+    }
+
+    h4 {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 410px) {
+    h4 {
+        font-size: 15px;
+    }
+}
+
+@media only screen and (max-width: 404px) {
+    h4 {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 398px) {
+    h4 {
+        font-size: 12px;
+    }
+
+    .logoSol {
+        margin-right: 5px;
+    }
+}
+
+@media only screen and (max-width: 398px) {
+    .logoSol {
+        display: none !important;
+    }
+}
+

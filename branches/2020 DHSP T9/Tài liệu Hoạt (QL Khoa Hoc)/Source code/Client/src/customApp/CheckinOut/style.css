@@ -1,0 +1,139 @@
+.upload-container {
+    display: grid;
+    grid-gap: 50px;
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
+    justify-content: center;
+}
+
+@media only screen and (max-width: 450px) {
+    .upload-container {
+        grid-template-columns: repeat(auto-fit, 80%);
+    }
+
+    .upload-div {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .upload-div {
+        width: 80%;
+    }
+
+    .upload-container {
+        grid-template-columns: repeat(auto-fit, 380px);
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .upload-container {
+        grid-template-columns: repeat(auto-fit, 400px);
+    }
+}
+
+@media only screen and (min-width: 850px) {
+    .upload-container {
+        grid-template-rows: 185px;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .upload-container {
+        padding: 0 100px;
+    }
+}
+
+.upload-div {
+    text-align: center;
+}
+
+.upload-div button {
+    font-weight: normal !important;
+}
+
+.ant-upload.ant-upload-drag {
+    border: 3px dashed #ccc;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+
+.ant-upload.ant-upload-drag:not(.ant-upload-disabled):hover {
+    border: 3px dashed #ccc;
+    border-bottom: none;
+}
+
+.button-scan {
+    border: 3px dashed #ccc;
+    border-top: none;
+    padding-bottom: 5px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+    background-color: #fafafa;
+}
+
+.div-action {
+    width: 100%;
+    text-align: center;
+}
+
+.div-action button {
+    margin-left: 10px;
+}
+
+.ant-input[disabled] {
+    color: black;
+}
+
+.ant-input {
+    color: black;
+    border: solid 1px #ccc;
+}
+
+.notice-checkout {
+    width: 100%;
+    text-align: center;
+    color: red;
+    font-style: italic;
+}
+
+.div-loading {
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 98%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+}
+
+.div-info {
+    padding-top: 5px;
+    padding-bottom: 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+.spin {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+}
+
+.hover-content:hover {
+    background: #40A9FF !important;
+    color: white !important;
+}
+
+.div-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 25px;
+    background-color: #e8e8e8;
+    padding: 10px 0 20px 0;
+    z-index: 999;
+    border-top: solid 1px #ccc;
+    height: 75px;
+}

@@ -1,0 +1,80 @@
+﻿@using Ums.App.Base
+@model Ums.Models.Account.UserModel
+
+@using (Html.BeginForm("InfoEdit", "User", FormMethod.Post, new { role = "form" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.Avatar)
+    <div class="row">
+        <div class="col-8 m-auto">
+            <br />
+            <br />
+            <h3 class="text-center">THÔNG TIN TÀI KHOẢN</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <td>Ảnh <span id="progress"></span></td>
+                    <td>
+                        <img id="avatar" src="@WorkContext.UserInfo.Avatar" style="max-height:80px" />
+                        <input type="file" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:30%">Họ tên</td>
+                    <td>@Html.TextBoxFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>Loại tài khoản</td>
+                    <td>@WorkContext.UserInfo.UserType</td>
+                </tr>
+                @if (WorkContext.UserInfo.UserType == "STAFF")
+                {
+                    <tr>
+                        <td>Đơn vị</td>
+                        <td>@(WorkContext.UserInfo.Staff?.Department?.Name)</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Ngày sinh</td>
+                    <td>@Html.TextBoxFor(m => m.Birthday, new { @class = "datepicker" })</td>
+                </tr>
+                <tr>
+                    <td>Điện thoại</td>
+                    <td>@Html.TextBoxFor(m => m.Phone)</td>
+                </tr>
+                <tr>
+                    <td>Địa chỉ</td>
+                    <td>@Html.TextBoxFor(m => m.Address)</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>@Html.TextBoxFor(m => m.Email)</td>
+                </tr>
+            </table>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $('input[type=file]').change(function () {
+        $(this).simpleUpload("@Url.Action("JsUpload","Upload")?path=User/Avatar/", {
+            allowedExts: ["jpg", "jpeg", "png"],
+            maxFileSize: 5000000,
+            start: function () {
+                $('#progress').html("");
+            },
+            progress: function (progress) {
+                $('#progress').html("Tải lên: " + Math.round(progress) + "%");
+            },
+            success: function (data) {
+                if (data.success) {
+                    $("#avatar").attr("src", data.data.file);
+                    $("#Avatar").val(data.data.file);
+                } else {
+                    $('#progress').html(data.message);
+                }
+            }
+        });
+    });
+</script>

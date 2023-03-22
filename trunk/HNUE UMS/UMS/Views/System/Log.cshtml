@@ -1,0 +1,20 @@
+﻿<select id="slcLog" class="form-control" style="width: 35%; float: left;margin-right: 10px">
+    <option value="">---Log---</option>
+    @foreach (var f in ViewBag.Files)
+    {
+        <option value="@f">@f</option>
+    }
+</select>
+<div class="clear"></div>
+<br/>
+<div id="Log" style="border: 1px solid #d0d0d0;padding: 10px"></div>
+<script>
+    $(function () {
+        $('#slcLog').change(function () {
+          $.get("@Url.Action("GetLog")?path=" + $(this).val()).done(function (r) {
+                $("#Log").html("");
+                jsonTree.create(JSON.parse(r), document.getElementById("Log"));
+            });
+        });
+    });
+</script>

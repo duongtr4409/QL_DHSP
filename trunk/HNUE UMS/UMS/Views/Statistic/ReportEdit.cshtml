@@ -1,0 +1,156 @@
+﻿@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="form-group col-4">
+            <label>Năm học</label>
+            <select id="YearId" class="form-control">
+                @foreach (var i in ViewBag.Years)
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-4">
+            <label>Học kỳ</label>
+            <select id="SemesterId" class="form-control"></select>
+        </div>
+        <div class="form-group col-4">
+            <label>Hệ đào tạo</label>
+            <select id="GradeId" class="form-control">
+                <option value="0">---Tất cả---</option>
+                @foreach (var i in ViewBag.Grades)
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-4">
+            <label>Loại báo cáo</label>
+            <select id="TypeId" class="form-control" min="1">
+                <option value="0">---Vui lòng chọn---</option>
+                @foreach (var i in ViewBag.Types)
+                {
+                    <option type="@i.Template" value="@i.Id">@i.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-4">
+            <label>Báo cáo tổng hợp</label>
+            <select id="ReportId" class="form-control"></select>
+        </div>
+        <div class="form-group col-4">
+            <label>Báo cáo chuyển khoản</label>
+            <select id="MoneyReportId" class="form-control"></select>
+        </div>
+        <div class="form-group col-4">
+            <label>Đơn vị</label>
+            <select id="DepartmentId" class="form-control">
+                <option value="0">---Tất cả---</option>
+                @foreach (var i in ViewBag.Departments)
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group col-4">
+            <label>Cán bộ</label>
+            <select id="StaffFilter" class="form-control">
+                <option value="1">Giảng viên & GVTH</option>
+                <option value="2">Giảng viên</option>
+                <option value="3">Giáo viên thực hành</option>
+                <option value="4">Nghỉ hưu/Chuyển công tác</option>
+                <option value="9">Mời giảng</option>
+                <option value="0">---Tất cả---</option>
+            </select>
+        </div>
+        <div class="form-group col-4">
+            <label>Hệ số bù giờ Khoa</label>
+            <select id="FacultyComplement" class="form-control">
+                <option value="false">Không áp dụng</option>
+                <option value="true">Áp dụng</option>
+            </select>
+        </div>
+        <div class="form-group col-12">
+            <label>Tên báo cáo</label>
+            <input type="text" id="Name" class="form-control" required="" />
+        </div>
+        <div class="form-group col-12">
+            <label>Ghi chú</label>
+            <textarea id="Desc" class="form-control"></textarea>
+        </div>
+        <div class="form-group col-12 text-center">
+            <button type="button" id="btnCreate" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Tạo báo cáo</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Trở lại</a>
+        </div>
+    </div>
+</div>
+<script>
+    window.parent.setmodalsize("750px", "560px");
+    $(function () {
+        $("select").change(function() {
+            var name = "";
+            if ($("#TypeId").val() !== "0") {
+                name += $("#TypeId option:selected").text();
+            }
+            if ($("#GradeId").val() !== "0") {
+                name += ", " + $("#GradeId option:selected").text();
+            }
+            if ($("#SemesterId").val() !== "0") {
+                name += ", " + $("#SemesterId option:selected").text();
+            }
+            if ($("#YearId").val() !== "0") {
+                name += ", " + $("#YearId option:selected").text();
+            }
+            if ($("#StaffFilter").val() !== "0") {
+                name += ", " + $("#StaffFilter option:selected").text();
+            }
+            if ($("#DepartmentId").val() !== "0") {
+                name += ", " + $("#DepartmentId option:selected").text();
+            }
+            $("#Name").val(name);
+            var desc = "";
+            $("select").each(function() {
+                desc += $(this).prev().html() + ": " + $(this).children("option:selected").text() + "\n";
+            });
+            $("#Desc").val(desc);
+        });
+        $("#btnCreate").click(function () {
+            if ($("#TypeId").val() === "0") {
+                alert("Vui lòng chọn loại báo cáo!");
+                return;
+            }
+            if ($("#Name").val() === "") {
+                alert("Vui lòng nhập tên báo cáo!");
+                return;
+            }
+            $(this).html("Đang tạo báo cáo...");
+            $(this).prop("disabled", true);
+            $.post("@Url.Action("ReportEdit")?yearId=" + $("#YearId").val() + "&semesterId=" + $("#SemesterId").val() + "&gradeId=" + $("#GradeId").val() + "&typeId=" + $("#TypeId").val() + "&reportId=" + $("#ReportId").val() + "&moneyReportId=" + $("#MoneyReportId").val() + "&name=" + encodeURIComponent($("#Name").val()) + "&departmentId=" + $("#DepartmentId").val() + "&staffFilter=" + $("#StaffFilter").val() + "&desc=" + encodeURIComponent($("#Desc").val()) + "&facultyComplement=" + $("#FacultyComplement").val()).done(function() {
+                    window.parent.location.reload();
+                });
+        });
+        $("#YearId").change(function() {
+            $("#SemesterId").html("<option value='0'>---Tất cả---</option>");
+            $.get("@Url.Action("GetSemester")?yearId=" + $(this).val()).done(function(r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option value='" + r[i].Id + "'>" + r[i].Name + "</option>").appendTo("#SemesterId");
+                }
+            });
+            $("#ReportId").html("<option value='0'>---Không chọn---</option>");
+            $.get("@Url.Action("GetReport")?yearId=" + $(this).val()).done(function(r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option value='" + r[i].Id + "'>" + r[i].Name + "</option>").appendTo("#ReportId");
+                }
+            });
+            $("#MoneyReportId").html("<option value='0'>---Không chọn---</option>");
+            $.get("@Url.Action("GetMoneyReport")?yearId=" + $(this).val()).done(function(r) {
+                for (var i = 0; i < r.length; i++) {
+                    $("<option value='" + r[i].Id + "'>" + r[i].Name + "</option>").appendTo("#MoneyReportId");
+                }
+            });
+        });
+        $("#YearId").change();
+    });
+</script>

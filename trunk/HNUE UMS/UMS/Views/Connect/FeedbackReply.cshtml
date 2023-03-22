@@ -1,0 +1,35 @@
+﻿@using Resources
+@model Ums.Models.Connect.FeedbackModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("FeedbackReply", "Connect", FormMethod.Post, new {  @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <h3>@Model.Department.Name > @Model.Staff.Name</h3>
+        <b>@Model.Title</b>
+        <p>@Html.Raw(Model.Content)</p>
+        <hr />
+        <label>Nội dung phản hồi</label>
+        @Html.TextAreaFor(m => m.Response)
+        <br/>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>
+<script>
+    window.parent.setmodalsize("70%", "800px");
+    $(function () {
+        CKEDITOR.replace('Response', {
+            filebrowserUploadUrl: '@Url.Action("EditorUpload","Upload")',
+            height: 350,
+            width: "100%",
+            tabSpaces: 4
+        });
+    });
+</script>

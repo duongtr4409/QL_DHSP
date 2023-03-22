@@ -1,0 +1,9 @@
+http://qldt.neu.edu.vn/LoginSSO/Login.aspx
+u: NCS36.103TT
+p: 05081981
+
+
+
+http://qldt.neu.edu.vn/NCS/Modules/TrangChu/Templates/Home.aspx
+http://ncs.hnue.edu.vn/Th%C6%B0-vi%E1%BB%87n
+http://sdh.hnue.edu.vn/dang-ky-tuyen-sinh-tien-si

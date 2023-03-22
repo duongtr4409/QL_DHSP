@@ -1,0 +1,173 @@
+﻿@model IEnumerable<TEMIS.Model.HocPhi>
+@using TEMIS.CMS.Areas.Admin.Models;
+@using TEMIS.CMS.Common;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@{
+    /**/
+
+    ViewBag.Title = "ApproveList";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+}
+
+<style>
+    #datatable td {
+        text-align: center;
+    }
+
+    .imgTitle {
+        width: 150px;
+        /*min-height: 150px;*/
+        max-height: auto;
+    }
+</style>
+<form method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Phê duyệt học phí NCS</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    @using (Html.BeginForm("Index", "QuanLyDiem", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    Khoa  <select class="form-control" name="ddlKhoa" id="ddlKhoa">
+                                        <option value="0">---Chọn Khoa---</option>
+                                        @foreach (var item in listKhoa)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                @*<div class="col-md-2">
+                                        Ngành học <select class="form-control" id="ddnganh"></select>
+                                    </div>*@
+
+                                <div class="col-sm-2">
+                                    Khoá Học
+                                    <select class="form-control" id="ddlKhoaHoc" name="ddlKhoaHoc" class="khoaHocddl">
+                                        <option value="0">---Chọn Khoá Học---</option>
+                                        @foreach (var item in listKhoaHoc)
+                                        {
+                                            <option value="@item.Id">@item.MaKhoa</option>
+                                        }
+                                    </select>
+                                </div>
+                                @*<div class="col-md-2">
+                                        Họ tên
+                                        <input type="text" id="hoten" name="hoten" required="required" class="form-control">
+                                    </div>*@
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    <div id="result">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="modelImg" class="modal fade modelImg">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:unset;min-height: 50px;background-color:unset">
+                <button type="button" class="close" data-dismiss="modal" style="font-size:50px;margin:0px 5px">&times;</button>
+            </div>
+            <div class="modal-content">
+                <iframe id="Url_Anh" style="width: 100%;height: 600px;text-align:center"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlKhoa').on('change', function (e) {
+            //var khoaid = this.value;
+            //loadnganh(khoaid, 'ddnganh')
+            LoadData();
+        });
+        $('#ddlKhoaHoc').on('change', function (e) {
+            // var khoaid = this.value;
+            // loadnganh(khoaid, 'ddnganh')
+            LoadData();
+        });
+        LoadData();
+    });
+
+    function xemImg(url) {
+        document.getElementById("Url_Anh").src = "/Images/BienLai/" + url;
+        $('#modelImg').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('iframe').load(function () {
+        $('iframe').contents().find("body")
+            .append($("<style type='text/css'>  body{text-align:center}  </style>"));
+    });
+    function updateStatu(id,status) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("UpdateStatus", "QuanLyHocPhi")',
+            data: { id: id, status: status },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Thay đổi trạng thái thành công');
+                    LoadData();
+
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+    function loadnganh(khoaid, divresult) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+     function LoadData() {
+        let khoahocid = $('#ddlKhoaHoc').val();
+        let khoaid = $("#ddlKhoa").val();
+            console.log(khoaid,khoahocid,"khoaid,khoahocid");
+
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadDataHocPhi", "QuanLyHocPhi")',
+                data: { khoaid: khoaid, khoahocid: khoahocid },
+                 contentType: 'application/html ; charset:utf-8',
+                 type: 'GET',
+                 dataType: 'html',
+                success: function (data) {
+                    $('#result').empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+</script>

@@ -1,0 +1,273 @@
+﻿@model IEnumerable<TEMIS.Model.PhongThi>
+@{
+    ViewBag.Title = "Quản lý phòng thi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách phòng thi</h2>
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success">Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <hr />
+                <div class="x_content">
+                    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                            <thead>
+                                <tr role="row">
+                                    <th style="text-align:center">Mã chức danh</th>
+                                    <th style="text-align:center">Tên chức danh</th>
+                                    <th style="width:15%!important;text-align:center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.</td>
+                                            <td>@item.MaPhongThi</td>
+                                            <td style="width:15%; text-align:center">
+                                                <button type="button" onclick="openedit(@item.Id, '@item.MaNghanh', '@item.ChuyenNghanh')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                                <button type="button" onclick="confirmremove(@item.Id)" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Mã chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="machucdanh" name="machucdanh" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenchucdanh">
+                                Tên chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenchucdanh" name="tenchucdanh" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Mã chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="IdEdit" id="IdEdit" value="" />
+                                <input type="text" id="machucdanh_edit" name="machucdanh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenchucdanh">
+                                Tên chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenchucdanh_edit" name="tenchucdanh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable( {
+          "pageLength": 25
+        } );
+        $('.dataTables_filter input').attr('maxlength', 255)
+     } );
+    function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    function openedit(id, machucdanh, tenchucdanh) {
+        $('#IdEdit').val(id);
+        $('#machucdanh_edit').val(machucdanh);
+        $('#tenchucdanh_edit').val(tenchucdanh);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnThem').click(function () {
+        var machucdanh = $('#machucdanh').val();
+        var tenchucdanh = $('#tenchucdanh').val();
+
+        if (machucdanh == "") {
+            toastr.error('mã chức danh không được để trống');
+            return false;
+        }
+        if (tenchucdanh == "") {
+            toastr.error('tên chức danh không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "ChuongTrinhDaoTao")',
+            data: { machucdanh: machucdanh, tenchucdanh: tenchucdanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var id = $('#IdEdit').val();
+        var machucdanh = $('#machucdanh_edit').val();
+        var tenchucdanh = $('#tenchucdanh_edit').val();
+        if (machucdanh == "") {
+            toastr.error('mã chức danh không được để trống');
+            return false;
+        }
+        if (tenchucdanh == "") {
+            toastr.error('tên chức danh không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "ChucDanh")',
+            data: { id: id, machucdanh: machucdanh, tenchucdanh: tenchucdanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "ChucDanh")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+</script>

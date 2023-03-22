@@ -1,0 +1,219 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models;
+@using TEMIS.Model
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Thêm mới lớp";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    List<ChucDanh> listChucDanh = (List<ChucDanh>)ViewBag.ListChucDanh;
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Tạo Lớp</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form class="form-horizontal form-label-left" novalidate>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="item form-group">
+                            <div class="col-md-6">
+                                Khoa  <select class="form-control" id="khoa" name="khoa">
+                                    <option value="0">------- Chọn Khoa -------</option>
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                Khóa  <select class="form-control">
+                                    <option value="CNTT">TS1</option>
+                                    <option value="CNTT">TS2</option>
+                                    <option value="CNTT">TS3</option>
+                                    <option value="CNTT">TS4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <div class="col-md-12">
+                                Học phần  <select class="form-control">
+                                    <option value="CNTT">HP1</option>
+                                    <option value="CNTT">HP2</option>
+                                    <option value="CNTT">HP3</option>
+                                    <option value="CNTT">HP4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <div class="col-md-12">
+                                Chuyên đề <select class="form-control">
+                                    <option value="CNTT">Tổng quan về nghiên cứu khoa học và viết luận án tiến sĩ</option>
+                                    <option value="CNTT">Nghiên cứu định tính - Nguyên tắc, kỹ thuật và những công cụ cơ bản</option>
+                                    <option value="CNTT">Mô hình định lượng phục vụ cho việc phân tích và đánh giá chính sách</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="item form-group" style="margin-bottom:27px!important">
+                            <div class="col-md-12">
+                                <button id="send" type="submit" class="btn btn-success">Tìm kiếm</button>
+                            </div>
+                        </div>
+                        <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <table id="datatable-buttonss" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="text-align:center">STT</th>
+                                        <th style="text-align:center">Mã HV</th>
+                                        <th style="text-align:center">Họ và tên</th>
+                                        <th style="text-align:center"><input type="checkbox" /></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td>1</td>
+                                        <td>K33 NCS 031</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>K33 NCS 032</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>K33 NCS 033</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>K33 NCS 034</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>K33 NCS 035</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>K33 NCS 036</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>K33 NCS 037</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td><input type="checkbox" /></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="item form-group">
+                            <div class="col-md-12">
+                                Tên lớp
+                                <input class="form-control" />
+                            </div>
+                            <div class="col-md-12">
+                                Sĩ số
+                                <input class="form-control" type="number" />
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <div class="col-md-12">
+                                Tên giảng viên
+                                <input class="form-control" />
+                            </div>
+
+                        </div>
+                        <div class="item form-group">
+                            <div class="col-md-12">
+                                Số giờ giảng
+                                <input class="form-control" type="number" />
+                            </div>
+
+                        </div>
+                        <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <table id="datatable-buttonss" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="text-align:center">STT</th>
+                                        <th style="text-align:center">Mã HV</th>
+                                        <th style="text-align:center">Họ và tên</th>
+                                        <th style="text-align:center">Ngày sinh</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td>1</td>
+                                        <td>K33 NCS 031</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td>12/05/1989</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>K33 NCS 032</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td>12/05/1989</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>K33 NCS 033</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td>12/05/1989</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>K33 NCS 034</td>
+                                        <td>Nguyễn Anh Vinh</td>
+                                        <td>12/05/1989</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+
+                            <button id="send" type="submit" class="btn btn-success">Xác nhận tạo lớp học</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ngaysinh').datetimepicker({
+        format: 'DD.MM.YYYY'
+    });
+    $(document).ready(function () {
+        $('#send').click(function () {
+            if ($('#matkhau').val() != $('#confirmmatkhau').val()) {
+                toastr.error('Mật khẩu nhập lại phải giống mật khẩu!');
+                return false;
+            }
+        });
+    });
+</script>

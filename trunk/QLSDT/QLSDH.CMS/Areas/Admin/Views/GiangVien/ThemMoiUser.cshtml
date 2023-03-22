@@ -1,0 +1,180 @@
+﻿@using TEMIS.Model
+@using CoreAPI.Entity
+@{
+    ViewBag.Title = "Thêm mới giảng viên ngoài trường";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<ChucDanhAPI> listChucDanh = (List<ChucDanhAPI>)ViewBag.ListChucDanh;
+    List<HocHamHocViAPI> listHocHamHocVi = (List<HocHamHocViAPI>)ViewBag.ListHocHamHocVi;
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thêm mới giảng viên ngoài trường</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                @using (Html.BeginForm("ThemMoiUser", "GiangVien", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <form class="form-horizontal form-label-left" novalidate>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hovaten">
+                                Mã giáo viên
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="Code" name="Code" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hovaten">
+                                Họ và tên <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="HoTen" name="HoTen" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaysinh">
+                                Ngày sinh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" class="form-control has-feedback-left" id="single_cal1" placeholder="ngày sinh" aria-describedby="inputSuccess2Status" name="NgaySinh">
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Giới Tính <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="GioiTinh" name="GioiTinh" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                                Nơi sinh
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="NoiSinh" name="NoiSinh" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                                Hộ khẩu 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="HoKhau" name="HoKhau" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                                Địa chỉ  
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="DiaChi" name="DiaChi"class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dienthoai">
+                                Điện thoại 
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="SoDienThoai" name="SoDienThoai"  class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="email" id="Email" name="Email" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Khoa <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="Khoa" name="Khoa" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @if (listKhoa != null)
+                                    {
+                                        foreach (var item in listKhoa)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="ChucDanh" name="ChucDanh" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @if (listChucDanh != null)
+                                    {
+                                        foreach (var item in listChucDanh)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Hàm học, hàm vị <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="HocHamHocVi" name="HocHamHocVi" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @if (listHocHamHocVi != null)
+                                    {
+                                        foreach (var item in listHocHamHocVi)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                @Html.ActionLink("Quay lại", "GiangVienNgoaiTruong", null, new { @class = "btn btn-primary" })
+
+                                <button id="send" type="submit" class="btn btn-success">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ngaysinh').datepicker({
+        format: 'DD.MM.YYYY'
+    });
+    $(document).ready(function () {
+        $('#send').click(function () {
+            if ($('#matkhau').val() != $('#confirmmatkhau').val()) {
+                toastr.error('Mật khẩu nhập lại phải giống mật khẩu!');
+                return false;
+            }
+        });
+    });
+</script>

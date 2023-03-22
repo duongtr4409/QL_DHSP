@@ -1,0 +1,131 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models
+@model NCSViewModel
+@{
+    ViewBag.Title = "Chi tiết NCS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .form-group {
+        margin-bottom: 10px;
+        height: 35px;
+    }
+    .control-label{
+       line-height:35px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thông tin NCS</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="mahocvien">
+                        Mã học viên
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" id="mahocvien" name="mahocvien" value="@Model.Ma" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="HoTen">
+                        Họ tên
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" id="HoTen" name="HoTen" value="@Model.HoTen" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="ngaysinh">
+                        Ngày sinh
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" id="ngaysinh" name="ngaysinh" readonly value="@DateTime.Parse(Model.NgaySinh.ToString()).ToString("dd/MM/yyyy")" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="GioiTinh">
+                        Giới tính
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input id="GioiTinh" value="@Model.GioiTinh" readonly class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="GioiTinh" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="NoiSinh">
+                        Nơi sinh
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" id="NoiSinh" value="@Model.NoiSinh" readonly name="NoiSinh" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="HoKhau">
+                        Hộ khẩu
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.HoKhau" id="HoKhau" readonly name="HoKhau" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="DiaChi">
+                        Địa chỉ
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="email" value="@Model.DiaChi" id="DiaChi" name="DiaChi" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="Email">
+                        Email
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.Email" id="Email" readonly name="Email" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="hovaten">
+                        Điện thoại
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.DienThoai" id="DienThoai" readonly name="DienThoai" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="ChucDanh">
+                        Chức danh
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.ChucDanh" id="ChucDanh" readonly name="ChucDanh" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="Khoa">
+                        Khoa
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.Khoa" id="Khoa" name="Khoa" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="DanToc">
+                        Dân tộc
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.DanToc" id="DanToc" name="DanToc" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12 text-right" for="QuocTich">
+                        Quốc tịch
+                    </label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                        <input type="text" value="@Model.QuocTich" id="QuocTich" name="QuocTich" readonly class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

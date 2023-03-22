@@ -1,0 +1,228 @@
+﻿
+@model List<TEMIS.CMS.Areas.Admin.Controllers.GiangVien_ChucVuView>
+<style>
+    #datatable-2 > tbody > tr > td {
+        padding: 4px !important;
+    }
+</style>
+<table id="datatable-3" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">
+                <label class="pos-rel">
+
+                </label>
+            </th>
+            <th style="text-align:center; width:30%">Học hàm học vị</th>
+            <th style="text-align:center; width:30%">Tên GV</th>
+            <th style="text-align:center; width:30%">Đơn vị</th>
+            <th style="text-align:center">Vai trò</th>
+            <th style="display:none">id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="a-center" style="text-align:center">
+                        <label class="pos-rel">
+                            @if (item.vaitro != null)
+                            {
+                                <input id="item_@item.idgv" type="checkbox" class="clbitem" checked>
+                            }
+                            else
+                            {
+                                <input id="item_@item.idgv" type="checkbox" class="clbitem">
+                            }
+                            <span class="lbl"></span>
+                            <input type="hidden" id="hdname_@item.idgv" class="form-control" name="hdname" value="@item.name" />
+                            <input type="hidden" id="hdchucvu_@item.idgv" class="form-control" name="hdchucvu" value="@item.chucvu" />
+                            <input type="hidden" id="idgv_@item.idgv" class="form-control" name="hdidgv" value="@item.idgv" />
+                        </label>
+                    </td>
+                    <td>@item.hochamhocvi</td>
+                    <td>@item.name</td>
+                    <td>
+                        @*<select class="form-control col-md-5 col-xs-12" id="chucvu_select_@item.idgv">
+                            @if (item.chucvu != null)
+                            {
+                                foreach (var o in item.chucvu)
+                                {
+                                    <option>@o</option>
+                                }
+                            }
+
+                        </select>*@
+                        <a>@item.donvicongtac</a>
+                    </td>
+                    <td style="text-align:center">
+                        <select class="form-control col-md-5 col-xs-12 select1" id="vaitro_select_1_@item.idgv">
+                            @if (item.vaitro != null)
+                            {
+                                if (item.vaitro.Equals("Chủ tịch Hội đồng"))
+                                {
+                                    <option selected>Chủ tịch Hội đồng</option>
+                                    <option> Phó chủ tịch HĐ </option>
+                                    <option> Ủy viên thường trực </option>
+                                    <option> Ủy viên </option>
+                                }
+                                else if (item.vaitro.Equals("Phó chủ tịch HĐ"))
+                                {
+                                    <option>Chủ tịch Hội đồng</option>
+                                    <option selected> Phó chủ tịch HĐ </option>
+                                    <option> Ủy viên thường trực </option>
+                                    <option> Ủy viên </option>
+                                }
+                                else if (item.vaitro.Equals("Ủy viên thường trực"))
+                                {
+                                    <option>Chủ tịch Hội đồng</option>
+                                    <option> Phó chủ tịch HĐ </option>
+                                    <option selected> Ủy viên thường trực </option>
+                                    <option> Ủy viên </option>
+                                }
+                                else if (item.vaitro.Equals("Ủy viên"))
+                                {
+                                    <option>Chủ tịch Hội đồng</option>
+                                    <option> Phó chủ tịch HĐ </option>
+                                    <option> Ủy viên thường trực </option>
+                                    <option selected> Ủy viên </option>
+                                }
+                                else
+                                {
+                                    <option>Chủ tịch Hội đồng</option>
+                                    <option> Phó chủ tịch HĐ </option>
+                                    <option> Ủy viên thường trực </option>
+                                    <option> Ủy viên </option>
+                                }
+                            }
+                            else
+                            {
+                                <option>Chủ tịch Hội đồng</option>
+                                <option> Phó chủ tịch HĐ </option>
+                                <option> Ủy viên thường trực </option>
+                                <option> Ủy viên </option>
+                            }
+
+                        </select>
+
+                        <select class="form-control col-md-5 col-xs-12 select2003" id="vaitro_select_2003_@item.idgv">
+                            @if (item.vaitro != null)
+                            {
+                                if (item.vaitro.Equals("UVTT, Trưởng ban"))
+                                {
+                                    <option selected>UVTT, Trưởng ban</option>
+                                    <option>Ủy viên</option>
+                                }
+                                else if (item.vaitro.Equals("Ủy viên"))
+                                {
+                                    <option>UVTT, Trưởng ban</option>
+                                    <option selected> Ủy viên </option>
+                                }
+                                else
+                                {
+                                    <option>UVTT, Trưởng ban</option>
+                                    <option>Ủy viên</option>
+                                }
+                            }
+                            else
+                            {
+                                <option>UVTT, Trưởng ban</option>
+                                <option>Ủy viên</option>
+                            }
+                        </select>
+                    </td>
+                    <td style="display:none">@item.idgv</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<link href="~/Content/toastr.css" rel="stylesheet" />
+<script src="~/Scripts/toastr.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#datatable-3').dataTable({
+            "pageLength": 10
+        });
+        var nameBM = $("#fileselect").val();
+        if (nameBM == 1) {
+            $('.select2003').hide();
+            $('.select1').show();
+        } else {
+            $('.select1').hide();
+            $('.select2003').show();
+        }
+    });
+    $(document).ready(function () {
+        var filerdata = [];
+        var nameBM = $("#fileselect").val();
+        $('#datatable-3').on("change", ".clbitem", function (event) {
+            if ($(this).is(":checked")) {
+                $(this).parent().parent().parent().addClass('selected');
+                var table = $('#datatable-3').DataTable();
+                var listName = '';
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    var idgv = item[5];
+                    var hocham = item[1];
+                    var coquan = 'Trường ĐHSP Hà Nội';
+                    //var cvu = $('#chucvu_select_' + idgv).val();
+                    var cvu = $('#chucvu_select_' + idgv).val();
+                    var vtro = $('#vaitro_select_' + idbm + '_' + idgv).val();
+                    addCanBo(0, idgv, item[2], cvu, vtro, hocham, coquan);
+                    item[0].checked = false;
+                    return item[5];
+                });
+            }
+            else {
+                $(this).parent().parent().parent().addClass('selected2');
+                var table = $('#datatable-3').DataTable();
+
+                var ids = $.map(table.rows('.selected2').data(), function (item) {
+                    var idxoa = item[5];
+                    var cvu = $('#chucvu_select_' + idxoa).val();
+                    //var cvu = '';
+                    var vtro = $('#vaitro_select_' + idbm + '_' + idxoa).val();
+                    var hocham = item[1];
+                    var coquan = 'Trường ĐHSP Hà Nội';
+                    addCanBo(1, idxoa, item[2], cvu, vtro, hocham, coquan)
+
+                    return item[5];
+                });
+            }
+        });
+
+    });
+    function addCanBo(type, idcb, tencb, chucvu, vaitro, hocham, coquan) {
+        var nameBM = $("#fileselect").val();
+         $.ajax({
+                type: "GET",
+             url: '@Url.Action("AddCanBoFormBieuMau", "ThiSinhTuyenSinh")',
+             data: { type: type, idcb: idcb, tencb: tencb, chucvu: chucvu, vaitro: vaitro, hocham: hocham, coquan: coquan, idbm: nameBM },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 console.log(data)
+                 if (data.mess.match("error")) {
+                     toastr.error(data.mess.slice(5));
+                     debugger
+                     $('#item_' + idcb).prop('checked', false);
+                 }
+                 else {
+                     $('#sl_chutich').val(data.chutichhd);
+                     $('#sl_phochutich').val(data.phochutichhd);
+                     $('#sl_uvthuongtruc').val(data.uvthuongtruc);
+                     $('#sl_uv').val(data.uyvien);
+                     toastr.success(data.mess);
+                 }
+                },
+             error: function (req, status, error) {
+                 toastr.error("Lỗi chọn cán bộ!")
+                 console.log(error);
+             }
+         });
+        //var elements = document.getElementsByClassName('.clbitem .choose');
+        //elements.removeClass("choose");
+    }
+</script>

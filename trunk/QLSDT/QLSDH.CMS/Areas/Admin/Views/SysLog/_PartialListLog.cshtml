@@ -1,0 +1,43 @@
+﻿@model List<SysLog>
+@using TEMIS.CMS.Common;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+<div class="x_content">
+    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+            <thead>
+                <tr role="row">
+                    <th style="text-align:center">Controller</th>
+                    <th style="text-align:center">Action</th>
+                    <th style="text-align:center">Create By</th>
+                    <th style="text-align:center;width:20%">Create At</th>
+                    <th style="text-align:center;">IP Address</th>
+                    <th style="text-align:center">Area Accessed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    <td>@item.Controller</td>
+                    <td>@item.Action</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.IPAddress</td>
+                    <td><span style="text-wrap:normal">@item.AreaAccessed</span></td>
+                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#datatable').dataTable({
+        "pageLength": 25
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+</script>

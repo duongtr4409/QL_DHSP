@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TEMIS.CMS.Areas.Admin.Models.VanBanViewModel>
+<div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+        <thead>
+            <tr role="row">
+                <th style="text-align:center">STT</th>
+                <th style="text-align:center">Tên</th>
+                <th style="text-align:center">Đường dẫn</th>
+                <th style="text-align:center">Đầu mục</th>
+                <th style="text-align:center">Chuyên mục</th>
+                <th style="width:15%!important;text-align:center">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <span>@i</span>
+                        </td>
+                        <td><a href="#">@item.TieuDe</a></td>
+                        <td class="imgTitle">
+                            @item.URL
+                        </td>
+                        <td>
+                            @item.DauMuc
+                        </td>
+                        <td style="text-align:center">
+                            @item.TenChuyenMuc
+                        </td>
+                        <td style="width:15%; text-align:center">
+                            <button type="button" onclick="openedit('@item.Id',  '@item.TieuDe','@item.URL', '@item.DauMuc','@item.ChuyenMuc')" class="btn btn-primary"><i class="fa fa-edit" title="sửa"></i></button>
+                            <button type="button" onclick="confirmremove(@item.Id)" class="btn btn-danger"><i class="fa fa-trash" title="xóa"></i></button>
+                        </td>
+                    </tr>
+                    i = i + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $('#datatable').dataTable({
+        "pageLength": 25
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+</script>

@@ -1,0 +1,140 @@
+﻿@using TEMIS.Model
+@using TEMIS.CMS.Common
+@{
+    ViewBag.Title = "Đại Học Sư Phạm Hà Nội";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+    List<TinTuc> listTin = (List<TinTuc>)ViewBag.listTin;
+    List<TinTuc> listThongBao = (List<TinTuc>)ViewBag.listThongBao;
+}
+<style type="text/css">
+    a:hover {
+        cursor: pointer;
+    }
+
+    .list li {
+        border-bottom: 2px dotted #aaa;
+        list-style: none;
+        overflow: hidden;
+        padding-bottom: 5px;
+        padding-top: 15px;
+    }
+
+    .widget {
+        padding-left: 0px;
+    }
+
+    .x_title {
+        padding: 20px 0px 20px 0px;
+    }
+
+        .x_title h2 {
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+
+    .newsthumbimg {
+        border: 1px solid #D0D0D0;
+        display: block;
+        padding: 3px;
+        width: 100%;
+        box-shadow: 0 0 5px #999;
+    }
+
+    .img-new-col {
+        padding-right: 0px;
+    }
+
+    .title {
+        margin: 0px;
+        font-size: 16px;
+    }
+
+    .byline {
+        font-size: 12px;
+    }
+
+    .pull-right {
+        padding-top: 15px;
+    }
+
+    .user-footer > .pull-right {
+        padding-top: 0px !important;
+    }
+
+    .boder-box {
+        border: 1px solid #D0D0D0;
+        box-shadow: 0 0 5px #999;
+        padding: 8px;
+    }
+</style>
+<section class="content-header container" style="margin-bottom:30px">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Đăng ký thành công</li>
+    </ol>
+</section>
+<div class="container"><hr style="border-color: #ddd !important;" /></div>
+<div style="clear:both"></div>
+
+<div class="x_panel container">
+    <div class="x_content" style="padding-bottom:20px">
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                <div class="x_title">
+                    <h2><i class="fa fa-bullhorn"></i> Đăng ký thành công </h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div style="font-size:16px">
+                    <p>Bạn đã đăng ký dự tuyển thành công!</p>
+                    <p>Kiểm tra tài khoản đăng nhập hệ thống thông qua email và vui lòng nộp lệ phí đăng ký dự tuyển</p>
+                    <p style="font-weight:bold">Thông tin chuyển tiền lệ phí</p>
+                    <ul>
+                        <li>Tên tài khoản: Trường Đại học Sư phạm Hà Nội</li>
+                        <li>Số Tài khoản: 1507201068820</li>
+                        <li>Tên Ngân Hàng: Agribank Chi nhánh Cầu Giấy</li>
+                        <li>Nội dung: Họ và tên, lệ phí xét tuyển K41NCS, số điện thoại (K41 tướng ứng với khoá 41 đang được trường tuyển sinh)</li>
+                    </ul>
+                    <p style="font-weight:bold">Ví dụ: Nguyễn Văn A, lệ phí xét tuyển K41NCS, 0912115115</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12  boder-box">
+                <div class="x_title">
+                    <h2><i class="fa fa-newspaper-o"></i> Tin tức mới </h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="dashboard-widget-content">
+                    <ul class="list widget">
+                        @foreach (var item in listTin)
+                        {
+                            <li>
+                                <div class="block">
+                                    <div class="block_content">
+                                        <div class="row">
+                                            <div class="col-md-4 img-new-col">
+                                                <div class="img-new">
+                                                    <a href="@Url.Action("TinTuc", "Home", new { id = SlugHelper.GenerateSlug(item.Id, item.TieuDe) })"><img class="newsthumbimg" src="~/Images/TinTuc/@item.AnhDaiDien" alt="" /></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h4 class="title">
+                                                    <a href="@Url.Action("TinTuc", "Home", new { id = SlugHelper.GenerateSlug(item.Id, item.TieuDe) })">@item.TieuDe</a>
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        <div class="byline">
+                                            <span class=" pull-right">
+                                                <i class="fa fa-clock-o"></i> <span> @DateTime.Parse(item.CreatedAt.ToString()).ToString("dd-MM-yyyy")</span>@Html.Raw("&nbsp;&nbsp;&nbsp;")<i class="fa fa-eye"></i> @*@item.CountView lượt xem*@
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

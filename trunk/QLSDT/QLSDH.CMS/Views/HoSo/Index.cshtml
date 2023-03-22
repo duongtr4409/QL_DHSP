@@ -1,0 +1,550 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models
+@model NCSViewModel
+@{
+    ViewBag.Title = "Hồ sơ NCS";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+}
+<section class="content-header container">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Hồ sơ NCS</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="container">
+        <div style="text-align:left">
+            <!-- Thông tin cá nhân -->
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thông tin cá nhân</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="display: block;">
+                    <div style="width:100%; float:left">
+                        <div style="width:450px; float:left">
+                            <label style="width:70px; float:left">Họ và tên :</label>
+                            <div class="form-group" style="width:365px; float:left">
+                                <label id="txtHoTen">@Model.HoTen</label>
+                            </div>
+                        </div>
+                        <div style="width:250px; float:left">
+                            <label style="width:65px; float:left">Giới tính :</label>
+                            <div class="form-group" style="width:172px; float:left">
+                                <label id="txtGioiTinh">@Model.GioiTinh</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%; float:left">
+                        <div style="width:450px; float:left; float:left">
+                            <label style="width:74px; float:left">Ngày sinh :</label>
+                            <div class="form-group" style="width:357px; float:left">
+                                <label id="txtNgaySinh">@DateTime.Parse(Model.NgaySinh.ToString()).ToString("dd-MM-yyyy")</label>
+                            </div>
+                        </div>
+
+                        <div style="width:300px; float:left">
+                            <label style="width:97px; float:left">Nơi sinh (tỉnh) :</label>
+                            <div class="form-group" style="width:180px; float:left">
+                                <label id="txtNoiSinh">@Model.NoiSinh</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%; float:left">
+                        <div style="width:450px; float:left; float:left">
+                            <label style="width:63px; float:left">Dân tộc :</label>
+                            <div class="form-group" style="width:375px; float:left">
+                                <label id="txtDanToc">@Model.DanToc</label>
+                            </div>
+                        </div>
+
+                        <div style="width:250px; float:left">
+                            <label style="width:75px; float:left">Quốc tịch :</label>
+                            <div class="form-group" style="width:169px; float:left">
+                                <label id="txtQuocTich">Việt Nam</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%; float:left">
+                        <label style="width:90px; float:left">Nghề nghiệp :</label>
+                        <div class="form-group" style="width:647px; float:left">
+                            <label id="txtNgheNghiepChucVu">@Model.NgheNghiep</label>
+                        </div>
+                    </div>
+                    <div style="width:100%; float:left">
+                        <label style="width:122px; float:left">Cơ quan công tác :</label>
+                        <div class="form-group" style="width:615px; float:left">
+                            <label id="txtCoQuanCongTac">@Model.CoQuanCongTacHienNay</label>
+                        </div>
+                    </div>
+                    <div style="width:100%; float:left">
+                        <label style="width:100px; float:left">Địa chỉ liên hệ :</label>
+                        <div class="form-group" style="width:636px; float:left">
+                            <label id="txtDiaChi">@Model.DiaChi</label>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;float:left">
+                        <div style="width:248px; float:left">
+                            <label style="width:98px; float:left">Điện thoại DĐ :</label>
+                            <div class="form-group" style="width:137px; float:left">
+                                <label id="txtDienThoaiDD">@Model.DienThoai</label>
+                            </div>
+                        </div>
+                        <div style="width:202px; float:left">
+                            <label style="width:60px; float:left">Cơ quan:</label>
+                            <div class="form-group" style="width:137px; float:left">
+                                <label id="txtDienThoaiCoquan">@Model.DienThoai</label>
+                            </div>
+                        </div>
+                        <div style="width:252px; float:left">
+                            <label style="width:70px; float:left">Nhà riêng:</label>
+                            <div class="form-group" style="width:177px; float:left">
+                                <label id="txtDTNhaRieng">@Model.DienThoai</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;float:left">
+                        <div style="width:450px; float:left">
+                            <label style="width:48px; float:left">Email :</label>
+                            <div class="form-group" style="width:387px; float:left">
+                                <label id="txtEmail">@Model.Email</label>
+                            </div>
+                        </div>
+                        <div style="width:200px; float:left">
+                            <label style="width:34px; float:left">Fax:</label>
+                            <div class="form-group" style="width:164px; float:left">
+                                <label id="txtFax"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:100%;float:left">
+                        <a href="@Url.Action("CapNhatHoSo", "HoSo")?edit=1" id="btnEdit"><i class="fa fa-edit"></i> Chỉnh sửa hồ sơ</a>
+                        @*<a href="javascript:void(0)" id="btnVietCamNhan"><i class="fa fa-graduation-cap"></i> Viết cảm nhận</a>*@
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+            <!-- Thông tin khóa học -->
+            <div class="box box-default box-solid" style="margin-top: 30px;">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thông tin khóa học</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="display: block;">
+                    <div style="width:100%;float: left">
+                        <div style="width:250px; float:left">
+                            <label style="width:130px; float:left">Mã nghiên cứu sinh:</label>
+                            <div class="form-group" style="width:120px; float:left">
+                                <label id="txtMaNCS">@Model.Ma</label>
+                            </div>
+                        </div>
+                        <div style="width:200px; float:left">
+                            <label style="width:93px; float:left">Khóa đào tạo:</label>
+                            <div class="form-group" style="width:105px; float:left">
+                                <label id="txtKhoaDaoTao">Chưa hoàn thiện</label>
+                            </div>
+                        </div>
+                        <div style="width:300px; float:left">
+                            <label style="width:122px; float:left">Đối tượng đào tạo:</label>
+                            <div class="form-group" style="width:173px; float:left">
+                                <label id="txtDoiTuongDaoTao">@Model.DoiTuongDuTuyen</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%; float:left">
+                        <div style="width:450px; float:left">
+                            <label style="width:103px; float:left">Chuyên ngành:</label>
+                            <div class="form-group" style="width:290px; float:left">
+                                <label id="txtChuyenNganh">@Model.TenChuyenNghanhDuTuyen</label>
+                            </div>
+                        </div>
+                        <div style="width:400px; float:left">
+                            <label style="width:125px; float:left">Định hướng đào tạo:</label>
+                            <div class="form-group" style="width:auto; float:left">
+                                <label id="txtDinhHuongDaoTao">Chưa hoàn thiện</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;float: left">
+                        <div style="width:450px; float:left">
+                            <label style="width:119px; float:left">Thời gian đào tạo:</label>
+                            <div class="form-group" style="width:226px; float:left">
+                                <label id="txtThoiGianDaoTao">@Model.ThoiGianHinhThucDaoTao @Html.Raw("tháng")</label>
+                            </div>
+                        </div>
+
+                        <div style="width:250px; float:left">
+                            <label style="width:119px; float:left">Hình thức đào tạo:</label>
+                            <div class="form-group" style="width:126px; float:left">
+                                <label id="txtHinhThucDaoTao">Chưa hoàn thiện</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;float: left">
+                        <div style="width:450px; float:left">
+                            <label style="width:57px; float:left">Tiến độ:</label>
+                            <div class="form-group" style="width:385px; float:left">
+                                <label id="txtTienDo">Chưa hoàn thiện</label>
+                            </div>
+                        </div>
+                        <div style="width:200px; float:left">
+                            <label style="width:75px; float:left">Tình trạng:</label>
+                            <div class="form-group" style="width:121px; float:left">
+                                <label id="txtTinhTrang">NCS đang học</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danh mục các quyết định -->
+                    <div style="width:100%; float:left">
+                        <label><b>Danh sách quyết định:</b></label>
+                    </div>
+                    <div style="width:50%; float:left">
+                        <div id="tbldataCLQD_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                                <div class="col-sm-12">
+                                    <table id="tbldataCLQD" class="table table-bordered table-hover dataTable no-footer" role="grid">
+                                        <thead>
+                                            <tr role="row"><th style="width:40px" class="sorting_disabled" rowspan="1" colspan="1">Stt</th><th style="width:140px" class="sorting_disabled" rowspan="1" colspan="1">Số quyết định</th><th style="width:65px" class="sorting_disabled" rowspan="1" colspan="1">Ngày ký</th><th class="sorting_disabled" rowspan="1" colspan="1">Tên quyết định</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            @*<tr role="row" class="odd">
+                                                <td>2</td>
+                                                <td>1828/QĐ-ĐHSP              </td>
+                                                <td>06/10/2015</td>
+                                                <td>Quyết định công nhận NCS</td>
+                                            </tr>
+                                            <tr role="row" class="even">
+                                                <td>1</td>
+                                                <td>3817/QĐ-ĐHSP</td>
+                                                <td>16/12/2019</td>
+                                                <td>Quyết định gia hạn<br>(Thời gian gia hạn: 12 tháng)</td>
+                                            </tr>*@
+                                        </tbody>
+                                    </table><div id="tbldataCLQD_processing" class="dataTables_processing" style="display: none;">Đang tải dữ liệu...</div>
+                                </div>
+                            </div><div class="row"><div class="col-sm-5"></div><div class="col-sm-7"></div></div>
+                        </div>
+                    </div>
+                    <!-- Danh mục các quyết định hiện thị dạng chi tiết-->
+                    <div style="display:none">
+                        <div style="width:100%;float: left">
+                            <label style="width:177px; float:left">Quyết định công nhận NCS:</label>
+                            <div class="form-group" style="width:568px; float:left">
+                                <label id="txtQuyetDinhCongNhanNCS">Chưa có thông tin</label>
+                            </div>
+                        </div>
+                        <div style="width:100%;float: left">
+                            <label style="width:214px; float:left">Quyết định chuyển chuyên ngành:</label>
+                            <div class="form-group" style="width:531px; float:left">
+                                <label id="txtQuyetDinhChuyenCN">Chưa có thông tin</label>
+                            </div>
+                        </div>
+                        <div style="width:100%;float: left">
+                            <label style="width:238px; float:left">Quyết định thay đổi hình thức đào tạo:</label>
+                            <div class="form-group" style="width:506px; float:left">
+                                <label id="txtQuyetDinhThayDoiHTDT">Chưa có thông tin</label>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:450px; float:left">
+                                <label style="width:127px; float:left">Quyết định gia hạn:</label>
+                                <div class="form-group" style="width:300px; float:left">
+                                    <label id="txtQuyetDinhGiaHan">Chưa có thông tin</label>
+                                </div>
+                            </div>
+                            <div style="width:450px; float:left">
+                                <label style="width:119px; float:left">Thời gian gia hạn:</label>
+                                <div class="form-group" style="width:230px; float:left">
+                                    <label id="txtThoiGianGiaHan">Chưa có thông tin</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <label style="width:163px; float:left">Quyết định dừng đào tạo:</label>
+                            <div class="form-group" style="width:582px; float:left">
+                                <label id="txtQuyetDinhDungDT">Chưa có thông tin</label>
+                            </div>
+                        </div>
+                        <div style="width:100%;float: left">
+                            <label style="width:173px; float:left">Quyết định tiếp nhận trở lại:</label>
+                            <div class="form-group" style="width:551px; float:left">
+                                <label id="txtQuyetDinhTiepNhanLai">Chưa có thông tin</label>
+                            </div>
+                        </div>
+                        <div style="width:100%;float: left">
+                            <label style="width:218px; float:left">Quyết định công nhận học vị tiến sĩ:</label>
+                            <div class="form-group" style="width:525px; float:left">
+                                <label id="txtQuyetDinhCongNhanTS">Chưa có thông tin</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+            <!-- Thông tin dự tuyển -->
+            @*<div class="box box-default box-solid collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Thông tin dự tuyển</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" style="display: none;">
+                        <div style="width:100%; float:left">
+                            <label><b>Đào tạo đại học</b></label>
+                        </div>
+
+                        <!-- Bằng 1 -->
+                        <div style="width:100%; float:left; padding-left:25px">
+                            <label><b><i>Bằng đại học thứ nhất:</i></b></label>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Cơ sở đào tạo:</label>
+                                <div class="form-group" style="width:290px; float:left">
+                                    <label id="txtTotNghiepTruong31">ĐH Sư phạm Hà Nội(Việt Nam)</label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Quốc gia đào tạo:</label>
+                                <div class="form-group" style="width:192px; float:left">
+                                    <label id="txtQuocGia31"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Chuyên ngành:</label>
+                                <div class="form-group" style="width:167px; float:left">
+                                    <label id="txtChuyenNganh31">Sư phạm Tin học</label>
+                                </div>
+                            </div>
+
+                            <div style="width:450px; float:left">
+                                <label style="width:114px; float:left">Xếp loại tốt nghiệp:</label>
+                                <div class="form-group" style="width:230px; float:left">
+                                    <label id="txtLoaiTotNghiep"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Hệ đào tạo:</label>
+                                <div class="form-group" style="width:225px; float:left">
+                                    <label id="txtHeDaoTao">Chính quy</label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Năm tốt nghiệp:</label>
+                                <div class="form-group" style="width:112px; float:left">
+                                    <label id="txtNamTotNghiep31">2003</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bằng 2 -->
+                        <div style="width:100%; float:left; padding-left:25px">
+                            <label><b><i>Bằng đại học thứ hai:</i></b></label>
+                        </div>
+
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Cơ sở đào tạo:</label>
+                                <div class="form-group" style="width:290px; float:left">
+                                    <label id="txtTotNghiepTruong32"></label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Quốc gia đào tạo:</label>
+                                <div class="form-group" style="width:192px; float:left">
+                                    <label id="txtQuocGia32"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Chuyên ngành:</label>
+                                <div class="form-group" style="width:167px; float:left">
+                                    <label id="txtChuyenNganh32"></label>
+                                </div>
+                            </div>
+                            <div style="width:450px; float:left">
+                                <label style="width:114px; float:left">Xếp loại tốt nghiệp:</label>
+                                <div class="form-group" style="width:240px; float:left">
+                                    <label id="txtLoaiTotNghiep31"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Hệ đào tạo:</label>
+                                <div class="form-group" style="width:225px; float:left">
+                                    <label id="txtHeDaoTao31">Bằng 2</label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Năm tốt nghiệp:</label>
+                                <div class="form-group" style="width:93px; float:left">
+                                    <label id="txtNamTotNghiep32"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%; float:left">
+                            <label><b>Đào tạo thạc sĩ</b></label>
+                        </div>
+                        <div style="width:100%; float:left">
+                            <label><b><i>Bằng thạc sĩ thứ nhất:</i></b></label>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:100px; float:left">Cơ sở đào tạo:</label>
+                                <div class="form-group" style="width:287px; float:left">
+                                    <label id="txtTotNghiepTruong41">ĐH Shute(Đài Loan)</label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:117px; float:left">Quốc gia đào tạo:</label>
+                                <div class="form-group" style="width:189px; float:left">
+                                    <label id="txtQuocGiaDaoTao41">Việt Nam</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Chuyên ngành:</label>
+                                <div class="form-group" style="width:167px; float:left">
+                                    <label id="txtChuyenNganh41">Quản lý Hệ thống thông tin</label>
+                                </div>
+                            </div>
+
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Năm tốt nghiệp:</label>
+                                <div class="form-group" style="width:113px; float:left">
+                                    <label id="txtNamTotNghiep41">2009</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%; float:left">
+                            <label><b><i>Bằng thạc sĩ thứ hai:</i></b></label>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Cơ sở đào tạo:</label>
+                                <div class="form-group" style="width:290px; float:left">
+                                    <label id="txtTotNghiepTruong42"></label>
+                                </div>
+                            </div>
+                            <div style="width:310px; float:left">
+                                <label style="width:114px; float:left">Quốc gia đào tạo:</label>
+                                <div class="form-group" style="width:192px; float:left">
+                                    <label id="txtQuocGiaDaoTao42"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%;float: left">
+                            <div style="width:600px; float:left; padding-left:45px">
+                                <label style="width:97px; float:left">Chuyên ngành:</label>
+                                <div class="form-group" style="width:157px">
+                                    <label id="txtChuyenNganh42"></label>
+                                </div>
+                            </div>
+
+                            <div style="width:310px; float:left">
+                                <label style="width:114px">Năm tốt nghiệp:</label>
+                                <div class="form-group" style="width:113px">
+                                    <label id="txtNamTotNghiep42"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trình độ ngoại ngữ -->
+                        <div style="width:100%; float:left">
+                            <label style="width:220px"><b>Trình độ ngoại ngữ khi dự tuyển:</b></label>
+                            <div class="form-group" style="width:513px">
+                                <label id="txtTrinhDoNgoaiNgu"></label>
+                            </div>
+                        </div>
+
+                        <div style="width:300px; float:left; display:none" id="zoneLoaiChungChiNCS">
+                            <label style="width:95px">Loại chứng chỉ:</label>
+                            <div class="form-group" style="width:202px">
+                                <label id="txtLoaiChungChiNCS"></label>
+                            </div>
+                        </div>
+
+                        <div style="width:350px; float:left; display:none" id="zoneNgayCapCCNCS">
+                            <label style="width:192px">Ngày/tháng/năm cấp chứng chỉ:</label>
+                            <div class="form-group" style="width:115px">
+                                <label id="txtNgayCapCCNCS"></label>
+                            </div>
+                        </div>
+
+                        <div style="width:100px; float:left; display:none" id="zoneDiemSoNCS">
+                            <label style="width:56px">Điểm số:</label>
+                            <div class="form-group" style="width:42px">
+                                <label id="txtDiemSoNCS"></label>
+                            </div>
+                        </div>
+                        <!-- Danh mục các công trình khoa học đã công bố trước khi dự tuyển -->
+                        <div style="width:100%; float:left">
+                            <label><b>Danh mục các công trình khoa học đã công bố trước khi dự tuyển:</b></label>
+                        </div>
+                        <div style="width:100%; float:left">
+                        <div style="width:100%; float:left">
+                            <div id="tbldata_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="tbldata" class="table table-bordered table-hover dataTable no-footer" role="grid">
+                                            <thead>
+                                                <tr role="row"><th style="width:60px" class="sorting_disabled" rowspan="1" colspan="1">Stt</th><th style="width:100px" class="sorting_disabled" rowspan="1" colspan="1">Năm công bố</th><th class="sorting_disabled dt-body-left" rowspan="1" colspan="1">Tên công trình khoa học</th><th class="sorting_disabled" rowspan="1" colspan="1">Tên tạp chí/ Hội thảo</th><th class="sorting_disabled" rowspan="1" colspan="1">Số tạp chí/ Nơi tổ chức hội thảo/ Nơi xuất bản</th></tr>
+                                            </thead>
+                                            <tbody><tr class="odd"><td valign="top" colspan="5" class="dataTables_empty">Không có dữ liệu nào được tìm thấy!</td></tr></tbody>
+                                        </table><div id="tbldata_processing" class="dataTables_processing" style="display: none;">Đang tải dữ liệu...</div>
+                                    </div>
+                                </div><div class="row"><div class="col-sm-5"></div><div class="col-sm-7"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+    <!-- /.box-body -->
+</section>

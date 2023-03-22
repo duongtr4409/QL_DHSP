@@ -1,0 +1,55 @@
+﻿@model List<TEMIS.CMS.Areas.Admin.Models.GiangVienViewModel>
+<table id="datatable-buttonss" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+    <thead>
+        <tr role="row">
+            <th style="text-align:center">STT</th>
+            <th style="text-align:center">Họ tên</th>
+            <th style="text-align:center">Ngày Sinh</th>
+            <th style="text-align:center">Giới Tính</th>
+            <th style="text-align:center">Nơi sinh</th>
+            <th style="text-align:center">Hộ khẩu</th>
+            <th style="text-align:center">Thông tin liên lạc (email, điện thoại)</th>
+            <th style="text-align:center">Chức danh</th>
+            <th style="text-align:center">Học hàm, học vị</th>
+            <th style="text-align:center">GV khoa</th>
+            <th style="width:15%!important;text-align:center">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <th class="text-center">@i</th>
+                    <td>@item.HoTen</td>
+                    <td>
+                        @if (item.NgaySinh != null)
+                        {
+                            @DateTime.Parse(item.NgaySinh.ToString()).ToString("dd/MM/yyyy")
+                        }
+                    </td>
+                    <td>@item.GioiTinh</td>
+                    <td>@item.NoiSinh</td>
+                    <td>@item.HoKhau</td>
+                    <td>@item.ThongTinLienLac</td>
+                    <td>@item.ChucDanh</td>
+                    <td>@item.HocHamHocVi</td>
+                    <td>@item.KHoa</td>
+                    <td style="width:15%; text-align:center">
+                        <button type="button" onclick="window.location.href='@Url.Action("Edit", "GiangVien" , new { id=item.Id })'" class="btn btn-primary btn-sm" title="Sửa"><i class="fa fa-edit"></i></button>
+                        <button type="button" onclick="confirmremove(@item.Id)" class="btn btn-danger btn-sm"  title="Xóa"><i class="fa fa-trash"></i></button>
+                        <button type="button" onclick="window.location.href='@Url.Action("PhanQuyen", "GiangVien" , new { id=item.Id })'" class="btn btn-primary btn-sm" title="Phân quyền"><i class="fa fa-lock"></i></button>
+                    </td>
+                </tr>
+                i = i + 1;
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-buttonss').DataTable();
+    });
+</script>

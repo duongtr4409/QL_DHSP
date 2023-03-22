@@ -1,0 +1,45 @@
+﻿@model List<LichBaoVe>
+@using TEMIS.Model
+<table id="tbldata" class="table table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="tbldata_info">
+    <thead>
+        <tr role="row">
+            <th style="width:35px" class="sorting_disabled" rowspan="1" colspan="1">STT</th>
+            <th style="text-align:left" class="sorting_disabled dt-body-left" rowspan="1" colspan="1">Đề tài</th>
+            <th style="width:150px" class="sorting_disabled" rowspan="1" colspan="1">Nghiên cứu sinh</th>
+            <th class="sorting_disabled" rowspan="1" colspan="1">Khóa</th>
+            <th class="sorting_disabled" rowspan="1" colspan="1">Chuyên ngành</th>
+            <th style="width:100px" class="sorting_disabled" rowspan="1" colspan="1">Cấp bảo vệ</th>
+            <th class="sorting_disabled" rowspan="1" colspan="1">Giờ</th>
+            <th class="sorting_disabled" rowspan="1" colspan="1">Ngày</th>
+            <th style="width:350px" class="sorting_disabled" rowspan="1" colspan="1">Địa điểm</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+        <tr role="row" class="odd">
+            <td>@i</td>
+            <td class="dt-body-left">@item.TenDeTai</td>
+            <td>@item.TenNCS</td>
+            <td>@item.KhoaHoc</td>
+            <td>@item.TenChuyenNganh</td>
+            <td>@item.CapBaoVe</td>
+            <td>@item.GioBaoVe</td>
+            <td>@DateTime.Parse(item.NgayBaoVe.ToString()).ToString("dd-MM-yyyy")</td>
+            <td>@item.DiaDiem</td>
+        </tr>
+                i = i + 1;
+            }
+        }
+    </tbody>
+</table>
+
+<script>
+    $('#tbldata').dataTable({
+        "pageLength": 25
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+</script>

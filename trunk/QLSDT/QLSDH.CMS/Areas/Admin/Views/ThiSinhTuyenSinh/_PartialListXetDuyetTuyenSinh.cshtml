@@ -1,0 +1,76 @@
+﻿@model IEnumerable<TEMIS.Model.DangKyTuyenSinh>
+@using TEMIS.CMS.Common;
+<div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+        <thead>
+            <tr role="row">
+                <th><input type="checkbox" name="cball" class="cball" value="" /></th>
+                <th class="text-center">STT</th>
+                <th class="text-center" style="width:30%!important">Tên NCS</th>
+                <th class="text-center">Ngày sinh</th>
+                <th class="text-center">Điện thoại</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Trạng thái hồ sơ</th>
+                <th class="text-center" style="width:20%!important">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center"><input type="checkbox" name="cb" class="cb" value="" /></td>
+                        <td class="text-center">@i</td>
+                        <td><a target="_blank" href="@Url.Action("Detail", "ThiSinhTuyenSinh" , new { id=item.Id })" style="color:#337ab7"> @item.HoTen</a></td>
+                        <td class="text-center">@DateTime.Parse(item.NgaySinh.ToString()).ToString("dd/MM/yyyy")</td>
+                        <td>@item.Email</td>
+                        <td>@item.NoiSinh</td>
+                        <td class="text-center">
+                            @if (item.Status == PublicConstant.STT_CHODUYET)
+                            {
+                                @Html.Raw("Đang chờ duyệt")
+                            }
+                            else if (item.Status == PublicConstant.STT_DUYET)
+                            {
+                                @Html.Raw("Đã duyệt")
+                            }
+                            else if (item.Status == PublicConstant.STT_XETTUYEN)
+                            {
+                                @Html.Raw("<span style=\"color:green\">Trúng tuyển</span>")
+                            }
+                            else if (item.Status == PublicConstant.STT_TRUOT)
+                            {
+                                @Html.Raw("<span style=\"color:red\">Trượt</span>")
+                            }
+                        </td>
+                        <td style="width:20%; text-align:center">
+                            @if (item.CapQuyenTruyCap == null || item.CapQuyenTruyCap == false)
+                            {
+                                if (item.Status == PublicConstant.STT_DUYET)
+                                {
+                                    <button type="button" onclick="duyethoso('@item.Id','@item.TenDeTai', '@item.KhoaId_NHD1','@item.Id_NHD1','@item.KhoaId_NHD2','@item.Id_NHD2','@item.NHD2', '@item.CoQuanCongTac_NHD2')" class="btn btn-success" title="Điều chỉnh NHD"><i class="fa fa-check" title="Điều chỉnh NHD"></i></button>
+                                    <button type="button" onclick="xettuyen('@item.Id')" class="btn btn-primary" title="Xét tuyển"><i class="fa fa-user-check"></i></button>
+                                    @*<button type="button" onclick="UpdateStatus(@item.Id,@PublicConstant.STT_XETTUYEN)" class="btn btn-primary" title="Xét tuyển"><i class="fa fa-user-check"></i></button>*@
+                                    @*<button type="button" onclick="UpdateStatus(@item.Id,@PublicConstant.STT_TRUOT)" class="btn btn-danger" title="Trượt"><i class="fa fa-user-slash"></i></button>*@
+                                }
+                                @*if (item.Status == PublicConstant.STT_XETTUYEN)
+            {
+                <button type="button" onclick="openpoupcapquyentruycap(@item.Id)" class="btn btn-success" title="Cấp mã truy cập"><i class="fa  fa-user-lock"></i></button>
+            }*@
+                            }
+                        </td>
+                    </tr>
+                    i = i + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable').DataTable();
+    });
+</script>

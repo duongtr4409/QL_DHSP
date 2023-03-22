@@ -1,0 +1,640 @@
+﻿@model IEnumerable<TEMIS.Model.HocPhiNCS>
+@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@{
+    ViewBag.Title = "Quản lý học phí";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+}
+<style>
+    #datatable td {
+        text-align: center;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thống kê và tra cứu học phí</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="control-label">Khoa</label>
+                            <select class="form-control" id="ddlKhoa" name="ddlKhoa">
+                                <option value="0">------- Chọn Khoa -------</option>
+                                @foreach (var item in listKhoa)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Ngành</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlNganh" name="ddlNganh"></select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Khoá Học</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlKhoaHoc" name="ddlKhoaHoc">
+                                <option value="0">------- Chọn Khoá Học -------</option>
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.Id">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label">Lớp</label>
+                            <select class="form-control">
+                                <option value="CNTT">CNTTT 1</option>
+                                <option value="CNTT">Vật lý 1</option>
+                                <option value="CNTT">Vật lý 2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label">Họ tên</label>
+                            <input type="text" id="hoten" name="hoten" required="required" class="form-control">
+                        </div>
+                        <div class="col-md-2" style="padding-top:24px;">
+                            <button type="submit" id="btnSearch" class="btn btn-info"><i class="fa fa-search" title="tìm kiếm"></i></button>
+
+                        </div>
+                        <div class="col-md-4" style="padding-top:20px">
+                            <a class="btn btn-info" title="Upload Excel" onclick="uploadFile()"><i class="fa fa-upload"> Upload Excel</i></a>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                        <thead>
+                            <tr role="row">
+                                <th style="text-align:center">Mã NCS</th>
+                                <th style="text-align:center">Họ và tên</th>
+                                <th style="text-align:center">Tổng tiền(VNĐ)</th>
+                                <th style="text-align:center">Đã trả(VNĐ)</th>
+                                <th style="text-align:center">Còn lại(VNĐ)</th>
+                                <th style="text-align:center">Hoàn thành</th>
+                                <th style="text-align:center">Quá hạn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.MaHV</td>
+                                        <td>@item.HoTen</td>
+                                        <td>@item.TongTien</td>
+                                        <td>@(item.DaTra != null ? item.DaTra : 0)</td>
+                                        <td id="item_@item.Id">
+                                            <script>
+                                                    document.getElementById("item_@item.Id").innerHTML = @item.TongTien - @(item.DaTra != null ? item.DaTra:0);
+                                            </script>
+                                        </td>
+                                        <td>
+                                            @if (item.HoanThanh == true)
+                                            {
+                                                <i class="glyphicon glyphicon-ok" style="color:green"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="glyphicon glyphicon-remove" style="color:red"></i>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.QuaHan == true)
+                                            {
+                                                <a>Quá hạn</a>
+                                            }
+                                            else if (item.QuaHan == false)
+                                            {
+                                                <a>Không</a>
+                                            }
+                                            else
+                                            {
+                                                if (item.HoanThanh == false)
+                                                {
+                                                    <a>Nộp lỗi</a>
+                                                }else
+                                                {
+                                                    <a>Không</a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+                                z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modelupload" id="modelupload" role="dialog">
+    @using (Html.BeginForm("UploadExcelFile", "QuanLyHocPhi", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload Excel</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="width:100%; padding:20px">
+                        <center>
+                            <input type="file" id="dataFile" name="upload" value="" />
+                        </center>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align:center">
+                    <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                    <input type="submit" id="btnImport" value="Import Excel" class="btn btn-info btn-form" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamodule">
+                                Mã Module <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="mamodule" name="mamodule" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenmodule">
+                                Tên Module <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenmodule" name="tenmodule" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machuongtrinh">
+                                Mã chương trình <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="machuongtrinh" name="machuongtrinh" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamon">
+                                Mã môn <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="mamon" name="mamon" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="madot">
+                                Mã đợt <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="madot" name="madot" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thoiluong">
+                                Thời lượng <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="thoiluong" name="thoiluong" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songaytt">
+                                Số ngày thực tập <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="songaytt" name="songaytt" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songayonline">
+                                Số ngày Online <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="songayonline" name="songayonline" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sogiothuchanh">
+                                Số giờ thực hành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="sogiothuchanh" name="sogiothuchanh" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamodule">
+                                Mã Module <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="IdEdit" id="IdEdit" value="" />
+                                <input type="text" id="mamodule_edit" name="mamodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenmodule">
+                                Tên Module <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenmodule_edit" name="tenmodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machuongtrinh">
+                                Mã chương trình <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="machuongtrinh_edit" name="machuongtrinh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamon">
+                                Mã môn <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="mamon_edit" name="mamon_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="madot">
+                                Mã đợt <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="madot_edit" name="madot_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thoiluong">
+                                Thời lượng <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="thoiluong_edit" name="thoiluong_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songaytt">
+                                Số ngày thực tập <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="songaytt_edit" name="songaytt_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songayonline">
+                                Số ngày Online <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="songayonline_edit" name="songayonline_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sogiothuchanh">
+                                Số giờ thực hành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="sogiothuchanh_edit" name="sogiothuchanh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable( {
+          "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+        LoadData(0);
+
+        $('#ddlKhoa').on('change', function (e) {
+            var khoaid = this.value;
+            loadnganh(khoaid, 'ddlNganh')
+            if (khoaid == 0) {
+                LoadData(0);
+            }
+        });
+
+        $('#ddlNganh').on('change', function (e) {
+            var valueSelected = this.value;
+            LoadData(valueSelected);
+        });
+        $('#khoa').on('change', function (e) {
+            var khoaid = this.value;
+            loadnganh(khoaid, 'nganh')
+        });
+
+        $('#khoa_edit').on('change', function (e) {
+            var khoaid = this.value;
+            loadnganh(khoaid, 'nganh_edit')
+        });
+    });
+    function uploadFile() {
+        $('#modelupload').modal({ backdrop: 'static', keyboard: false })
+    }
+     function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "QuanLyHocPhi")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function LoadData(nganhid) {
+        @*$('#divProcessing').show();
+        var model = $('#dataresult');
+            $.ajax({
+                url: '@Url.Action("LoadData", "QuanLyHocPhi")',
+                data: { nganhid: nganhid },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });*@
+    }
+    function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    function openedit(id, mamodule, tenmodule, machuongtrinh, mamon, madot, thoiluong, songaytt, songayonline, sogiothuchanh) {
+        $('#IdEdit').val(id);
+        $('#mamodule_edit').val(mamodule);
+        $('#tenmodule_edit').val(tenmodule);
+        $('#machuongtrinh_edit').val(machuongtrinh);
+        $('#mamon_edit').val(mamon);
+        $('#madot_edit').val(madot);
+        $('#thoiluong_edit').val(thoiluong);
+        $('#songaytt_edit').val(songaytt);
+        $('#songayonline_edit').val(songayonline);
+        $('#sogiothuchanh_edit').val(sogiothuchanh);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnThem').click(function () {
+        var mamodule = $('#mamodule').val();
+        var tenmodule = $('#tenmodule').val();
+        var machuongtrinh = $('#machuongtrinh').val();
+        var mamon = $('#tenmodule').val();
+        var madot = $('#tenmodule').val();
+        var thoiluong = $('#tenmodule').val();
+        var songaytt = $('#tenmodule').val();
+        var songayonline = $('#tenmodule').val();
+        var sogiothuchanh = $('#tenmodule').val();
+
+        if (mamodule == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (tenmodule == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (machuongtrinh == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (mamon == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (madot == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (thoiluong == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (songaytt == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (songayonline == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (sogiothuchanh == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "Module")',
+            data: { mamodule: mamodule, tenmodule: tenmodule, machuongtrinh: machuongtrinh, mamon: mamon, madot: madot, thoiluong: thoiluong, songaytt: songaytt, songayonline: songayonline, sogiothuchanh: sogiothuchanh },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var id = $('#IdEdit').val();
+        var mamodule = $('#mamodule_edit').val();
+        var tenmodule = $('#tenmodule_edit').val();
+        var machuongtrinh = $('#machuongtrinh_edit').val();
+        var mamon = $('#mamon_edit').val();
+        var madot = $('#madot_edit').val();
+        var thoiluong = $('#thoiluong_edit').val();
+        var songaytt = $('#songaytt_edit').val();
+        var songayonline = $('#songayonline_edit').val();
+        var sogiothuchanh = $('#sogiothuchanh_edit').val();
+
+        if (mamodule == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (tenmodule == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (machuongtrinh == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (mamon == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (madot == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (thoiluong == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (songaytt == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (songayonline == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+        if (sogiothuchanh == "") {
+            toastr.error('Không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "Module")',
+            data: { id: id, mamodule: mamodule, tenmodule: tenmodule, machuongtrinh: machuongtrinh, mamon: mamon, madot: madot, thoiluong: thoiluong, songaytt: songaytt, songayonline: songayonline, sogiothuchanh: sogiothuchanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "Module")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 100);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+</script>

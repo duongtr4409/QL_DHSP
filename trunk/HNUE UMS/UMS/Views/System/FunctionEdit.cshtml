@@ -1,0 +1,52 @@
+﻿@using Resources
+@using Ums.Core.Domain.System
+@model Ums.Models.System.FunctionModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("FunctionEdit", "System", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Order)
+        @Html.HiddenFor(m => m.Id)
+        <div class="form-group">
+            <label>@Actions.Group</label>
+            <select id="CategoryId" name="CategoryId" class="form-control" min="1">
+                @foreach (SystemCategory i in ViewBag.Categories)
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label>@Actions.Name</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>@Actions.Icon</label>
+            @Html.TextBoxFor(m => m.Icon, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>@Actions.Key</label>
+            @Html.TextBoxFor(m => m.Key, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>@Actions.Url</label>
+            @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>@Actions.Public</label>
+            @Html.CheckBoxFor(m => m.IsPublic)
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("600px", "570px");
+    $("#CategoryId").val(@Model.CategoryId);
+</script>

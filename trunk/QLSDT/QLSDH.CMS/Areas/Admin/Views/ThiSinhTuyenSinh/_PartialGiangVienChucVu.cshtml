@@ -1,0 +1,161 @@
+﻿@model List<TEMIS.CMS.Areas.Admin.Controllers.GiangVien_ChucVuView>
+<style>
+    #datatable-2 > tbody > tr > td {
+        padding: 4px !important;
+    }
+</style>
+<table id="datatable-3" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">
+                <label class="pos-rel">
+
+                </label>
+            </th>
+            <th style="text-align:center">Học hàm học vị</th>
+            <th style="text-align:center; width:30%">Tên GV</th>
+            <th style="text-align:center">Cơ quan công tác</th>
+            <th style="text-align:center">Vai trò</th>
+            <th style="display:none">id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="a-center" style="text-align:center">
+                        <label class="pos-rel">
+                            @if (item.vaitro != null)
+                            {
+                                <input type="checkbox" class="clbitem" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="clbitem">
+                            }
+                            <span class="lbl"></span>
+                            <input type="hidden" id="hdname_@item.idgv" class="form-control" name="hdname" value="@item.name" />
+                            <input type="hidden" id="hdchucvu_@item.idgv" class="form-control" name="hdchucvu" value="@item.chucvu" />
+                            <input type="hidden" id="idgv_@item.idgv" class="form-control" name="hdidgv" value="@item.idgv" />
+                        </label>
+                    </td>
+                    <td>@item.hochamhocvi</td>
+                    <td>@item.name</td>
+                    <td>
+                        @item.donvicongtac
+                    </td>
+                    <td style="text-align:center">
+                        <select class="form-control col-md-5 col-xs-12" id="vaitro_select_@item.idgv">
+                            <option>Chủ tịch Hội đồng</option>
+                            <option>Phó chủ tịch HĐ</option>
+                            <option>Ủy viên thường trực</option>
+                            <option>Ủy viên</option>
+                        </select>
+                    </td>
+                    <td style="display:none">@item.idgv</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-3').dataTable({
+            "pageLength": 10
+        });
+    });
+    $(document).ready(function () {
+        var filerdata = [];
+        $('#datatable-3').on("change", ".clbitem", function (event) {
+            if ($(this).is(":checked")) {
+                $(this).parent().parent().parent().addClass('selected');
+                var table = $('#datatable-3').DataTable();
+                var listName = '';
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    var idgv = item[5];
+                    var hocham = item[1];
+                    var coquan = item[3];
+                    //var cvu = $('#chucvu_select_' + idgv).val();
+                    var cvu = '';
+                    var vtro = $('#vaitro_select_' + idgv).val();
+
+                    //var nguoichon = item[1] + '-' + cvu + '-' + vtro;
+                    //if (!filerdata.includes(nguoichon))
+                    //    filerdata.push(nguoichon);
+                    //listName = listName + nguoichon + ',';
+
+                    addCanBo(0, idgv, item[2], cvu, vtro, hocham, coquan)
+                    return item[5];
+
+                });
+
+                //$('#giangvien_chucvu').val(listName.substring(0, listName.length - 1));
+
+                //$('#array_push').val(filerdata);
+
+            }
+            else {
+                //var listName = $('#giangvien_chucvu').val();
+                var listName ='';
+                var nameremove = '';
+                $(this).parent().parent().parent().addClass('selected2');
+                var table = $('#datatable-3').DataTable();
+
+                var ids = $.map(table.rows('.selected2').data(), function (item) {
+                    var idxoa = item[5];
+                    //var cvu = $('#chucvu_select_' + idxoa).val();
+                    var cvu = '';
+                    var vtro = $('#vaitro_select_' + idxoa).val();
+                    var hocham = item[1];
+                    var coquan = item[3];
+                   // nameremove = item[1] + '-' + cvu + '-' + vtro;
+
+                    //check tên xóa có nằm trong mảng k để remove
+                    //var check_in_array = filerdata.indexOf(nameremove);
+                    //if (check_in_array)
+                    //    filerdata.splice(check_in_array, 1);
+
+                    addCanBo(1, idxoa, item[2], cvu, vtro, hocham, coquan)
+
+                    return item[5];
+                });
+
+
+                //listName = listName.replace(nameremove, '');
+
+                //$('#giangvien_chucvu').val(listName.substring(0, listName.length - 1));
+                //$(this).parent().parent().parent().removeClass('selected2');
+                //$(this).parent().parent().parent().removeClass('selected');
+                //$('#array_push').val(filerdata);
+            }
+        });
+
+    });
+    function addCanBo(type,idcb, tencb, chucvu, vaitro,hocham,coquan) {
+         $.ajax({
+                type: "GET",
+             url: '@Url.Action("AddCanBoFormBieuMau", "ThiSinhTuyenSinh")',
+             data: { type: type, idcb: idcb, tencb: tencb, chucvu: chucvu, vaitro: vaitro, hocham: hocham, coquan: coquan , idbm: 1005 },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 console.log(data)
+                 if (data == "error") {
+                     toast.error("Lỗi chọn cán bộ!")
+                 }
+                 else {
+                     $('#sl_chutich').val(data.chutichhd);
+                     $('#sl_phochutich').val(data.phochutichhd);
+                     $('#sl_uvthuongtruc').val(data.uvthuongtruc);
+                     $('#sl_uv').val(data.uyvien);
+                 }
+                },
+             error: function (req, status, error) {
+                 toast.error("Lỗi chọn cán bộ!")
+                 console.log(error);
+             }
+            });
+    }
+</script>

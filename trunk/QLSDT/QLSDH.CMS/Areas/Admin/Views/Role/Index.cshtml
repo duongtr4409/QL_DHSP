@@ -1,0 +1,53 @@
+﻿@model List<TEMIS.Model.Roles>
+@{
+    ViewBag.Title = "Quản lý nhóm quyền";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>
+                        Danh sách nhóm quyền
+                    </h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                            <thead>
+                                <tr role="row">
+                                    <th style="text-align:center">STT</th>
+                                    <th style="text-align:center">Tên nhóm quyền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    var stt = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center">@stt</td>
+                                            <td style="text-align:center">@item.Name</td>
+                                        </tr>
+                                        stt = stt + 1;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable({
+            "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+    });
+</script>

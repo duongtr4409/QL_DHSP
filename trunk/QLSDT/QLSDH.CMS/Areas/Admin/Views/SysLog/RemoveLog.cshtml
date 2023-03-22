@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "RemoveLog";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_content">
+                <label>Xóa log dữ liệu người dùng</label>
+                <hr style="margin:0px !important" />
+                <div class="row">
+                    <div class="col-sm-4" style="display:inline-flex;padding-top: 23px;">
+                        <label>Từ ngày</label>
+                        <input type="datetime" class="form-control" />
+                    </div>
+                    <div class="col-sm-4" style="display:inline-flex;padding-top: 23px;">
+                        <label>Đến ngày</label>
+                        <input type="datetime" class="form-control" />
+                    </div>
+                    <div class="col-sm-3" style="padding-top: 23px;">
+                        <button type="button" id="btnRemove" class="btn btn-info">Thực hiện xóa</button>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-2" style="display:inline-flex">
+                        <label style="white-space:nowrap;margin-right:10px;padding-top:12px">
+                            Xóa log crash:
+                        </label>                            <input type="checkbox" class="checkbox" style="margin-top:15px" />
+                        <button type="button" id="btnRemove" class="btn btn-info" style="margin-left:15px;">Thực hiện xóa</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@model List<TEMIS.CMS.Models.ViewModelHocPhan>
+@using TEMIS.Model
+
+<table id="tbldataHPTienSi" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th style="width:40px">Stt</th>
+            <th>Mã học phần</th>
+            <th>Tên học phần</th>
+            <th>Tín chỉ</th>
+            <th>Loại học phần</th>
+            <th>Điểm học phần</th>
+            <th>Đăng ký học - Thời khóa biểu</th>
+        </tr>
+    </thead>
+    <tbody id="zone_data">
+        @if (Model != null)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <tr class="row00">
+                    <td class="center">@i</td>
+                    <td class="center">@item.MaHocPhan</td>
+                    <td style="text-align:left">@item.TenHocPhan</td>
+                    <td>@item.TinChi</td>
+                    <td>
+                        @if (item.TuChon == true)
+                        {
+                            @Html.Raw("Tự chọn")
+                        }
+                        else
+                        {
+                            @Html.Raw("Bắt buộc")
+                        }
+                    </td>
+                    <td>@item.DiemHocPhan</td>
+                    <td>
+                        @if (item.TuChon != null && bool.Parse(item.TuChon.ToString()) == false) // học phần bắt buộc
+                        {
+                            @*<a title="Xem lịch" href="">Xem lịch</a>*@
+                            @Html.Raw("Đã đăng ký");
+                        }
+                        else
+                        {
+                            if (item.TrangThaiDangKy)
+                            {
+                                @*<a title="Xem lịch" href="">Xem lịch</a>*@
+                                @Html.Raw("Đã đăng ký");
+                            }
+                            else
+                            {
+                                <a title="Đăng ký học" id="btnDangKyHocPhan" class="btnDangKyHocPhan pointer" onclick="DangKyHocPhan(@item.Id)">Đăng ký</a>
+                            }
+                        }
+                    </td>
+                </tr>
+                i = i + 1;
+            }
+        }
+    </tbody>
+</table>

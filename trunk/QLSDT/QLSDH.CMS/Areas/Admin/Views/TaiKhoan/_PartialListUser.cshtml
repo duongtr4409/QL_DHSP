@@ -1,0 +1,76 @@
+﻿@model List<CoreAPI.Entity.TaiKhoan>
+@using TEMIS.CMS.Common;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@{
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+    var loginInfo = (TaiKhoan)Session[PublicConstant.LOGIN_INFO];
+}
+<div class="x_content">
+    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+            <thead>
+                <tr role="row">
+                    <th style="text-align:center" width="20%">Tên đăng nhập</th>
+                    <th style="text-align:center">Họ tên</th>
+                    <th style="text-align:center">Email</th>
+                    <th style="text-align:center">Quyền</th>
+                    <th style="text-align:center">Trạng thái</th>
+                    <th style="text-align:center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.Username</td>
+                            <td>@item.Name</td>
+                            <td>@item.Email</td>
+                            <td>@item.RoleName</td>
+                            <td style="text-align:center">
+                                @if (item.isLock)
+                                {<span>Khóa</span> }
+                                else
+                                { <span>Kích hoạt</span>
+                                }
+                            </td>
+                            <td style="text-align:center">
+                                @*@if (item.isLock)
+                                {
+                                    <button type="button" onclick="confirmlock('@item.Username')" class="btn btn-primary"><i class="fa fa-unlock" title="Mở khóa tài khoản"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="confirmlock('@item.Username')" class="btn btn-danger"><i class="fa fa-lock" title="Khóa tài khoản"></i></button>
+                                }*@
+                                @if (!roleInfo.Role.Equals(PublicConstant.ROLE_NCS))
+                                {
+                                    <a href='@Url.Action("PhanQuyen", "TaiKhoan", new { username = item.Username })' class="btn btn-primary">
+                                        <i class="fa fa fa-user" title="Phân quyền"></i>
+                                    </a>
+                                    @*<button type="button" onclick="openchangepass(@item.Id)" class="btn btn-primary"><i class="fa fa-refresh" title="Reset mật khẩu"></i></button>*@
+
+                                }
+                                else
+                                {
+                                    @*<button type="button" onclick="openchangepass(@item.Id)" class="btn btn-primary"><i class="fa fa-refresh" title="Đổi mã truy cập"></i></button>*@
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#datatable').dataTable({
+        "pageLength": 25
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+</script>

@@ -1,0 +1,191 @@
+﻿@using TEMIS.Model
+@{
+    ViewBag.Title = "Quản lý tin tức";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<DanhMucTinTuc> listDanhMuc = (List<DanhMucTinTuc>)ViewBag.listDanhMuc;
+}
+<style>
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .x_content a {
+        color: #337ab7 !important;
+    }
+
+    .imgTitle {
+        width: 150px;
+        /*min-height: 150px;*/
+        max-height: auto;
+    }
+</style>
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách tin bài và thông báo</h2>
+                    <div class="pull-right">
+                        <a class="btn btn-success" href="@Url.Action("Create","TinTuc")"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <hr />
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label">Danh mục</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlDanhMuc" name="ddlDanhMuc">
+                                <option value="0">------- Chọn danh mục -------</option>
+                                @foreach (var item in listDanhMuc)
+                                {
+                                    <option value="@item.Id">@item.TenDanhMuc</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div id="dataresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+     $(document).ready(function () {
+         LoadData(0);
+         $('#ddlDanhMuc').on('change', function (e) {
+             var valueSelected = this.value;
+             LoadData(valueSelected);
+         });
+    });
+
+    function LoadData(danhmucid) {
+        $('#divProcessing').show();
+        var model = $('#dataresult');
+            $.ajax({
+                url: '@Url.Action("LoadData", "TinTuc")',
+                data: { danhmucid: danhmucid },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+
+
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "TinTuc")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // setTimeout(function () { location.reload(); }, 2000);
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    function Duyet(id) {
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Duyet", "TinTuc")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // setTimeout(function () { location.reload(); }, 2000);
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+    function HuyDuyet(id) {
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("HuyDuyet", "TinTuc")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // setTimeout(function () { location.reload(); }, 2000);
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+</script>

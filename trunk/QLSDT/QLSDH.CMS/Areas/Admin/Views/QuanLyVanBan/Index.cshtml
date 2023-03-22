@@ -1,0 +1,388 @@
+﻿@using TEMIS.Model
+@{
+    ViewBag.Title = "Quản lý văn bản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<ChuyenMucVanBan> listChuyenMuc = (List<ChuyenMucVanBan>)ViewBag.ListChuyenMucVanBan;
+}
+<style>
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .x_content a {
+        color: #337ab7 !important;
+    }
+
+    .imgTitle {
+        width: 150px;
+        /*min-height: 150px;*/
+        max-height: auto;
+    }
+</style>
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách văn bản</h2>
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label">Danh mục</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlDanhMucVanBan" name="ddlDanhMucVanBan">
+                                <option value="0">------- Chọn -------</option>
+                                @foreach (var item in listChuyenMuc)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenMuc</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="dataresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+             background:#f5f5f5;
+             opacity:0.5;
+             z-index:999;
+             position:absolute;
+             left:0px;
+             top :0px;
+             cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-bodys">
+                <div class="x_content  form-horizontal form-label-left">
+                    <br />
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenvanban">
+                            Tên văn bản <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tenvanban" name="tenvanban" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="duongdan">
+                            Đường dẫn <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            @*<input type="text" id="duongdan" name="duongdan" required="required" class="form-control col-md-7 col-xs-12">*@
+                            <input type="file" name="fupload" id="fupload" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ChuyenMuc">
+                            Chuyên mục <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="ChuyenMuc" name="ChuyenMuc">
+                                @foreach (var item in listChuyenMuc)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenMuc</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="daumuc">
+                            Đầu mục <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="daumuc" name="daumuc" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-bodys">
+                <div class="x_content form-horizontal form-label-left">
+                    <br />
+                    <input type="hidden" id="IdEdit" name="IdEdit" />
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenvanban_edit">
+                            Tên văn bản <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tenvanban_edit" name="tenvanban_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="duongdan_edit">
+                            Đường dẫn <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="file" name="fupload_edit" id="fupload_edit" class="form-control" value="" /><br />
+                            <input type="text" id="duongdan_edit" name="duongdan_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="daumuc_edit">
+                            Đầu mục <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="daumuc_edit" name="daumuc_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Chuyenmuc_edit">
+                            Chuyên mục <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="Chuyenmuc_edit" name="Chuyenmuc_edit">
+                                @foreach (var item in listChuyenMuc)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenMuc</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function () {
+            LoadData(0);
+            $('#ddlDanhMucVanBan').on('change', function (e) {
+                var valueSelected = this.value;
+                LoadData(valueSelected);
+            });
+        });
+
+        function LoadData(idchuyemuc) {
+            $('#divProcessing').show();
+            var model = $('#dataresult');
+                $.ajax({
+                    url: '@Url.Action("LoadData", "QuanLyVanBan")',
+                    data: { idchuyemuc: idchuyemuc },
+                    contentType: 'application/html ; charset:utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        model.empty().html(result);
+                        $('#divProcessing').hide();
+                    },
+                    error: function (error) {
+                        $('#divProcessing').hide();
+                        console.log('lỗi load dữ liệu: ' + error.responseText);
+                    }
+                });
+        }
+
+         function openadd() {
+            $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+        }
+        function openedit(id, tenvanban, duongdan, daumuc, huyenMuc) {
+            $('#IdEdit').val(id);
+            $('#tenvanban_edit').val(tenvanban);
+            $('#duongdan_edit').val(duongdan);
+            $('#daumuc_edit').val(daumuc);
+            $('#Chuyenmuc_edit').val(huyenMuc);
+            $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+        }
+        function confirmremove(id) {
+            $('#IdXoa').val(id);
+            $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+        }
+
+        $('#btnThem').click(function () {
+            var tieude = $('#tenvanban').val();
+            var daumuc = $('#daumuc').val();
+            var chuyemuc = $("#ChuyenMuc").val();
+
+            if (tenvanban == "") {
+                toastr.error('Tên văn bản không được để trống');
+                return false;
+            }
+            if (daumuc == "") {
+                toastr.error('bạn chưa nhập đầu mục');
+                return false;
+            }
+            if (chuyemuc == "") {
+                toastr.error('bạn chưa chọn chuyên mục');
+                return false;
+            }
+
+            $("#divProcessing").show();
+            if (window.FormData !== undefined) {
+                debugger
+                 var fileUpload = $("#fupload").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                 }
+
+                 fileData.append('tieude', tieude);
+                 fileData.append('daumuc', daumuc);
+                 fileData.append('chuyemuc', chuyemuc);
+
+                $.ajax({
+                    url: '@Url.Action("ThemMoi", "QuanLyVanBan")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Thêm mới thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+
+        })
+
+        $('#btnSua').click(function () {
+            var id = $('#IdEdit').val();
+            var tieude = $('#tenvanban_edit').val();
+            var url = $('#duongdan_edit').val();
+            var daumuc = $('#daumuc_edit').val();
+            var chuyemuc = $("#ChuyenMuc").val();
+
+            if (tenvanban == "") {
+                toastr.error('Tên văn bản không được để trống');
+                return false;
+            }
+            if (daumuc == "") {
+                toastr.error('bạn chưa nhập đầu mục');
+                return false;
+            }
+            if (chuyemuc == "") {
+                toastr.error('bạn chưa chọn chuyên mục');
+                return false;
+            }
+
+            $("#divProcessing").show();
+
+            if (window.FormData !== undefined) {
+                var fileUpload = $("#fupload_edit").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                 }
+
+                fileData.append('id', id);
+                fileData.append('tieude', tieude);
+                fileData.append('url', url);
+                fileData.append('daumuc', daumuc);
+                fileData.append('chuyemuc', chuyemuc);
+
+                $.ajax({
+                    url: '@Url.Action("Update", "QuanLyVanBan")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Cập nhật thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+        })
+
+        $('#btnXoa').click(function () {
+            var id = $('#IdXoa').val();
+            $("#divProcessing").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Xoa", "QuanLyVanBan")',
+                data: { id: id },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#divProcessing").hide();
+                    if (data == '') {
+                        setTimeout(function () { location.reload(); }, 2000);
+                        toastr.success('Xóa thành công');
+                    } else {
+                        toastr.error(data);
+                    }
+                },
+                error: function (req, status, error) {
+                    $("#divProcessing").hide();
+                }
+            });
+        })
+
+</script>
+

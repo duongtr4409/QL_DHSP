@@ -1,0 +1,287 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<OrganizationInfo> listDivision = (List<OrganizationInfo>)ViewBag.ListDivisions;
+    List<OrganizationInfo> listInstitues = (List<OrganizationInfo>)ViewBag.ListInstitues;
+
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý tài khoản cán bộ trực thuộc trường</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-sm-12 col-xs-12">
+                        <label class="control-label">Khoa</label>
+                        <select class="form-control" name="ddlKhoa" id="ddlKhoa">
+                            <option value="0">------- Chọn Khoa -------</option>
+                            @foreach (var item in listKhoa)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label class="control-label">
+                            Phòng ban
+                        </label><select class="form-control" name="ddlPhongban" id="ddlPhongBan">
+                            <option value="0">---Chọn phòng ban---</option>
+                            @foreach (var item in listDivision)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label class="control-label">
+                            Trung tâm,viện nghiện cứu
+                        </label><select class="form-control" name="ddlTrungTam" id="ddlTrungTam">
+                            <option value="0">---Chọn Trung tâm/Viện nghiên cứu---</option>
+                            @foreach (var item in listInstitues)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    @*<div class="col-md-3 col-sm-12 col-xs-12">
+                        <label class="control-label"> Tìm theo từ khóa:</label>
+                        <input type="text" width="350" placeholder="Nhập từ khóa tìm kiếm" class="form-control col-sm-3" id="txtSearch" />
+                    </div>
+                    <div class="col-md-1 col-sm-12 col-xs-12">
+                        <button type="submit" style="margin-top:23px" id="btnSearch" class="btn btn-info"><i class="fa fa-search" title="Tìm kiếm"></i></button>
+                    </div>*@
+                </div>
+                @*<div class="row">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label class="control-label"> Tìm theo từ khóa:</label>
+                            <input type="text" width="350" placeholder="Nhập từ khóa tìm kiếm" class="form-control col-sm-3" id="txtSearch" />
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <button type="submit" style="margin-top:23px" id="btnSearch" class="btn btn-info"><i class="fa fa-search" title="Tìm kiếm"></i></button>
+                        </div>
+                    </div>*@
+                <hr />
+                <div id="_partialUser">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Đổi mật khẩu</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Mật khẩu mới <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="Id" id="Id" value="" />
+                                <input type="text" id="password" name="password" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnChange" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modellock" id="modellock" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdLock" id="IdLock" value="" />
+                        <h3>Bạn có chăc muốn thay đổi trạng thái tài khoản?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnLock" class="btn btn-success" data-dismiss="modal">Thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        ReloadDataUser();
+        $('#btnsearch').click(function () {
+            ReloadDataUser();
+        });
+    });
+    function ReloadDataUser() {
+        $('#divProcessing').show();
+        var departmentId = 0;
+        var idKhoa = $('#ddlKhoa').val();
+        var idPhongBan = $('#ddlPhongBan').val();
+        var idTrungTam = $('#ddlTrungTam').val();
+        //var strSearch = $('#txtSearch').val();
+
+        if (idKhoa > 0) {
+            departmentId = idKhoa;
+        }
+        else if (idPhongBan > 0) {
+            departmentId = idPhongBan;
+        }
+        else if (idTrungTam > 0) {
+            departmentId = idTrungTam;
+        }
+
+         $.ajax({
+            url: '@Url.Action("ListUser", "TaiKhoan")',
+            type: "GET",
+             dataType: "html",
+             data: { departmentId: departmentId},
+            success: function (data) {
+                $('#_partialUser').html('');
+                $('#_partialUser').html(data);
+                $('#divProcessing').hide();
+             },
+             error: function (error) {
+                 $('#divProcessing').hide();
+                 console.log('lỗi load dữ liệu: ' + error.responseText);
+             }
+        });
+    }
+    function openchangepass(id) {
+        $('#Id').val(id);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#ddlKhoa').on('change', function (e) {
+        document.getElementById("ddlTrungTam").selectedIndex = 0;
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        //$("#ddlTrungTam option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Trung tâm/Viện nghiên cứu -------";
+        //}).prop('selected', true);
+        //$("#ddlPhongBan option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Phòng ban -------";
+        //}).prop('selected', true);
+        ReloadDataUser();
+    });
+    $('#ddlPhongBan').on('change', function (e) {
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+        document.getElementById("ddlTrungTam").selectedIndex = 0;
+        //$("#ddlKhoa option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Khoa -------";
+        //}).prop('selected', true);
+        //$("#ddlTrungTam option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Trung tâm/Viện nghiên cứu -------";
+        //}).prop('selected', true);
+        ReloadDataUser();
+    });
+    $('#ddlTrungTam').on('change', function (e) {
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        //$("#ddlKhoa option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Khoa -------";
+        //}).prop('selected', true);
+
+        //$("#ddlPhongBan option").filter(function () {
+        //    $(this).val() == 0;
+        //    return $(this).text() == "------- Chọn Phòng ban -------";
+        //}).prop('selected', true);
+        ReloadDataUser();
+    });
+    function confirmlock(username) {
+        $('#IdLock').val(username);
+        $('#modellock').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('#btnLock').click(function () {
+        var username = $('#IdLock').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LockUserRoles", "TaiKhoan")',
+            data: { username: username },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == '') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Thay đổi thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnChange').click(function () {
+        var id = $('#Id').val();
+        var password = $('#password').val();
+        if (password == "") {
+            toastr.error('mật khẩu không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ChangePasss", "Taikhoan")',
+            data: { id: id, password: password},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+</script>

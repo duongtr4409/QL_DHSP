@@ -1,0 +1,228 @@
+﻿@model TEMIS.Model.Module_BD
+@{
+    ViewBag.Title = "Sửa Module";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thêm mới Module bồi dưỡng</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamodule">
+                            Mã Module <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="hidden" name="IdEdit" id="IdEdit" value="@Model.Id" />
+                            <input value="@Model.MaModule" type="text" id="mamodule_edit" name="mamodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenmodule">
+                            Tên Module <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.TenModule" type="text" id="tenmodule_edit" name="tenmodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machuongtrinh">
+                            Tên chương trình <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="machuongtrinh_edit" class="pull-right col-md-12 col-xs-12" style="line-height: 1.42857143;    height: 34px; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc"></select>
+                        </div>
+                        @*<div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.MaChuongTrinh" type="text" id="machuongtrinh_edit" name="machuongtrinh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamon">
+                            Tên môn học<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="mamon_edit" class="pull-right col-md-12 col-xs-12" style="line-height: 1.42857143;    height: 34px; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc"></select>
+                        </div>
+                        @*<div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.MaMon" type="text" id="mamon_edit" name="mamon_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="madot">
+                            Mã đợt <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.MaDot" type="text" id="madot_edit" name="madot_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thoiluong">
+                            Thời lượng <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.ThoiLuong" type="number" id="thoiluong_edit" name="thoiluong_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songaytt">
+                            Số ngày thực tập <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.SoNgayTT" type="number" id="songaytt_edit" name="songaytt_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songayonline">
+                            Số ngày Online <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.SoNgayOnline" type="number" id="songayonline_edit" name="songayonline_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sogiothuchanh">
+                            Số giờ thực hành <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input value="@Model.SoGioThucHanh" type="number" id="sogiothuchanh_edit" name="sogiothuchanh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer" style="text-align:center">
+                    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+                    <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#btnSua').click(function () {
+        var id = $('#IdEdit').val();
+        var mamodule = $('#mamodule_edit').val();
+        var tenmodule = $('#tenmodule_edit').val();
+        var machuongtrinh = $('#machuongtrinh_edit').val();
+        var mamon = $('#mamon_edit').val();
+        var madot = $('#madot_edit').val();
+        var thoiluong = $('#thoiluong_edit').val();
+        var songaytt = $('#songaytt_edit').val();
+        var songayonline = $('#songayonline_edit').val();
+        var sogiothuchanh = $('#sogiothuchanh_edit').val();
+
+        if (mamodule == "") {
+            toastr.error('Mã Module Không được để trống');
+            return false;
+        }
+        if (tenmodule == "") {
+            toastr.error('Tên Module không được để trống');
+            return false;
+        }
+        if (machuongtrinh == "") {
+            toastr.error('mã chương trình Không được để trống');
+            return false;
+        }
+        if (mamon == "") {
+            toastr.error('mã môn Không được để trống');
+            return false;
+        }
+        if (madot == "") {
+            toastr.error('mã đợt Không được để trống');
+            return false;
+        }
+        if (thoiluong == "") {
+            toastr.error('thời lượng Không được để trống');
+            return false;
+        }
+        else if (thoiluong < 0) {
+            toastr.error('Thời lượng không thể là số âm');
+            return false;
+        }
+        if (songaytt == "") {
+            toastr.error('số ngày thực hành Không được để trống');
+            return false;
+        }
+        else if (songaytt < 0) {
+            toastr.error('Số ngày thực hành không thể là số âm');
+            return false;
+        }
+        if (songayonline == "") {
+            toastr.error('số ngày online Không được để trống');
+            return false;
+        }
+        else if (songayonline < 0) {
+            toastr.error('Số ngày online không thể là số âm');
+            return false;
+        }
+        if (sogiothuchanh == "") {
+            toastr.error('số giờ thực hành Không được để trống');
+            return false;
+        }
+        else if (sogiothuchanh < 0) {
+            toastr.error('Số giờ thực hành không thể là số âm');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "Module")',
+            data: { id: id, mamodule: mamodule, tenmodule: tenmodule, machuongtrinh: machuongtrinh, mamon: mamon, madot: madot, thoiluong: thoiluong, songaytt: songaytt, songayonline: songayonline, sogiothuchanh: sogiothuchanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    window.location.href = '@Url.Action("Index", "Module")';
+                    //setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        LoadListChuongTrinh();
+        LoadListMonHoc();
+    });
+    function LoadListChuongTrinh() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaChuongTrinh", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#machuongtrinh_edit').html(result);
+                $('#machuongtrinh_edit').val(@Model.MaChuongTrinh);
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+    function LoadListMonHoc() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaMonHoc", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#mamon_edit').html(result);
+                $('#mamon_edit').val(@Model.MaMon);
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+</script>
+

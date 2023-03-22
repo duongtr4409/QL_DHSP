@@ -1,0 +1,1102 @@
+﻿@model TEMIS.Model.DangKyTuyenSinh
+@using TEMIS.Model;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@using CoreAPI.Entity;
+@using TEMIS.CMS.Common;
+@{
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+    var loginInfo = (TaiKhoan)Session[PublicConstant.LOGIN_INFO];
+}
+@{
+    ViewBag.Title = "Chi tiết thông tin tuyển sinh";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<City> listCity = (List<City>)ViewBag.ListCity;
+    List<District> listDistrict = (List<District>)ViewBag.ListDistrict;
+    List<Ward> listWard = (List<Ward>)ViewBag.ListWard;
+    HocPhi phidangky = ViewBag.PhiDangKy;
+}
+
+<style>
+    .lb-themmoi {
+        display: inline-block;
+        max-width: 100% !important;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        font-weight: 700 !important
+    }
+
+    .input-themmoi {
+        display: block;
+        width: 100% !important;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .col-sm-12 {
+        margin-bottom: 10px;
+    }
+
+    .required {
+        color: red;
+    }
+
+    img {
+        height: 100%;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Chi tiết thông tin tuyển sinh</h2>
+                <button style="margin-left:10px" type="button" onclick="taifile('@Model.Url_FileUpload_Zip')" class="btn btn-dark" title="Tải tệp file đính kèm"><i class="fa fa-download" title="Tải tệp file đính kèm"></i></button>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-lg-12 col-sm-12">
+                    <h3 style="display: inline;">I. Thông tin cá nhân</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(1)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Họ và tên thí sinh </label>
+                    <input name="hovaten" type="text" id="hovaten" required="" value="@Model.HoTen" class="inputdk form-control" placeholder="Họ và tên viết chữ in hoa có dấu" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Giới tính </label>
+                    <select name="gioitinh" id="gioitinh" class="inputdk form-control" disabled>
+                        <option value="0">-------- Chọn ------</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Ngày sinh </label>
+                    <input name="ngaysinh" type="text" id="ngaysinh" required="" value="@DateTime.Parse(Model.NgaySinh.ToString()).ToString("dd-MM-yyyy")" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Nơi sinh </label>
+                    <input name="noisinh" type="text" id="noisinh" required="" value="@Model.NoiSinh" class="inputdk form-control" placeholder="Tỉnh mới" disabled>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <label>Địa chỉ liên lạc </label>
+                    <input name="diachi" type="text" id="diachi" required="" value="@Model.DiaChiLienLac" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Tỉnh/ Thành phố(<span class="required">*</span>)</label>
+                    <input name="cmnd_tinhthanh" type="text" id="cmnd_tinhthanh" required="" value="@listCity.Find(ele => @Model.TinhThanh_CMND == ele.CityCode).Name" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Quận/huyện(<span class="required">*</span>)</label>
+                    <input name="cmnd_huyen" type="text" id="cmnd_huyen" required="" value="@listDistrict.Find(ele => @Model.Quan_CMND == ele.DistrictCode ).Name" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Xã/Phường(<span class="required">*</span>)</label>
+                    <input name="cmnd_xa" type="text" id="cmnd_xa" required="" value="@listWard.Find(ele => @Model.Xa_CMND == ele.WardCode).Name" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Thông tin CMND/CCCD</label>
+                    <input name="cmnd" type="text" id="cmnd" required="" class="inputdk form-control" value="@Model.SoCMND" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Ngày cấp</label>
+                    <input name="cmnd_ngaycap" type="text" id="cmnd_ngaycap" required="" value="@DateTime.Parse(Model.Ngaycap_CMND.ToString()).ToString("dd-MM-yyyy")" class="inputdk form-control" data-target="#cmnd_ngaycap" data-toggle="cmnd_ngaycap" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Nơi cấp</label>
+                    <input name="cmnd_noicap" type="text" id="cmnd_noicap" required="" value="@Model.Noicap_CMND" class="inputdk form-control" disabled>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <label>Số điện thoại </label>
+                    <input name="sdt" type="number" id="sdt" required="" value="@Model.SoDienThoai" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Email </label>
+                    <input name="email" type="text" id="email" required="" value="@Model.Email" class="inputdk form-control" disabled>
+                </div>
+
+
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display: inline;">II. Thông tin nghề nghiệp</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(2)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-3  col-sm-12">
+                    <label>Nghề nghiệp</label>
+                    <input name="cmnd" type="text" id="cmnd" required="" class="inputdk form-control" value="@Model.NgheNghiep" disabled>
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>Cơ quan công tác hiện nay </label>
+                    <input name="coquan" type="text" id="coquan" required="" value="@Model.CoQuanCongTacHienNay" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-3  col-sm-12">
+                    <label>Năm bắt đầu công tác </label>
+                    <input name="namct" type="number" id="namct" value="@Model.NamBatDauCongTac" required="" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-3  col-sm-12">
+                    <label>Hiện là cán bộ </label>
+                    <select name="canbo" id="canbo" class="inputdk form-control" disabled>
+                        <option value="0">------- chọn -------</option>
+                        <option value="bienche">Biên chế</option>
+                        <option value="hopdong">Hợp đồng</option>
+                    </select>
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>Vị trí công việc hiện tại </label>
+                    <input name="vitricv" type="text" id="vitricv" required="" value="@Model.ViTriConViecHienTai" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-3  col-sm-12">
+                    <label>Thâm niên nghề nghiệp </label>
+                    <input name="thamnien" type="text" id="thamnien" required="" value="@Model.ThamNiemNghieNghiep" placeholder="số năm công tác trong lĩnh vực ngành ĐKDT" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-12">
+                    <label>Chuyên môn </label>
+                    <input name="chuyenmon" type="text" id="chuyenmon" required="" value="@Model.ChuyenMon" class="inputdk form-control" disabled>
+                </div>
+
+
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display:inline">III. Văn bằng đại học</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(3)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Trường tốt nghiệp (TN) </label>
+                    <input name="tentruongct" type="text" id="tentruongct" required="" value="@Model.Truong_TN_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Năm TN </label>
+                    <input name="namtn" type="number" id="namtn" required="" value="@Model.Nam_TN_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Hệ đào tạo </label>
+                    <input name="hedt" type="text" id="hedt" required="" value="@Model.HeDaoTao_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Ngành TN </label>
+                    <input name="nganhtn" type="text" id="nganhtn" required="" value="@Model.Nghanh_TN_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Điểm TB </label>
+                    <input name="diemTb" type="number" id="diemTb" required="" value="@Model.DiemTrungBinh_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Loại TN </label>
+                    <input name="loaitn" type="text" id="loaitn" required="" value="@Model.LoaiTotNghiep_DaiHoc" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-12  col-sm-12">
+                    <label>File Đính kém </label>
+                    <label style="margin-bottom:0px" class="inputdk form-control"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_DaiHoc')">Xem file</a></label>
+                </div>
+
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display:inline">IV. Văn bằng 2</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(4)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Trường tốt nghiệp (TN) </label>
+                    <input name="tentruong_vb2" type="text" id="tentruong_vb2" required="" value="@Model.Truong_TN_VB2" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Năm TN </label>
+                    <input name="namtn_vb2" type="number" id="namtn_vb2" required="" value="@Model.Nam_TN_VB2" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Hệ đào tạo </label>
+                    <input name="hedt_vb2" type="text" id="hed_vb2t" required="" value="@Model.HeDaoTao_VB2" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Ngành TN </label>
+                    <input name="nganhtn_vb2" type="text" id="nganhtn_vb2" required="" value="@Model.Nganh_TN_VB2" class="inputdk form-control" disabled>
+                </div>
+
+                <div class="col-md-4  col-sm-12">
+                    <label>Điểm TB </label>
+                    <input name="diemTb_vb2" type="number" id="diemTb_vb2" required="" value="@Model.DiemTrungBinh_VB2" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Loại TN </label>
+                    <input name="loaitn_vb2" type="text" id="loaitn_vb2" required="" value="@Model.LoaiTotNghiep_VB2" class="inputdk form-control" disabled>
+                </div>
+                @if (!string.IsNullOrEmpty(@Model.Url_FileUpload_VB2))
+                {
+                    <div class="col-md-12  col-sm-12">
+                        <label>File Đính kém </label>
+                        <label style="margin-bottom:0px" class="inputdk form-control"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_VB2')">Xem file</a></label>
+                    </div>
+                }
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display:inline">V. Văn bằng thạc sĩ</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(5)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Trường tốt nghiệp (TN) </label>
+                    <input name="tentruongts" type="text" id="tentruongts" required="" value="@Model.Truong_TN_ThacSi" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Năm TN </label>
+                    <input name="namtnts" type="number" id="namtnts" required="" value="@Model.Nam_TN_ThacSi" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Hệ đào tào </label>
+                    <input name="hedtts" type="text" id="hedtts" required="" value="@Model.HeDaoTao_ThacSi" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4  col-sm-12">
+                    <label>Ngành TN </label>
+                    <input name="nganhts" type="text" id="nganhts" required="" value="@Model.Nghanh_TN_ThacSi" class="inputdk form-control" disabled>
+                </div>
+
+                <div class="col-md-4  col-sm-12">
+                    <label>Điểm TB </label>
+                    <input name="diemTbts" type="number" id="diemTbts" required="" value="@Model.DiemTrungBinh_ThacSi" class="inputdk form-control" disabled>
+                </div>
+                @if (!string.IsNullOrEmpty(@Model.Url_FileUpload_ThacSi))
+                {
+                    <div class="col-md-12  col-sm-12">
+                        <label>File Đính kém </label>
+                        <label class="inputdk form-control"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_ThacSi')">Xem file</a></label>
+                    </div>
+                }
+
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display:inline">VI. Ngoại ngữ & Bổ túc kiến thức</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(6)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Ngoại ngữ (Tiếng...) </label>
+                    <input name="ngoaingu" type="text" id="ngoaingu" required="" value="@Model.NgoaiNgu" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Loại văn bằng (chứng chỉ) </label>
+                    <input name="vanbang" type="text" id="vanbang" required="" value="@Model.LoaiVanBangNgoaiNgu" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Bổ túc kiến thức (nếu có) </label>
+                    <input name="botuckthuc" type="text" id="botuckthuc" required="" value="@Model.BoTucKienThuc" class="inputdk form-control" disabled>
+                </div>
+                @if (!string.IsNullOrEmpty(@Model.Url_ChungChiNgoaiNgu))
+                {
+                    <div class="col-md-12 col-sm-12">
+                        <label>File Đính kém </label>
+                        <label style="margin-bottom:0px" class="inputdk form-control"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_ChungChiNgoaiNgu')">Xem file</a></label>
+                    </div>
+                }
+
+                <div class="col-lg-12" style="margin-top:15px">
+                    <h3 style="display:inline">VII. Thông tin dự tuyển</h3>
+                    @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                    {
+                        <button type="button" onclick="phanhoi(7)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                    }
+                    <hr />
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Chuyên ngành dự tuyển </label>
+                    <input name="chuyennganhdt" type="text" id="chuyennganhdt" required="" value="@Model.TenChuyenNghanhDuTuyen" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Đối tượng dự tuyển </label>
+                    <select name="dtdt" id="dtdt" class="inputdk form-control" disabled>
+                        <option value="0">-------- chọn --------</option>
+                        <option value="coquan">Cơ quan cử</option>
+                        <option value="tstdo">Thí sinh tự do</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Tên đề tài</label>
+                    <input name="tendetai" type="text" id="tendetai" required="" value="@Model.TenDeTai" class="inputdk form-control" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label>Thời gian và hình thức đào tạo </label>
+                    <select name="thoigiandt" id="thoigiandt" class="inputdk form-control" disabled>
+                        <option value="0">-------- chọn --------</option>
+                        <option value="36">Chính quy tập trung 3 năm (36 tháng đối với người có bằng thạc sĩ)</option>
+                        <option value="48">Chính quy tập trung 4 năm (48 tháng đối với người chưa có bằng thạc sĩ)</option>
+                    </select>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.NHD1))
+                {
+                    <div class="col-md-4 col-sm-12">
+                        <label>Người hướng dẫn 1 </label>
+                        <input name="nhd1" type="text" id="nhd1" required="" value="@Model.NHD1" class="inputdk form-control" disabled>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.NHD2))
+                {
+                    <div class="col-md-4 col-sm-12">
+                        <label>Người hướng dẫn 2</label>
+                        <input name="nhd2" type="text" id="nhd2" required="" value="@Model.NHD2" class="inputdk form-control" disabled>
+                    </div>
+                }
+                <div class="col-lg-12">
+                    <h3>VIII. File đính kèm theo hồ sơ dự tuyển</h3>
+                    <hr />
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File ảnh sơ yếu lý lịch </label>
+                    @if (@Model.Url_FileUpload_AnhSoYeuLyLich != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_AnhSoYeuLyLich')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(11)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+
+                <div class="col-md-6  col-sm-12">
+                    <label>File công văn giới thiệu </label>
+                    @if (@Model.Url_FileUpload_CongVanGioiThieu != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_CongVanGioiThieu')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(12)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File giấy khám sức khoẻ </label>
+                    @if (@Model.Url_FileUpload_GiaySucKhoe != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_GiaySucKhoe')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(13)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File thư giới thiệu</label>
+                    @if (@Model.Url_FileUpload_ThuGioiThieu != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_ThuGioiThieu')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(14)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File bài báo khoa học </label>
+                    @if (@Model.Url_FileUpload_BaiBaoKhoaHoc != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_BaiBaoKhoaHoc')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(15)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File đề cương nghiên cứu </label>
+                    @if (@Model.Url_FileUpload_DeCuongNghienCuu != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_DeCuongNghienCuu')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(16)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+                <div class="col-md-6  col-sm-12">
+                    <label>File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng </label>
+                    @if (@Model.Url_FileUpload_HopDongLaoDong != null)
+                    {
+                        <div>
+                            <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImg('@Model.Url_FileUpload_Zip/@Model.Url_FileUpload_HopDongLaoDong')">Xem file</a></label>
+                            @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT))
+                            {
+                                <button type="button" onclick="phanhoi(17)" class="btn btn-dark col-md-offset-1" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="inputdk form-control"></label>
+                    }
+                </div>
+
+                <hr />
+                <div class="col-lg-12">
+                    <h3>IX. Thông tin khác</h3>
+                    <hr />
+                </div>
+                @if (phidangky != null)
+                {
+                    <div class="col-md-4  col-sm-12">
+
+                        <label>Phí đăng ký hồ sơ</label>
+                        @if (phidangky.File != null)
+                        {
+                            <div>
+                                <label class="inputdk form-control form-control-u col-md-10"><a onclick="xemImgPhiDK('@phidangky.File')">Xem file</a></label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <label class="inputdk form-control form-control-u col-md-10">Chưa nộp lệ phí</label>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <label></label>
+                        <div>
+                            @if (phidangky.TrangThai == null || phidangky.TrangThai == PublicConstant.CHUA_NOP)
+                            {
+                                <div style="display:flex">
+                                    <label for="lephi_danop" style="padding-top: 7px;" class="radio-inline">
+                                        <input id="lephi_danop" disabled value="@PublicConstant.DA_NOP" type="radio" name="lephi">
+                                        Nộp thành công
+                                    </label>
+                                    <label for="lephi_chuanop" style="padding-top: 7px;padding-right:10px" class="radio-inline">
+                                        <input type="radio" disabled value="@PublicConstant.NOP_LOI" id="lephi_chuanop" name="lephi">
+                                        Nôp lỗi
+                                    </label>
+                                </div>
+
+                            }
+                            else if (phidangky.TrangThai == PublicConstant.DA_NOP)
+                            {
+                                @*<label class="inputdk form-control form-control-u col-md-10"><p style="color:blue">Đã nộp</p></label>*@
+                                <div style="display:flex">
+                                    <label for="lephi_danop" style="padding-top: 7px;" class="radio-inline">
+                                        <input id="lephi_danop" checked value="@PublicConstant.DA_NOP" type="radio" name="lephi">
+                                        Nộp thành công
+                                    </label>
+                                    <label for="lephi_chuanop" style="padding-top: 7px;padding-right:10px" class="radio-inline">
+                                        <input type="radio" value="@PublicConstant.NOP_LOI" id="lephi_chuanop" name="lephi">
+                                        Nôp lỗi
+                                    </label>
+                                </div>
+                            }
+                            else if (phidangky.TrangThai == PublicConstant.NOP_LOI)
+                            {
+                                @*<label class="inputdk form-control form-control-u col-md-10"><p style="color:red">Nộp lỗi</p></label>*@
+                                <div style="display:flex">
+                                    <label for="lephi_danop" style="padding-top: 7px;" class="radio-inline">
+                                        <input id="lephi_danop" value="@PublicConstant.DA_NOP" type="radio" name="lephi">
+                                        Nộp thành công
+                                    </label>
+                                    <label for="lephi_chuanop" style="padding-top: 7px;padding-right:10px" class="radio-inline">
+                                        <input type="radio" checked value="@PublicConstant.NOP_LOI" id="lephi_chuanop" name="lephi">
+                                        Nôp lỗi
+                                    </label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="display:flex">
+                                    <label for="lephi_danop" style="padding-top: 7px;" class="radio-inline">
+                                        <input id="lephi_danop" value="@PublicConstant.DA_NOP" type="radio" name="lephi">
+                                        Nộp thành công
+                                    </label>
+                                    <label for="lephi_chuanop" style="padding-top: 7px;padding-right:10px" class="radio-inline">
+                                        <input type="radio" value="@PublicConstant.NOP_LOI" id="lephi_chuanop" name="lephi">
+                                        Nôp lỗi
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <div class="col-md-12" style="margin-top:20px; text-align:center">
+                        @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+                        <button type="button" onclick="huyhoso('@Model.Id',@PublicConstant.STT_TRUOT)" class="btn btn-danger" title="Huỷ"><i style="margin-right: 5px;" class="fa fa-user-slash" title="Huỷ"></i>Huỷ</button>
+                        @if (!roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT)&&phidangky!=null)
+                        {
+                            if (Model.TrangThaiTuyenSinh == PublicConstant.STT_DANGKYMOI)
+                            {
+                                <button disabled type="button" class="btn btn-dark" title="Đăng ký mới"><i style="margin-right: 5px;" class="fa fa-check" title="Đăng ký mới"></i>Đăng ký mới</button>
+                                <button type="button" id="btn_lephi" style="display:none;" class="btn btn-primary" onclick="updateStatusHocPhi(@phidangky.Id)">Xác nhận nộp lệ phí</button>
+                            }
+                            else if (Model.TrangThaiTuyenSinh == PublicConstant.STT_DANGXULY)
+                            {
+                                <button disabled type="button" class="btn btn-success" title="Đang xử lý"><i style="margin-right: 5px;" class="fa fa-check" title="Đang xử lý"></i>Đang xử lý</button>
+                                <button type="button" id="btn_lephi" style="display:none;" class="btn btn-primary" onclick="updateStatusHocPhi(@phidangky.Id)">Xác nhận nộp lệ phí</button>
+                            }
+                            else
+                            {
+                                <button disabled type="button" class="btn btn-success" title="Đang xử lý"><i style="margin-right: 5px;" title="Đang xử lý"></i>Đang xử lý</button>
+                                <button type="button" id="btn_lephi" style="display:none;" class="btn btn-primary" onclick="updateStatusHocPhi(@phidangky.Id)">Xác nhận nộp lệ phí</button>
+                            }
+                            <button type="button" onclick="duyethoso('@phidangky.TrangThai','@Model.Id','@Model.TenDeTai', '@Model.KhoaId_NHD1','@Model.Id_NHD1','@Model.KhoaId_NHD2','@Model.Id_NHD2','@Model.NHD2')" class="btn btn-success" title="Duyệt hồ sơ"><i style="margin-right: 5px;" class="fa fa-user-check" title="Duyệt hồ sơ"></i>Duyệt hồ sơ</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modelphanhoi" id="modelphanhoi" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Gửi phản hồi cho NCS</h4>
+                <div name="TieuDe" id="TieuDe"></div>
+                <input type="hidden" name="Idphanhoi" id="Idphanhoi" value="" />
+            </div>
+            <div class="x_content">
+                <br />
+                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-4 col-xs-12" for="tenhocphan">
+                            Nội dung
+                        </label>
+                        <div class="col-md-10 col-sm-7 col-xs-12">
+                            <textarea type="text" id="NoiDungPhanHoi" name="NoiDungPhanHoi" required="required" class="form-control col-md-7 col-xs-12" style="min-height: 120px;"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnGuiPhanHoi" class="btn btn-success" data-dismiss="modal">Gửi phản hồi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modelduyeths" id="modelduyeths" role="dialog">
+    <div class="modal-dialog" style="width: 80%!important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Duyệt hồ sơ</h4>
+                <input type="hidden" name="Idhoso" id="Idhoso" value="" />
+            </div>
+            <div class="x_content">
+                <br />
+                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tenhocphan">
+                            Tên đề tài
+                        </label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <textarea type="text" id="tendetai" name="tendetai" required="required" class="form-control col-md-7 col-xs-12">
+`                           </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
+                                    Cán bộ giáo viên 1
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div style="display:flex">
+                                        <label for="loaiGV_1_in" class="radio-inline">
+                                            <input type="radio" value="0" id="loaiGV_1_in" checked name="loaiGV_1">
+                                            GV trong trường
+                                        </label>
+                                        <label for="loaiGV_1_out" class="radio-inline">
+                                            <input type="radio" value="1" id="loaiGV_1_out" disabled name="loaiGV_1">
+                                            GV ngoài trường
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
+                                    Chọn Khoa
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <select name="ddlKhoa_1" id="ddlKhoa_1" class="form-control">
+                                        <option value="0">--- Chọn Khoa ---</option>
+                                        @foreach (var item in listKhoa)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
+                                    Đề xuất người hướng dẫn 1
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <select id="ddlGV_1" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
+                                    Cán bộ giáo viên 2
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div style="display:flex">
+                                        <label for="loaiGV_2_in" class="radio-inline">
+                                            <input type="radio" value="0" id="loaiGV_2_in" checked name="loaiGV_2">
+                                            GV trong trường
+                                        </label>
+                                        <label for="loaiGV_2_out" class="radio-inline">
+                                            <input type="radio" value="1" id="loaiGV_2_out" name="loaiGV_2">
+                                            GV ngoài trường
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="gv2_khoa">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
+                                    Chọn Khoa
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <select name="ddlKhoa_2" id="ddlKhoa_2" class="form-control">
+                                        <option value="0">--- Chọn Khoa ---</option>
+                                        @foreach (var item in listKhoa)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" id="gv2_ten">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">
+                                    Đề xuất người hướng dẫn 2
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <select id="ddlGV_2" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="form-group" hidden id="gv2_ten2">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">
+                                    Đề xuất người hướng dẫn 2
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input name="tenGV_2" type="text" id="tenGV_2" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group" hidden id="coquanGV_2_div">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">
+                                    Cơ quan công tác
+                                </label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input name="coquanGV_2" type="text" id="coquanGV_2" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnDuyetHS" class="btn btn-success" data-dismiss="modal">Duyệt hồ sơ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modelImg" class="modal fade modelImg">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:unset">
+                <button type="button" class="close" data-dismiss="modal" style="font-size:50px;margin:0px 5px">&times;</button>
+            </div>
+            <div class="modal-content">
+                <iframe id="Url_Anh" style="width: 100%;height: 600px;text-align:center"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var lephi_status = 0;
+    var ReportSubmit = [];
+        
+
+    $(document).ready(function () {
+        $('#gioitinh').val('@Model.GioiTinh');
+        $('#nghenghiep').val('@Model.NgheNghiep');
+        $('#canbo').val('@Model.HienLaCanBo');
+        $('#dtdt').val('@Model.DoiTuongDuTuyen');
+        $('#thoigiandt').val('@Model.ThoiGianHinhThucDaoTao');
+        $('input[type=radio][name=lephi]').change(function () {
+            lephi_status = this.value;
+            $("#btn_lephi").css("display","inline-block");
+        });
+    });
+
+    function updateStatusHocPhi(id) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("UpdateStatus", "QuanLyHocPhi")',
+            data: { id: id, status: lephi_status },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('thay đổi trạng thái thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+     function huyhoso(id, status) {
+            $("#divProcessing").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateStatus", "ThiSinhTuyenSinh")',
+                data: { id: id, status: status},
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#divProcessing").hide();
+                    if (data == 'OK') {
+                        setTimeout(function () { location.reload(); }, 100);
+                        toastr.success("Cập nhật dữ liệu thành công!");
+                    } else {
+                        toastr.error(data);
+                    }
+                },
+                error: function (req, status, error) {
+                    $("#divProcessing").hide();
+                }
+            });
+    }
+    function phanhoi(id) {
+        $('#Idphanhoi').val(id);
+        if (id == 1) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Thông tin cá nhân";
+        }
+        else if (id == 2) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Thông tin nghề nghiệp ";
+        }
+        else if (id == 3) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Văn bằng đại học ";
+        }
+        else if (id == 4) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Văn bằng 2";
+        }
+        else if (id == 5) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Văn bằng thạc sĩ";
+        }
+        else if (id == 6) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Ngoại ngữ & Bổ túc kiến thức ";
+        }
+         else if (id == 7) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục Thông tin dự tuyển";
+        }
+        else if (id == 11) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File ảnh sơ yếu lý lịch";
+        }
+        else if (id == 12) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File công văn giới thiệu";
+        }
+        else if (id == 13) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File giấy khám sức khoẻ";
+        }
+        else if (id == 14) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File thư giới thiệu";
+        }
+        else if (id == 15) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File bài báo khoa học";
+        }
+        else if (id == 16) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File đề cương nghiên cứu";
+        }
+        else if (id == 17) {
+            document.querySelector("#TieuDe").innerHTML = "Về mục File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng";
+        }
+        $('#modelphanhoi').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    function taifile(url) {
+        var link = url + ".zip";
+        document.location.href = "/Upload/TaiLieu/" + link;
+    }
+
+    function xemImg(url) {
+        document.getElementById("Url_Anh").src = "/Upload/TaiLieu/" + url;
+        $('#modelImg').modal({ backdrop: 'static', keyboard: false })
+    }
+    function xemImgPhiDK(url) {
+        document.getElementById("Url_Anh").src = "/Images/BienLai/" + url;
+        $('#modelImg').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('iframe').load(function () {
+        $('iframe').contents().find("body")
+            .append($("<style type='text/css'>  body{text-align:center}  </style>"));
+    });
+    $('#btnGuiPhanHoi').click(function () {
+        var tieude = document.getElementById("TieuDe").innerHTML;
+        var noidungphanhoi = $('#NoiDungPhanHoi').val();
+        if (noidungphanhoi == "") {
+            toastr.error("Bạn chưa nhập nội dung phản hồi");
+            return false;
+        };
+
+        ReportSubmit.push({ title: tieude, mess: noidungphanhoi });
+        console.log(ReportSubmit);
+        var email = '@Model.Email';
+        @*$("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GuiPhanHoiTuyenSinh", "ThiSinhTuyenSinh")',
+            data: { email: email, tieude: tieude, noidungphanhoi: noidungphanhoi },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 100);
+                    toastr.success("Gửi phản hồi thành công")
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });*@
+    });
+</script>
+<script>
+    function duyethoso(status, id, tendetai, khoaId_NHD1, id_NHD1, khoaId_NHD2, id_NHD2, NHD2) {
+        if (status == @PublicConstant.DA_NOP) {
+            $('#ddlKhoa_1').val(0);
+            loadGV2(0, 'ddlGV_1');
+            var lGV_2 = 0;
+            $("input[name=loaiGV_2][value=" + lGV_2 + "]").prop('checked', true);
+
+            $("#gv2_khoa").show();
+            $("#gv2_ten").show();
+            $("#gv2_ten2").hide();
+            $("#coquanGV_2_div").hide();
+
+            $('#tenGV_2').val();
+
+
+            $('#Idhoso').val(id);
+            $('#tendetai').val(tendetai);
+
+            if (khoaId_NHD1 != '' && id_NHD1 != '') {
+                $('#ddlKhoa_1').val(khoaId_NHD1);
+                loadGV2(khoaId_NHD1, 'ddlGV_1', id_NHD1);
+            }
+
+            if (khoaId_NHD2 != '' && id_NHD2 != '') {
+                var lGV_2 = 0;
+                $("input[name=loaiGV_2][value=" + lGV_2 + "]").prop('checked', true);
+                $('#ddlKhoa_2').val(khoaId_NHD2);
+                loadGV2(khoaId_NHD2, 'ddlGV_2', id_NHD2);
+                $('#ddlGV_2').val(id_NHD2);
+            } else if (NHD2 != '') {
+                var lGV_2 = 1;
+                $("input[name=loaiGV_2][value=" + lGV_2 + "]").prop('checked', true);
+                $('#tenGV_2').val(NHD2);
+                $("#gv2_khoa").hide();
+                $("#gv2_ten").hide();
+                $("#gv2_ten2").show();
+                $("#coquanGV_2_div").show();
+            }
+            $('#modelduyeths').modal({ backdrop: 'static', keyboard: false })
+        }
+        else {
+            toastr.error('Hồ sơ chưa được xác nhận lệ phí đăng ký thi!');
+        }
+
+    }
+
+    $(document).ready(function () {
+        $('input[type=radio][name=loaiGV_2]').change(function () {
+            var loaiGV = this.value;
+            if (loaiGV == 1) {
+                $("#gv2_khoa").hide();
+                $("#gv2_ten").hide();
+                $("#gv2_ten2").show();
+                $("#coquanGV_2_div").show();
+            } else {
+                $("#gv2_khoa").show();
+                $("#gv2_ten").show();
+                $("#gv2_ten2").hide();
+                $("#coquanGV_2_div").hide();
+            }
+        });
+        $('#ddlKhoa_1').on('change', function (e) {
+            var khoaid = this.value;
+            loadGV(khoaid, 'ddlGV_1')
+        });
+        $('#ddlKhoa_2').on('change', function (e) {
+            var khoaid = this.value;
+            loadGV(khoaid, 'ddlGV_2')
+        });
+    });
+
+    function loadGV(khoaid, divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGiangVienByKhoaWithHHHV", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 console.log(data);
+                 $('#' + divresult).empty().html(data);
+
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+    function loadGV2(khoaid, divresult,id_NHD) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGiangVienByKhoaWithHHHV", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid, id_NHD: id_NHD },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 $('#' + divresult).empty().html(data);
+                 $('#ddlGV_1').val(id_NHD);
+
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+
+    $('#btnDuyetHS').click(function () {
+        var id = $('#Idhoso').val();
+        var detai = $('#tendetai').val();
+        var ddlKhoa_1 = $('#ddlKhoa_1').val();
+        var ddlGV_1 = $('#ddlGV_1').val();
+
+        var loaiGV_2 = $("input[name='loaiGV_2']:checked").val();
+        var ddlKhoa_2 = $('#ddlKhoa_2').val();
+        var ddlGV_2 = $('#ddlGV_2').val();
+        var tenGV_2 = $('#tenGV_2').val();
+        var coquancongtacGV_2 = $('#coquancongtacGV_2').val();
+
+        if (detai == "") {
+            toastr.error('Chưa điền tên đề tài');
+            return false;
+        }
+        if (ddlGV_1 == 0 || ddlGV_1 == null) {
+            toastr.error('Chưa chọn người hướng dẫn 1');
+            return false;
+        }
+        if (ddlGV_2 == null && tenGV_2 == "" && coquancongtacGV_2 == "") {
+            check_thongtin_canbo2 = false;
+        }
+        if (loaiGV_2 == 0) {
+            if (tenGV_2 == "" || coquancongtacGV_2 == "") {
+                toastr.error('Chưa chọn người hướng dẫn 2');
+                return false;
+            }            
+        }
+        else if (loaiGV_2 == 1) {
+            if (ddlGV_2 == 0 || ddlGV_2 == null) {
+                toastr.error('Chưa chọn người hướng dẫn 2');
+                return false;
+            }
+        }
+        //if ((loaiGV_2 == 0 && ddlGV_2 == 0) || (loaiGV_2 == 1 && tenGV_2 == "") || (loaiGV_2 == 1 && check_thongtin_canbo2 == false)) {
+        //    toastr.error('Chưa chọn người hướng dẫn 2');
+        //    return false;
+        //}
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("DuyetHoSo", "ThiSinhTuyenSinh")',
+            data: { id: id, tendetai: detai, ddlKhoa_1: ddlKhoa_1, ddlGV_1: ddlGV_1, loaiGV_2: loaiGV_2, ddlKhoa_2: ddlKhoa_2, ddlGV_2: ddlGV_2, tenGV_2: tenGV_2, coquancongtacGV_2: coquancongtacGV_2},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 100);
+                    toastr.success("Duyệt hồ sơ thành công")
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    });
+</script>
+<style>
+    .form-control-u {
+        width: 80% !important;
+    }
+</style>

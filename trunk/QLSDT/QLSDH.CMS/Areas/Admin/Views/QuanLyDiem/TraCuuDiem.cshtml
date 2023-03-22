@@ -1,0 +1,214 @@
+﻿@model IEnumerable<TEMIS.Model.Diem>
+@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@using TEMIS.CMS.Common;
+@using System.Threading.Tasks;
+
+@{
+    ViewBag.Title = "Tra cứu điểm NCS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+    var role = "";
+    var IDKHOA = ViewBag.IDKHOA;
+    if (roleInfo != null)
+    {
+        role = roleInfo.Role;
+    }
+}
+<style>
+    #datatable-buttonss a {
+        color: blue
+    }
+</style>
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Tra cứu điểm NCS</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    @using (Html.BeginForm("Index", "QuanLyDiem", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="container">
+                            <div class="row">
+                                @if (roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT) || roleInfo.Role.Equals(PublicConstant.ROLE_GIANG_VIEN_HD))
+                                {
+                                    <div class="col-md-2">
+                                        <label class="control-label">Ngành học</label>
+                                        <select class="form-control" id="ddlNganh"></select>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-2">
+                                        <label class="control-label">Khoa</label>
+                                        <select class="form-control" name="khoa" id="ddlKhoa">
+                                            <option value="0">------- Chọn Khoa -------</option>
+                                            @foreach (var item in listKhoa)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="control-label">Ngành học</label>
+                                        <select class="form-control" id="ddlNganh"></select>
+                                    </div>
+                                }
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Khóa</label>
+                                    <select class="form-control" id="ddlKhoaHoc" name="ddlKhoaHoc">
+                                        @foreach (var item in listKhoaHoc)
+                                        {
+                                            <option value="@item.Id">@item.MaKhoa</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Họ tên</label>
+                                    <input type="text" id="hoten" name="hoten" required="required" class="form-control">
+                                </div>
+                                <div class="col-md-2" style="padding-top:24px;">
+                                    <a id="btnSearch" class="btn btn-info"><i class="fa fa-search" title="tìm kiếm"></i></a>
+                                    @*&nbsp;&nbsp;
+                                        <input type="button" name="btnExport" id="btnExport" value="Xuất Excel" class="btn btn-info btn-md" />*@
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <div id="divresult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable-buttonss').dataTable({
+            "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+        console.log(@IDKHOA);
+        loadnganh(@IDKHOA, "ddlNganh");
+        loaddiem(@IDKHOA, 0, '');
+
+        $('#btnSearch').click(function () {
+                 loaddiem();
+             });
+         });
+    $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        loadnganh(khoaid, 'ddlNganh');
+        loaddiem();
+    });
+    $('#ddlNganh').on('change', function (e) {
+        loaddiem();
+    });
+    function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+
+    function loaddiem() {
+        var khoaid = $('#ddlKhoa').val();
+        var nganhid = $('#ddlNganh').val();
+        var khoahocid = $('#ddlKhoaHoc').val();
+        var hoten = $('#hoten').val();
+        if (nganhid == '' || nganhid == null) {
+            nganhid = 0;
+        }
+        if (khoahocid == '') {
+            khoahocid = 0;
+        }
+        if (khoaid == 'undefined' || khoaid == null) {
+            khoaid =@IDKHOA;
+        }
+        $('#divProcessing').show();
+        var model = $('#divresult');
+            $.ajax({
+                url: '@Url.Action("LoaDataTraCuuDiem", "QuanLyDiem")',
+                data: { khoaid: khoaid, nganhid: nganhid, khoahocid: khoahocid, hoten: hoten },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+
+    function opendown() {
+        var khoaid = $('#ddlKhoa').val();
+        var nganhid = $('#ddlNganh').val();
+        var khoahocid = $('#ddlKhoaHoc').val();
+        var hoten = $('#hoten').val();
+        if (nganhid == '' || nganhid == null) {
+            nganhid = 0;
+        }
+        if (khoahocid == '') {
+            khoahocid = 0;
+        }
+        if (khoaid == 'undefined' || khoaid == null) {
+            khoaid =@IDKHOA;
+        }
+        var nameBM = $("#fileselect").val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("DownLoadExcel", "QuanLyDiem")',
+            data: { khoaid: khoaid, nganhid: nganhid, khoahocid: khoahocid, hoten: hoten},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data != 'Không tìm thấy file' && data != 'error') {
+                    console.log(data)
+                    $("#hrf_file").attr("href", data);
+                    $('#hrf_file').css('pointer-events', 'visible');
+                    toastr.success('File đã được lưu');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+</script>

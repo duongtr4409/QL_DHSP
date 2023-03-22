@@ -1,0 +1,100 @@
+﻿
+@model List<TEMIS.CMS.Areas.Admin.Controllers.GiangVienView>
+<style>
+    #datatable-2 > tbody > tr > td {
+        padding: 4px !important;
+    }
+</style>
+<table id="datatable-2" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">
+                @*<label class="pos-rel">
+                        <input type="checkbox" class="cball" id="check-all">
+                        <span class="lbl"></span>
+                    </label>*@
+            </th>
+            <th style="text-align:center">Tên GV</th>
+            <th style="text-align:center">Học hàm học vị</th>
+            <th style="display:none">staffid</th>
+            <th style="display:none">idgv</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="a-center" style="text-align:center">
+                        <label class="pos-rel">
+                            <input type="checkbox" class="clbitem" id="@item.name">
+                            <span class="lbl"></span>
+                            <input type="hidden" id="hdname" class="form-control" name="hdname" value="@item.name" />
+                            <input type="hidden" id="hdhocvi" class="form-control" name="hdhocvi" value="@item.hocham" />
+                            <input type="hidden" id="idstaff" class="form-control" name="hdstaff" value="@item.staffid" />
+                            <input type="hidden" id="idgv" class="form-control" name="hdgv" value="@item.idgv" />
+                        </label>
+                    </td>
+                    <td>@item.name</td>
+                    <td>@item.hocham</td>
+                    <td style="display:none">@item.staffid</td>
+                    <td style="display:none">@item.idgv</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-2').dataTable({
+            "pageLength": 10
+        });
+    });
+    $(document).ready(function () {
+        $('#datatable-2').on("change", ".clbitem", function (event) {
+            if ($(this).is(":checked")) {
+                $('option:selected', this).remove();
+                $(this).parent().parent().parent().addClass('selected');
+                var table = $('#datatable-2').DataTable();
+                var listName = '';
+                var idstaff = '';
+                var idgv = '';
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+
+                    listName = listName + item[2] + ' ' + item[1] + ',';
+                    idstaff = idstaff + item[3] + ',';
+                    idgv = idgv + item[4] + ',';
+                    return item[2] + ' ' + item[1];
+                });
+                console.log(listName);
+                $('#namegv').val(listName.substring(0, listName.length - 1));
+                $('#hidden_staffid').val(idstaff.substring(0, idstaff.length - 1));
+                $('#hidden_idgv').val(idgv.substring(0, idgv.length - 1));
+                console.log($('#hidden_staffid').val());
+                console.log($('#hidden_idgv').val());
+            }
+            else {
+                var table = $('#datatable-2').DataTable();
+                $(this).parent().parent().parent().removeClass('selected2');
+                $(this).parent().parent().parent().removeClass('selected');
+                var listName2 = '';
+                var listidstaff = '';
+                var listidgv = '';
+                var ids2 = $.map(table.rows('.selected').data(), function (item) {
+
+                    listName2 = listName2 + item[2] + ' ' + item[1] + ',';
+                    listidstaff = listidstaff + item[3] + ',';
+                    listidgv = listidgv + item[4] + ',';
+                    return item[2] + ' ' + item[1];
+                });
+                console.log("listname 2 = " + listName2);
+                $('#namegv').val(listName2.substring(0, listName2.length - 1));
+                $('#hidden_staffid').val(listidstaff.substring(0, listidstaff.length - 1));
+                $('#hidden_idgv').val(listidgv.substring(0, listidgv.length - 1));
+                console.log('id staff after romeve ' + $('#hidden_staffid').val());
+                console.log('id gv after romeve ' + $('#hidden_idgv').val());
+            }
+        });
+    });
+</script>

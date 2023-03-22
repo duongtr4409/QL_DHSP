@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Đồng bộ giảng viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Đồng bộ thông tin giảng viên</h2>
+<div class="row">
+    @using (Html.BeginForm("DongBoGiangVien", "GiangVien", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <div class="row" style="text-align:center">
+            <div class="col-sm-12">
+                <div class="panel panel-dblues" style="border: 1px solid #76b51b;margin-bottom: 0px;">
+
+                    <div class="panel-body txtct" style="padding: 25px;">
+                        <div class="form-group">
+                            <input type="submit" id="btnDongBo" value="Đồng bộ" class="btn btn-info btn-form btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

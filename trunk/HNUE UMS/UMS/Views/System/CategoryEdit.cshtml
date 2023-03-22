@@ -1,0 +1,33 @@
+﻿@using Resources
+@model Ums.Models.System.FunctionCategoryModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("CategoryEdit", "System", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Order)
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="form-group">
+            <label>@Actions.Name</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label>@Actions.Icon</label>
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Icon, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("400px", "270px");
+</script>

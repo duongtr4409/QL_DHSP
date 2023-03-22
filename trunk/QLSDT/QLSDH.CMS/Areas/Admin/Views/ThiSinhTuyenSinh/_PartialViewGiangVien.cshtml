@@ -1,0 +1,115 @@
+﻿@model List<TEMIS.CMS.Areas.Admin.Controllers.GiangVienView>
+<style>
+    #datatable-2 > tbody > tr > td {
+        padding: 4px !important;
+    }
+</style>
+<table id="datatable-2" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">
+                <label class="pos-rel">
+                    <input type="checkbox" class="cball" id="check-all">
+                    <span class="lbl"></span>
+                </label>
+            </th>
+            <th style="text-align:center">Tên GV</th>
+            <th style="text-align:center">Học hàm học vị</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="a-center" style="text-align:center">
+                        <label class="pos-rel">
+                            <input type="checkbox" class="clbitem">
+                            <span class="lbl"></span>
+                            <input type="hidden" id="hdname" class="form-control" name="hdname" value="@item.name" />
+                            <input type="hidden" id="hdhocvi" class="form-control" name="hdhocvi" value="@item.hocham" />
+                            
+                        </label>
+                    </td>
+                    <td>@item.name</td>
+                    <td>@item.hocham</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-2').dataTable({
+            "pageLength": 10
+        });
+    });
+    $(document).ready(function () {
+        $('.cball').click(function () {
+            //$('#datatable-2').on("change", ".cball", function (event) {
+            if ($(this).is(":checked")) {
+
+                var table = $('#datatable-2').DataTable();
+                var listName = '';
+                var ids = $.map(table.rows().data(), function (item) {
+                    listName = listName + item[2] + ' ' + item[1] + ',';
+                    return item[0];
+
+                });
+                console.log(ids);
+                $('#namegv').val(listName.substring(0, listName.length - 1));
+            } else {
+                $('#namegv').val('');
+            }
+
+        });
+
+        $('#datatable-2').on("change", ".clbitem", function (event) {
+            if ($(this).is(":checked")) {
+                $(this).parent().parent().parent().addClass('selected');
+                var table = $('#datatable-2').DataTable();
+                var listName = '';
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+
+                    listName = listName + item[2] + ' ' + item[1] + ',';
+                    return item[2] + ' ' + item[1];
+                });
+                console.log(listName);
+                $('#namegv').val(listName.substring(0, listName.length - 1));
+
+            }
+            else {
+                var listName = $('#namegv').val();
+                console.log('list name input = ' + listName);
+                var nameremove = '';
+                $(this).parent().parent().parent().addClass('selected2');
+                var table = $('#datatable-2').DataTable();
+
+                var ids = $.map(table.rows('.selected2').data(), function (item) {
+
+                    nameremove = item[2] + ' ' + item[1];
+                });
+                console.log("ten phai xoa: " + nameremove);
+                listName = listName.replace(nameremove, '');
+                console.log(listName);
+                $('#namegv').val(listName);
+
+               
+
+                $(this).parent().parent().parent().removeClass('selected2');
+                $(this).parent().parent().parent().removeClass('selected');
+                var listName2 = '';
+                var ids2 = $.map(table.rows('.selected').data(), function (item) {
+
+                    listName2 = listName2 + item[2] + ' ' + item[1] + ',';
+                    return item[2] + ' ' + item[1];
+                });
+                console.log("listname 2 = " + listName2);
+                $('#namegv').val(listName2.substring(0, listName2.length - 1));
+            }
+        });
+
+    });
+
+</script>

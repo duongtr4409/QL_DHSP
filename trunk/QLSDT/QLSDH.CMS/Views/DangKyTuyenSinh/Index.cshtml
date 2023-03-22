@@ -1,0 +1,1006 @@
+﻿@using TEMIS.Model;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Đăng ký tuyển sinh";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+    List<ChuyenNganhDaoTao> listChuyenNghanh = (List<ChuyenNganhDaoTao>)ViewBag.ListChuyenNganhDaoTao;
+    List<City> listCity = (List<City>)ViewBag.ListCity;
+    List<DanToc> listDanToc = (List<DanToc>)ViewBag.ListDanToc;
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+}
+<style type="text/css">
+    .inputdk {
+        display: block;
+        width: 100%;
+        height: calc(2.25rem + 2px);
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+        background-color: #2c539e;
+        outline: 0;
+        display: inline-block;
+        border-radius: .25rem !important;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+    }
+
+    h2, h3 {
+        font-weight: bold;
+    }
+
+    label {
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .required {
+        color: red;
+    }
+</style>
+<section class="content-header container">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Đăng ký tuyển sinh</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="container">
+        <div style="text-align:left">
+            <!-- Thông tin đăng kýt tuyển sinh-->
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h1 class="box-title">Đăng ký dự tuyển nghiên cứu sinh</h1>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                @using (Html.BeginForm("DangKy", "DangKyTuyenSinh", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                <div class="box-body" style="display: block; flex-wrap:wrap">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>I. Thông tin cá nhân <span style="font-size:16px;">(Lưu ý mục đánh dấu <span class="required">(*)</span> là bắt buộc</span></h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Họ và tên thí sinh (<span class="required">*</span>)</label>
+                        <input name="hovaten" type="text" id="hovaten" required="" class="form-control inputdk" placeholder="Họ và tên viết chữ in hoa có dấu">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Giới tính (<span class="required">*</span>)</label>
+                        <select name="gioitinh" id="gioitinh" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Ngày sinh (<span class="required">*</span>)</label>
+                        <input name="ngaysinh" type="text" id="ngaysinh" required="" class="form-control inputdk" data-target="#ngaysinh" data-toggle="ngaysinh">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Nơi sinh (<span class="required">*</span>)</label>
+                        <input name="noisinh" type="text" id="noisinh" required="" class="form-control inputdk" placeholder="Tỉnh mới">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Dân tộc (<span class="required">*</span>)</label>
+                        @*<div class="frmSearch">
+                            <input type="text" id="search-box" placeholder="Country Name" />
+                            <div id="suggesstion-box"></div>
+                        </div>*@
+                        <script>
+                            $(document).ready(function () {
+                                $("#search-box").keyup(function () {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "@Url.Action("DanToc","DangKyTuyenSinh")",
+                                        data: { key: $(this).val() },
+                                        beforeSend: function () {
+                                            $("#search-box").css("background", "#FFF url(LoaderIcon.gif) no-repeat 165px");
+                                        },
+                                        success: function (data) {
+                                            $("#suggesstion-box").show();
+                                            $("#suggesstion-box").html(data);
+                                            $("#search-box").css("background", "#FFF");
+                                        }
+                                    });
+                                });
+                            });
+                            //To select country name
+                            function selectCountry(val) {
+                                $("#search-box").val(val);
+                                $("#suggesstion-box").hide();
+                            }
+                        </script>
+                        <select name="dantoc" id="dantoc" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            @foreach (var item in listDanToc)
+                            {
+                                <option value="@item.TenDanToc">@item.TenDanToc</option>
+                            }
+                        </select>
+                        @*<input name="dantoc" type="text" id="dantoc" required="" class="form-control inputdk" placeholder="Dân tộc">*@
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Số điện thoại (<span class="required">*</span>)</label>
+                        <input name="sdt" type="number" id="sdt" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Tỉnh/Thành phố(<span class="required">*</span>)</label>
+                        <select name="cmnd_tinhthanh" id="cmnd_tinhthanh" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            @foreach (var item in listCity)
+                            {
+                                <option value="@item.CityCode">@item.Type @item.Name</option>
+                            }
+                        </select>
+                        <input name="tinhthanh" type="text" id="tinhthanh" hidden>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Quận/Huyện(<span class="required">*</span>)</label>
+                        <select name="cmnd_huyen" id="cmnd_huyen" class="form-control inputdk"></select>
+                        <input name="quanhuyen" type="text" id="quanhuyen" hidden>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Xã/Phường(<span class="required">*</span>)</label>
+                        <select name="cmnd_xa" id="cmnd_xa" class="form-control inputdk"></select>
+                        <input name="xaphuong" type="text" id="xaphuong" hidden>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Thông tin CMND/CCCD:(<span class="required">*</span>)</label>
+                        <input name="cmnd" type="text" id="cmnd" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Ngày cấp(<span class="required">*</span>)</label>
+                        <input name="cmnd_ngaycap" type="text" id="cmnd_ngaycap" required="" class="form-control inputdk" data-target="#cmnd_ngaycap" data-toggle="cmnd_ngaycap">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Nơi cấp(<span class="required">*</span>)</label>
+                        <input name="cmnd_noicap" type="text" id="cmnd_noicap" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Email (<span class="required">*</span>)</label>
+                        <input name="email" type="text" id="email" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-8 col-sm-12 col-xs-12">
+                        <label>Địa chỉ liên lạc (<span class="required">*</span>)</label>
+                        <input name="diachi" type="text" id="diachi" required="" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>II. Thông tin nghề nghiệp</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label>Nghề nghiệp (<span class="required">*</span>)</label>
+                        <input name="nghenghiep" type="text" id="nghenghiep" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>Cơ quan công tác hiện nay (<span class="required">*</span>)</label>
+                        <input name="coquan" type="text" id="coquan" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label>Năm bắt đầu công tác (<span class="required">*</span>)</label>
+                        <input name="namct" type="number" id="namct" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label>Đối tượng (<span class="required">*</span>)</label>
+                        <select name="canbo" id="canbo" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            <option value="bienche">Biên chế</option>
+                            <option value="hopdong">Hợp đồng</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>Chức vụ hiện tại (<span class="required">*</span>)</label>
+                        <input name="vitricv" type="text" id="vitricv" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <label>Thâm niên nghề nghiệp (<span class="required">*</span>)</label>
+                        <input name="thamnien" type="text" id="thamnien" required="" placeholder="số năm công tác trong lĩnh vực ngành ĐKDT" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>Chuyên môn (<span class="required">*</span>)</label>
+                        <input name="chuyenmon" type="text" id="chuyenmon" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>III. Văn bằng đại học</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Trường tốt nghiệp (TN) (<span class="required">*</span>)</label>
+                        <input name="tentruongct" type="text" id="tentruongct" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Năm TN (<span class="required">*</span>)</label>
+                        <input name="namtn" type="number" id="namtn" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Hệ đào tạo (<span class="required">*</span>)</label>
+                        <select name="hedt" id="hedt" class="form-control inputdk">
+                            <option value="0">---Chọn---</option>
+                            <option value="Chính quy">Chính quy</option>
+                            <option value="Chính quy liên thông">Chính quy liên thông</option>
+                            <option value="Từ xa">Từ xa</option>
+                            <option value="Vừa học vừa làm">Vừa học vừa làm</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Ngành TN (<span class="required">*</span>)</label>
+                        <input name="nganhtn" type="text" id="nganhtn" required="" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Điểm TB (<span class="required">*</span>)</label>
+                        <input name="diemTb" type="text" id="diemTb" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Loại TN (<span class="required">*</span>)</label>
+                        <select name="loaitn" id="loaitn" class="form-control inputdk">
+                            <option value="">---Chọn---</option>
+                            <option value="Xuất sắc">Xuất sắc</option>
+                            <option value="Giỏi">Giỏi</option>
+                            <option value="Khá">Khá</option>
+                            <option value="Trung bình khá">Trung bình khá</option>
+                            <option value="Trung bình">Trung bình</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>File Đính kém dạng PDF (<span class="required">*</span>) (Scan văn bằng có công chứng)<span></span></label>
+                        <input name="filevbdh" type="file" id="filevbdh" required="" accept="application/pdf" class="form-control inputdk">
+                    </div>
+
+
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>IV. Văn bằng 2 </h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Trường tốt nghiệp (TN)</label>
+                        <input name="tentruong_vb2" type="text" id="tentruong_vb2" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Năm TN</label>
+                        <input name="namtn_vb2" type="number" id="namtn_vb2" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Hệ đào tạo</label>
+                        <select name="hedt_vb2" id="hedt_vb2" class="form-control inputdk">
+                            <option value="0">---Chọn---</option>
+                            <option value="Chính quy">Chính quy</option>
+                            <option value="Chính quy liên thông">Chính quy liên thông</option>
+                            <option value="Từ xa">Từ xa</option>
+                            <option value="Vừa học vừa làm">Vừa học vừa làm</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Ngành TN </label>
+                        <input name="nganhtn_vb2" type="text" id="nganhtn_vb2" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Điểm TB </label>
+                        <input name="diemTb_vb2" type="text" id="diemTb_vb2" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Loại TN </label>
+                        <select name="loaitn_vb2" id="loaitn_vb2" class="form-control inputdk">
+                            <option value="">---Chọn---</option>
+                            <option value="Xuất sắc">Xuất sắc</option>
+                            <option value="Giỏi">Giỏi</option>
+                            <option value="Khá">Khá</option>
+                            <option value="Trung bình khá">Trung bình khá</option>
+                            <option value="Trung bình">Trung bình</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>File Đính kém dạng PDF<span></span> (Scan văn bằng có công chứng)</label>
+                        <input name="filevb_vb2" type="file" id="filevb_vb2" accept="application/pdf" class="form-control inputdk">
+                    </div>
+
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>V. Văn bằng thạc sĩ (nếu có)</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Trường tốt nghiệp (TN)</label>
+                        <input name="tentruongts" type="text" id="tentruongts" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Năm TN </label>
+                        <input name="namtnts" type="number" id="namtnts" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Hệ đào tào</label>
+                        <input name="hedtts" type="text" id="hedtts" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Ngành TN</label>
+                        <input name="nganhts" type="text" id="nganhts" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Điểm TB </label>
+                        <input name="diemTbts" type="text" id="diemTbts" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>File Đính kém dạng PDF<span></span> (Scan văn bằng có công chứng)</label>
+                        <input name="filevbts" type="file" accept="application/pdf" id="filevbts" class="form-control inputdk">
+                    </div>
+
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>VI. Ngoại ngữ</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>Ngoại ngữ (Tiếng...) (<span class="required">*</span>)</label>
+                        <select name="ngoaingu" id="ngoaingu" class="form-control inputdk">
+                            <option value="-1">-------- Chọn ------</option>
+                            <option value="Tiếng Anh">Tiếng Anh</option>
+                            <option value="Tiếng Nga">Tiếng Nga</option>
+                            <option value="Tiếng Pháp">Tiếng Pháp</option>
+                            <option value="Tiếng Trung">Tiếng Trung</option>
+                            <option value="Tiếng Đức">Tiếng Đức</option>
+                            <option value="Tiếng Nhật">Tiếng Nhật</option>
+                            <option value="Tiếng Việt dành cho người nước ngoài">Tiếng Việt dành cho người nước ngoài</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>Loại văn bằng (chứng chỉ) (<span class="required">*</span>)</label>
+                        <input name="vanbang" type="text" id="vanbang" required="" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>File Đính kém dạng PDF(<span class="required">*</span>) (Scan văn bằng có công chứng)</label>
+                        <input name="filenn" type="file" accept="application/pdf" id="filenn" required="" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>VII. Bổ túc kiến thúc (Nếu có)</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label>Bổ túc kiến thức (nếu có) </label>
+                        <input name="botuckthuc" type="text" id="botuckthuc" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>VIII. Thông tin dự tuyển</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Khoa dự tuyển(<span class="required">*</span>)</label>
+                        <select name="ddlKhoa" id="ddlKhoa" class="form-control inputdk">
+                            @if (listKhoa != null)
+                            {
+                                <option value="0">-------- Chọn ------</option>
+                                foreach (var item in listKhoa)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Chuyên ngành dự tuyển (<span class="required">*</span>)</label>
+                        <select name="chuyennganhdt" id="chuyennganhdt" class="form-control inputdk">
+                            @if (listChuyenNghanh != null)
+                            {
+                                <option value="0">-------- Chọn ------</option>
+                                foreach (var item in listChuyenNghanh)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenNganh</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Đối tượng dự tuyển (<span class="required">*</span>)</label>
+                        <select name="dtdt" id="dtdt" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            <option value="coquan">Cơ quan cử</option>
+                            <option value="tstdo">Thí sinh tự do</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Tên đề tài dự tuyển(<span class="required">*</span>)</label>
+                        <input name="tendetai" type="text" id="tendetai" class="form-control inputdk">
+                    </div>
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <label><u>Cán bộ hướng dẫn (Có thể chọn hoặc không)</u></label>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12" style="display: grid;">
+                        <label class="">Cán bộ hướng dẫn 1</label>
+                        <div style="display:flex">
+                            <label for="cb1_in" class="radio-inline">
+                                <input id="cb1_in" type="radio" checked name="cb1">
+                                GV trong trường
+                            </label>
+                            <label for="cb1_out" class="radio-inline">
+                                <input type="radio" id="cb1_out" disabled name="cb1">
+                                GV ngoài trường
+                            </label>
+                        </div>
+
+                        @*<select name="loaiGV_1" id="loaiGV_1" class="form-control inputdk">
+                <option value="0" selected>GV trong trường</option>
+                <option value="1" disabled>GV ngoài trường</option>
+            </select>*@
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Chọn Khoa</label>
+                        <select name="ddlKhoa_1" id="ddlKhoa_1" class="form-control inputdk">
+                            <option value="0">--- Chọn Khoa ---</option>
+                            @foreach (var item in listKhoa)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <label>Họ và tên</label>
+                        <select name="ddlGV_1" id="ddlGV_1" class="form-control inputdk"></select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12" style="display:grid">
+                        <label>Cán bộ hướng dẫn 2</label>
+                        <div style="display:flex">
+                            <label for="cb2_in" class="radio-inline">
+                                <input type="radio" value="0" id="cb2_in" checked name="cb2">
+                                GV trong trường
+                            </label>
+                            <label for="cb2_out" class="radio-inline">
+                                <input type="radio" value="1" id="cb2_out" name="cb2">
+                                GV ngoài trường
+                            </label>
+                        </div>
+                        <select name="loaiGV_2" id="loaiGV_2" class="form-control inputdk" style="display: none">
+                            <option value="0">GV trong trường</option>
+                            <option value="1">GV ngoài trường</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12" id="gv2_khoa">
+                        <label>Chọn Khoa</label>
+                        <select name="ddlKhoa_2" id="ddlKhoa_2" class="form-control inputdk">
+                            <option value="0">--- Chọn Khoa ---</option>
+                            @foreach (var item in listKhoa)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12" id="gv2_ten">
+                        <label>Họ và tên</label>
+                        <select name="ddlGV_2" id="ddlGV_2" class="form-control inputdk"></select>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12" hidden id="gv2_ten2">
+                        <label>Họ và tên</label>
+                        <input name="tenGV_2" type="text" id="tenGV_2" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12" hidden id="gv2_coquancongtac">
+                        <label>Cơ quan công tác</label>
+                        <input name="coquancongtacGV_2" type="text" id="coquancongtacGV_2" class="form-control inputdk">
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12" hidden>
+                        <label>Thời gian và hình thức đào tạo (<span class="required">*</span>)</label>
+                        <select name="thoigiandt" id="thoigiandt" class="form-control inputdk">
+                            <option value="0">-------- Chọn ------</option>
+                            <option value="36">Chính quy tập trung 3 năm (36 tháng đối với người có bằng thạc sĩ)</option>
+                            <option value="48">Chính quy tập trung 4 năm (48 tháng đối với người chưa có bằng thạc sĩ)</option>
+                        </select>
+                    </div>
+                    <hr />
+
+
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <h3>IX. File đính kèm theo hồ sơ dự tuyển</h3>
+                        <hr />
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>Ảnh sơ yếu lý lịch (4x6)(<span class="required">*</span>)</label>
+                        <input name="filesyll" type="file" accept="image/png, image/jpeg" id="filesyll" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File công văn giới thiệu dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filecvgt" type="file" accept="application/pdf" id="filecvgt" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File giấy khám sức khoẻ dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filegksk" type="file" accept="application/pdf" id="filegksk" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File thư giới thiệu dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filetgt" type="file" accept="application/pdf" id="filetgt" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File bài báo khoa học dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filebbkh" type="file" accept="application/pdf" id="filebbkh" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File đề cương nghiên cứu dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filedcnc" type="file" accept="application/pdf" id="filedcnc" class="form-control inputdk">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <label>File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng dạng PDF(<span class="required">*</span>)</label>
+                        <input name="filehdld" type="file" accept="application/pdf" id="filehdld" class="form-control inputdk">
+                    </div>
+
+                    <hr />
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center!important; padding:20px">
+                        <input type="submit" name="name" id="btnSave" class="btn btn-primary" value="Đăng ký" />
+                        @Html.ActionLink("Quay lại", "Index", "Home", null, new { @class = "btn btn-primary" })
+                    </div>
+
+                </div>
+                    <!-- /.box-body -->
+                }
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+</section>
+<script>
+    $(function () {
+        $("#ngaysinh").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+        $("#cmnd_ngaycap").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+    $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        loadchuyennganh(khoaid, 'chuyennganhdt')
+    });
+    function loadchuyennganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByKhoa", "DangKyTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    $(document).ready(function () {
+        $('#ddlKhoa_1').on('change', function (e) {
+            var khoaid = this.value;
+            loadGV(khoaid, 'ddlGV_1')
+        });
+        $('#ddlKhoa_2').on('change', function (e) {
+            var khoaid = this.value;
+            loadGV(khoaid, 'ddlGV_2')
+        });
+        $('input[type=radio][name=cb2]').change(function () {
+            var loaiGV = this.value;
+            if (loaiGV == 1) {
+                $("#gv2_khoa").hide();
+                $("#gv2_ten").hide();
+                $("#gv2_ten2").show();
+                $("#gv2_coquancongtac").show();
+                $("#loaiGV_2").val(1);
+            } else {
+                $("#gv2_khoa").show();
+                $("#gv2_ten").show();
+                $("#gv2_ten2").hide();
+                $("#gv2_coquancongtac").hide();
+                $("#loaiGV_2").val(0);
+            }
+        });
+        $('#cmnd_tinhthanh').on('change', function (e) {
+            var CityCode = this.value;
+            //$('#tinhthanh').val(this.html);
+            //$('#quanhuyen').val('');
+            //$('#xaphuong').val('');
+            loadDistrictByCity(CityCode, 'cmnd_huyen');
+            loadWardByDistrict('', 'cmnd_xa')
+        });
+        $('#cmnd_huyen').on('change', function (e) {
+            var DistrictCode = this.value;
+            //$('#quanhuyen').val(this.html);
+            //$('#xaphuong').val('');
+            loadWardByDistrict(DistrictCode, 'cmnd_xa')
+        });
+        //$('#cmnd_xa').on('change', function (e) {
+        //    $('#xaphuong').val(this.html);
+        //});
+
+    });
+    function loadGV(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGVByKhoa", "DangKyTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+    function loadDistrictByCity(CityCode,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadDistrictByCity", "DangKyTuyenSinh")',
+                data: { CityCode: CityCode },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+    function loadWardByDistrict(DistrictCode,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadWardByDistrict", "DangKyTuyenSinh")',
+                data: { DistrictCode: DistrictCode },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+            if ($('#hovaten').val() == '') {
+                toastr.error('Họ tên không được để trống');
+                return false;
+            }
+            if ($('#gioitinh').val() == '0') {
+                toastr.error('Bạn chưa chọn giới tính');
+                return false;
+            }
+            if ($('#dantoc').val() == '') {
+                toastr.error('Dân tộc không được để trống');
+                return false;
+            }
+            if ($('#ngaysinh').val() == '') {
+                toastr.error('Ngày sinh không được để trống');
+                return false;
+            }
+            if ($('#sdt').val() == '') {
+                toastr.error('Điện thoại không được để trống');
+                return false;
+            }
+            if ($('#email').val() == '') {
+                toastr.error('Email không được để trống');
+                return false;
+            }
+            if ($('#noisinh').val() == '') {
+                toastr.error('Nơi sinh không được để trống');
+                return false;
+            }
+            if ($('#diachi').val() == '') {
+                toastr.error('Địa chỉ không được để trống');
+                return false;
+            }
+            if ($('#nghenghiep').val() == '-') {
+                toastr.error('Bạn chưa chọn nghề nghiệp');
+                return false;
+            }
+            if ($('#coquan').val() == '') {
+                toastr.error('Cơ quan đang công tác không được để trống');
+                return false;
+            }
+            if ($('#namct').val() == '') {
+                toastr.error('Năm bắt đầu công tác không được để trống');
+                return false;
+            }
+            if ($('#canbo').val() == '') {
+                toastr.error('Bạn chưa chọn cán bộ');
+                return false;
+            }
+            if ($('#vitricv').val() == '') {
+                toastr.error('Vị trí công việc hiện tại không được để trống');
+                return false;
+            }
+            if ($('#thamnien').val() == '') {
+                toastr.error('Thâm niên nghề nghiệp không được để trống');
+                return false;
+            }
+            if ($('#chuyenmon').val() == '') {
+                toastr.error('Chuyên môn không được để trống');
+                return false;
+            }
+            if ($('#tentruongct').val() == '') {
+                toastr.error('Tên trường tốp nghiệp không được để trống');
+                return false;
+            }
+            if ($('#filevbdh').val() == '') {
+                toastr.error('Bạn chưa đính kèm văn bằng đại học');
+                return false;
+            }
+            if ($('#namtn').val() == '') {
+                toastr.error('Năm tốt nghiệp đại học không được để trống');
+                return false;
+            }
+            if ($('#hedt').val() == '-1') {
+                toastr.error('Hệ đào tạo đại học không được để trống');
+                return false;
+            }
+            if ($('#nganhtn').val() == '') {
+                toastr.error('Ngành tốt nghiệp đại học không được để trống');
+                return false;
+            }
+
+            if ($('#diemTb').val() == '') {
+                toastr.error('Điểm trung bình đại học không được để trống');
+                return false;
+            }
+            if ($('#loaitn').val() == '-1') {
+                toastr.error('Loại tốt nghiệp đại học không được để trống');
+                return false;
+            }
+            //if ($('#tenGV_2').val() != '') {
+            //    if ($('#coquancongtacGV_2').val() == '') {
+            //        toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
+            //    }
+            //    return false;
+            //}
+
+            //if ($('#tentruong_vb2').val() == '') {
+            //    toastr.error('Tên trường tốp nghiệp văn bằng 2 không được để trống');
+            //    return false;
+            //}
+            //if ($('#filevb_vb2').val() == '') {
+            //    toastr.error('Bạn chưa đính kèm văn bằng 2 đại học');
+            //    return false;
+            //}
+            //if ($('#namtn_vb2').val() == '') {
+            //    toastr.error('Năm tốt nghiệp đại học văn bằng 2 không được để trống');
+            //    return false;
+            //}
+            //if ($('#hedt_vb2').val() == '') {
+            //    toastr.error('Hệ đào tạo đại học văn bằng 2 không được để trống');
+            //    return false;
+            //}
+            //if ($('#nganhtn_vb2').val() == '') {
+            //    toastr.error('Ngành tốt nghiệp đại học văn bằng 2 không được để trống');
+            //    return false;
+            //}
+
+            //if ($('#diemTb_vb2').val() == '') {
+            //    toastr.error('Điểm trung bình đại học văn bằng 2 không được để trống');
+            //    return false;
+            //}
+            //if ($('#loaitn_vb2').val() == '') {
+            //    toastr.error('Loại tốt nghiệp đại học văn bằng 2 không được để trống');
+            //    return false;
+            //}
+
+
+            if ($('#ngoaingu').val() == '') {
+                toastr.error('Ngoại ngữ không được để trống');
+                return false;
+            }
+            if ($('#vanbang').val() == '') {
+                toastr.error('Loại văn bằng chứng chỉ ngoại ngữ không được để trống');
+                return false;
+            }
+            if ($('#filenn').val() == '') {
+                toastr.error('Bạn chưa đính kèm văn bằng, chứng chỉ ngoại ngữ');
+                return false;
+            }
+
+            //if ($('#chuyennganhdt').val() == '0') {
+            //    toastr.error('Bạn chưa chọn chuyên nghành dự tuyển');
+            //    return false;
+            //}
+            if ($('#dtdt').val() == '0') {
+                toastr.error('Bạn chưa chọn đối tường dự tuyển');
+                return false;
+            }
+            if ($('#tendetai').val() == '0') {
+                toastr.error('Bạn chưa nhập tên đề tài');
+                return false;
+            }
+            if ($('#cmnd').val() == '0') {
+                toastr.error('Bạn chưa nhập số CMND');
+                return false;
+            }
+            if ($('#cmnd_ngaycap').val() == '0') {
+                toastr.error('Bạn chưa nhập ngày cấp CMND');
+                return false;
+            }
+            if ($('#cmnd_noicap').val() == '0') {
+                toastr.error('Bạn chưa nhập nơi cấp CMND');
+                return false;
+            }
+            if ($('#cmnd_tinhthanh').val() == '0') {
+                toastr.error('Bạn chưa chọn Tỉnh/Thành phố');
+                return false;
+            }
+            if ($('#cmnd_huyen').val() == '0' || $('#cmnd_huyen').val() == null) {
+                toastr.error('Bạn chưa nhập Quận/ huyện');
+                return false;
+            }
+            if ($('#cmnd_xa').val() == '0' || $('#cmnd_huyen').val() == null) {
+                toastr.error('Bạn chưa nhập Xã/ Phường');
+                return false;
+            }
+            //if ($('#tentruongts').val() == '' && $('#filevbts').val() == '' && $('#namtnts').val() == '' && $('#hedtts').val() == '' && $('#nganhts').val() == '' && $('#diemTbts').val() == '') {
+            //    $('#thoigiandt').val(48);
+            //} else {
+            //    if ($('#tentruongts').val() == '') {
+            //        toastr.error('Tên trường tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#filevbts').val() == '') {
+            //        toastr.error('Bạn chưa đính kèm thông tin thạc sỹ');
+            //        return false;
+            //    }
+            //    if ($('#namtnts').val() == '') {
+            //        toastr.error('Năm tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#hedtts').val() == '') {
+            //        toastr.error('Hệ đào tạo thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#nganhts').val() == '') {
+            //        toastr.error('Ngành tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#diemTbts').val() == '') {
+            //        toastr.error('Điểm trung bình thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    $('#thoigiandt').val(36);
+            //}
+
+            if ($('#filesyll').val() == '') {
+                toastr.error('Bạn chưa đính kèm ảnh sơ yếu lý lịch');
+                return false;
+            }
+            if ($('#filecvgt').val() == '') {
+                toastr.error('Bạn chưa đính kèm công văn giới thiệu');
+                return false;
+            }
+            if ($('#filegksk').val() == '') {
+                toastr.error('Bạn chưa đính kèm giấy khám sức khoẻ');
+                return false;
+            }
+            if ($('#filetgt').val() == '') {
+                toastr.error('Bạn chưa đính kèm thư giới thiệu');
+                return false;
+            }
+            if ($('#filebbkh').val() == '') {
+                toastr.error('Bạn chưa đính kèm bài báo khoa học');
+                return false;
+            }
+            if ($('#filedcnc').val() == '') {
+                toastr.error('Bạn chưa đính kèm đề cương nghiên cứu');
+                return false;
+            }
+            if ($('#filehdld').val() == '') {
+                toastr.error('Bạn chưa đính kèm quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng');
+                return false;
+            }
+
+            if ($('#filesyll')[0].files[0] && $('#filesyll')[0].files[0].type != 'image/png' && $('#filesyll')[0].files[0].type != 'image/jpeg' && $('#filesyll')[0].files[0].type != 'image/gif' && $('#filesyll')[0].files[0].type != 'image/jpg') {
+                toastr.error('File ảnh sơ yếu lý lịch chưa đúng định dạng');
+                return false;
+
+            }
+
+            if ($('#filecvgt')[0].files[0] && $('#filecvgt')[0].files[0].type != 'application/pdf') {
+                toastr.error('File công văn giới thiệu chưa đúng định dạng PDF');
+                return false;
+
+            }
+            if ($('#filegksk')[0].files[0] && $('#filegksk')[0].files[0].type != 'application/pdf') {
+                toastr.error('File giấy khám sức khỏe chưa đúng định dạng PDF');
+                return false;
+
+            }
+            if ($('#filetgt')[0].files[0] && $('#filetgt')[0].files[0].type != 'application/pdf') {
+                toastr.error('File thư giới thiệu chưa đúng định dạng PDF');
+                return false;
+
+            }
+
+            if ($('#filebbkh')[0].files[0] && $('#filebbkh')[0].files[0].type != 'application/pdf') {
+                toastr.error('File bài báo khoa học chưa đúng định dạng PDF');
+                return false;
+
+            }
+            if ($('#filedcnc')[0].files[0] && $('#filedcnc')[0].files[0].type != 'application/pdf') {
+                toastr.error('File đề cương nghiên cứu chưa đúng định dạng PDF');
+                return false;
+
+            }
+
+            if ($('#filehdld')[0].files[0] && $('#filehdld')[0].files[0].type != 'application/pdf') {
+                toastr.error('File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng chưa đúng định dạng PDF');
+                return false;
+
+            }
+
+            if ($('#filenn')[0].files[0] && $('#filenn')[0].files[0].type != 'application/pdf') {
+                toastr.error('File ngoại ngữ chưa đúng định dạng PDF');
+                return false;
+
+            }
+
+            if ($('#filevbdh')[0].files[0] && $('#filevbdh')[0].files[0].type != 'application/pdf') {
+                toastr.error('File scan văn bằng đại học chưa đúng định dạng PDF');
+                return false;
+
+            }
+
+            var arr_filesize = ['filesyll', 'filecvgt', 'filegksk', 'filetgt', 'filebbkh', 'filedcnc', 'filehdld', 'filenn', 'filevbdh'];
+
+            for (let i in arr_filesize) {
+                if ($(`#${arr_filesize[i]}`)[0].files[0] && $(`#${arr_filesize[i]}`)[0].files[0].size > 1000000) {
+                    toastr.error('File có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
+            }
+  
+
+            //if ($('#thoigiandt').val() == '0') {
+            //    toastr.error('Bạn chưa chọn thời gian và hình thức đào tạo');
+            //    return false;
+            //}
+
+            //if ($('#thoigiandt').val() == '36') {
+            //    if ($('#tentruongts').val() == '') {
+            //        toastr.error('Tên trường tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#filevbts').val() == '') {
+            //        toastr.error('Bạn chưa đính kèm thông tin thạc sỹ');
+            //        return false;
+            //    }
+
+            //    if ($('#namtnts').val() == '') {
+            //        toastr.error('Năm tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#hedtts').val() == '') {
+            //        toastr.error('Hệ đào tạo thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#nganhtnts').val() == '') {
+            //        toastr.error('Ngành tốt nghiệp thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //    if ($('#diemTbts').val() == '') {
+            //        toastr.error('Điểm trung bình thạc sĩ không được để trống');
+            //        return false;
+            //    }
+            //}
+        });
+    });
+</script>

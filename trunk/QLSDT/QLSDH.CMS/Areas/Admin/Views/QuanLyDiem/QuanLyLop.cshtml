@@ -1,0 +1,201 @@
+﻿@model IEnumerable<TEMIS.Model.Diem>
+@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+
+@{
+    ViewBag.Title = "Quản lý Lớp";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Quản lý Lớp</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2"><label class="control-label">Khoa</label>
+                              <select class="form-control" name="khoa" id="ddlKhoa">
+                                <option value="0">------- Chọn Khoa -------</option>
+                                @foreach (var item in listKhoa)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                                <label class="control-label">Ngành học</label>
+                                <select class="form-control" id="ddlNganh"></select>
+                        </div>
+                        <div class="col-md-2">
+                                <label class="control-label">Môn học</label>
+                                <select class="form-control" id="ddlMonHoc"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label">Khóa</label>
+                            <select class="form-control" id="ddlkhoahoc">
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.Id">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2" style="padding-top:24px;">
+                            <input type="submit" value="Tìm kiếm" class="btn btn-info btn-md" />
+
+                        </div>
+                        <div class="col-md-2" style="padding-top:24px;">
+                            <a class="btn btn-success btn-md" href="@Url.Action("Themmoilop","QuanLyDiem")">Tạo lớp</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <table id="datatable-buttonss" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                        <thead>
+                            <tr role="row">
+                                <th style="text-align:center">STT</th>
+                                <th style="text-align:center">Tên lớp</th>
+                                <th style="text-align:center">Sĩ Số </th>
+                                <th style="text-align:center">Khoa</th>
+                                <th style="text-align:center">Khóa</th>
+                                <th style="text-align:center">Tên giảng viên</th>
+                                <th style="text-align:center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>STT</td>
+                                            <td>@item.MaHocVien</td>
+                                            <td>@item.TenHocVien</td>
+                                            <td>@item.SoDiem</td>
+                                            <td><a href="@Url.Action("NhapDiem", "QuanLyDiem" , new { magiaovien=item.MaGiaoVien })">Thông tin khóa học</a></td>
+                                        </tr>
+                                    }
+                                }*@
+
+                            <tr>
+                                <td>1</td>
+                                <td>CNTT1</td>
+                                <td>30</td>
+                                <td>CNTT</td>
+                                <td>TS1</td>
+                                <td>Nguyễn Thu Hằng	</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Sửa</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>CNTT2</td>
+                                <td>30</td>
+                                <td>CNTT</td>
+                                <td>TS1</td>
+                                <td>Trần Văn Tuấn	</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Sửa</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Vật Lý 1</td>
+                                <td>30</td>
+                                <td>Vật Lý</td>
+                                <td>TS1</td>
+                                <td>Nguyễn Thu Hằng	</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Sửa</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>CNTT3</td>
+                                <td>30</td>
+                                <td>CNTT</td>
+                                <td>TS4</td>
+                                <td>Đặng Thu Trang</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Sửa</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable-buttonss').DataTable();
+    });
+    $(document).ready(function () {
+        $('#datatable').dataTable( {
+          "pageLength": 25
+        });
+$('.dataTables_filter input').attr('maxlength', 255)
+        $('#ddlKhoa').on('change', function (e) {
+            var khoaid = this.value;
+            loadnganh(khoaid, 'ddlNganh')
+            //loaddata();
+        });
+        $('#ddlNganh').on('change', function (e) {
+            var nganhid = this.value;
+            console.log(nganhid);
+            loadmonhoc(nganhid, 'ddlMonHoc')
+            //loaddata();
+        });
+    });
+
+     function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "QuanLyHocPhi")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+   function loadmonhoc(nganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadMonHocByNganh", "QuanLyHocPhi")',
+             data: { nganhid: nganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+</script>

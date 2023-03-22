@@ -1,0 +1,44 @@
+﻿@model List<TEMIS.Model.VanBan>
+@{
+    ViewBag.Title = "Văn bản";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+    List<TEMIS.Model.ChuyenMucVanBan> ChuyenMucVanBan = (List<TEMIS.Model.ChuyenMucVanBan>)ViewBag.ChuyenMuc;
+}
+
+<section class="content-header container">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Mẫu văn bản</li>
+    </ol>
+</section>
+<section class="content container">
+    <div class="container" style=" width: 100% !important">
+        <!-- Document -->
+        <div>
+            <div style="text-align:left" id="LoaiBCNCS">
+                @foreach (var item in ChuyenMucVanBan)
+                {
+                    <div class="box box-default box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">@item.TenChuyenMuc</h3>
+                            <div class="box-tools pull-right"></div>
+                        </div>
+
+                        <div class="box-body" style="display: block;" id="LoaiBaoCaoIdB4D021AD19D346BF987678868DBC0607_@item.Id">
+                            @{
+                                var listVanBan = Model.Where(o => o.ChuyenMuc == item.Id).ToList();
+                                int i = 1;
+                                foreach (var vb in listVanBan)
+                                {
+                                    <div><label style="width:100%"><a target="_blank" href="~/Upload/VanBan/@vb.URL">@i. @vb.TieuDe</a></label></div>
+                                    i = i + 1;
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- end Document -->
+    </div>
+</section>

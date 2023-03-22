@@ -1,0 +1,353 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý ngành đào tạo";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<TEMIS.Model.NganhDaoTao> listNganhDaoTao = (List<TEMIS.Model.NganhDaoTao>)ViewBag.listNganhDaoTao;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý ngành đào tạo</h2>
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label">Khoa</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlKhoa" name="ddlKhoa">
+                                <option value="0">------- Chọn Khoa -------</option>
+                                @foreach (var item in listKhoa)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
+                    <div class="x_content">
+                        <div id="dataresult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Mã Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="manganh" name="manganh" required="required" class="form-control col-md-7 col-xs-12" maxlength="20">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Tên Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tennganh" name="tennganh" required="required" class="form-control col-md-7 col-xs-12" maxlength="150">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenchucdanh">
+                                Thuộc khoa <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="form-control col-md-7 col-xs-12" id="khoa" name="khoa">
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal" onclick="handleCancel()">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <input type="hidden" id="IdEdit" name="IdEdit" />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                                Mã Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="manganh_edit" name="manganh_edit" required="required" class="form-control col-md-7 col-xs-12" maxlength="20">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tennganh_edit">
+                                Tên Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tennganh_edit" name="tennganh_edit" required="required" class="form-control col-md-7 col-xs-12" maxlength="150">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="khoa_edit">
+                                Thuộc khoa <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="form-control col-md-7 col-xs-12" id="khoa_edit" name="khoa_edit">
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        LoadData(0);
+
+        $('#ddlKhoa').on('change', function (e) {
+            var valueSelected = this.value;
+            LoadData(valueSelected);
+        });
+    });
+    function handleCancel(){
+        $('#manganh').val("");
+        $('#tennganh').val("");
+        $('#khoa').val(1);
+    }
+    function LoadData(khoaid) {
+        $('#divProcessing').show();
+        var model = $('#dataresult');
+            $.ajax({
+                url: '@Url.Action("LoadData", "NganhDaoTao")',
+                data: { idKhoa: khoaid },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                    
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+
+     function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    function openedit(id, manganh, tennganh, khoaid) {
+        $('#IdEdit').val(id);
+        $('#manganh_edit').val(manganh);
+        $('#tennganh_edit').val(tennganh);
+        $('#khoa_edit').val(khoaid);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnThem').click(function () {
+        
+        var manganh = $('#manganh').val().trim();
+        var tennganh =  $('#tennganh').val().trim();
+        var khoa = $('#khoa').val();
+        var tenkhoa = $("#khoa option:selected").text();
+
+        if (!manganh ) {
+            toastr.error('Mã nghành không được để trống');
+            return false;
+        }
+        if (!tennganh ) {
+            toastr.error('Tên ngành không được để trống');
+            return false;
+        }
+
+        if (!khoa) {
+            toastr.error('Bạn chưa chọn khoa');
+            return false;
+        }
+        const currentNganhDaoTao = @Html.Raw(Json.Encode(ViewBag.listNganhDaoTao));
+        if(currentNganhDaoTao.some(i=>{
+           return i.MaNganh == manganh;
+        })){
+            toastr.error("Mã ngành đã tồn tại");
+            return false;
+        }
+    
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "NganhDaoTao")',
+            data: { manganh: manganh, tennganh: tennganh, khoaid: khoa, tenkhoa: tenkhoa },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    //setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Thêm mới thành công');
+                     $('#manganh').val("");
+                     $('#tennganh').val("");
+                    $('#khoa').val(1);
+                    
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var id = $('#IdEdit').val();
+        var manganh = $('#manganh_edit').val().trim();
+        var tennganh = $('#tennganh_edit').val().trim();
+        var khoaid = $('#khoa_edit').val();
+        var tenkhoa = $("#khoa_edit option:selected").text();
+
+        if (tennganh == "") {
+            toastr.error('Tên ngành không được để trống');
+            return false;
+        }
+        if (manganh == "") {
+            toastr.error('Mã nghành không được để trống');
+            return false;
+        }
+        if (khoa == "") {
+            toastr.error('Bạn chưa chọn khoa');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Update", "NganhDaoTao")',
+            data: { id: id, manganh: '' + manganh+'', tennganh: '' + tennganh + '', khoaid: khoaid, tenkhoa: ''+tenkhoa + ''},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    //setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Cập nhật thành công');
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("XoaNganh", "NganhDaoTao")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == '') {
+                    //setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Xóa thành công');
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+</script>

@@ -1,0 +1,206 @@
+﻿@model IEnumerable<NCSViewModel>
+@using TEMIS.CMS.Areas.Admin.Models
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý NCS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách NCS</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_title">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Khoa</label>
+                                        <select class="form-control" id="ddlKhoa" name="ddlKhoa">
+                                            <option value="0">------- Chọn Khoa -------</option>
+                                            @foreach (var item in listKhoa)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="control-label">Mã NCS</label>
+                                        <input style="width:100%" class="form-control" id="MaNCS" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="control-label">Tên NCS</label>
+                                        <input style="width:100%" class="form-control" id="TenNCS" />
+                                    </div>
+                                    <div class="col-md-2 pull-left" style="margin-top:25px; float:right">
+                                        <button type="button" id="btnSearch" class="btn btn-info"><i class="fa fa-search" title="tìm kiếm"></i></button>
+                                        @*<input type="button" id="btnSearch" value="Tìm kiếm" class=btn btn-info">*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="x_content">
+                    <div id="divresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadncs();
+        $('#ddlKhoa').on('change', function (e) {
+            loadncs();
+        });
+    });
+    $('#btnSearch').click(function () {
+        loadncs();
+    });
+    function loadncs() {
+        var khoaid = $('#ddlKhoa').val();
+        var mancs = $('#MaNCS').val();
+        var tenncs = $('#TenNCS').val();
+        $('#divProcessing').show();
+        var model = $('#divresult');
+            $.ajax({
+                url: '@Url.Action("GetListHocVien", "HocVien")',
+                data: { khoaid: khoaid, mancs: mancs, tenncs: tenncs },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+</script>
+
+
+
+@*<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <center>
+                            <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                            <h3>Bạn có chăc muốn xóa?</h3>
+                        </center>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align:center">
+                    <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                    <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modelcapnhat" id="modelcapnhat" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Cập nhật Khoa lớp</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="x_content">
+                        <br />
+                        <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamodule">
+                                    Khoa<span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="hidden" name="IdEdit" id="IdEdit" value="" />
+                                    <input type="text" id="mamodule_edit" name="mamodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenmodule">
+                                    Lớp <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="tenmodule_edit" name="tenmodule_edit" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align:center">
+                    <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                    <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function openadd() {
+            $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+        }
+        function openedit(id, machucvu, tenchucvu, kyhieu) {
+            $('#IdEdit').val(id);
+            $('#machucvu_edit').val(machucvu);
+            $('#tenchucvu_edit').val(tenchucvu);
+            $('#kyhieu_edit').val(kyhieu);
+            $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+        }
+        function confirmremove(id) {
+            $('#IdXoa').val(id);
+            $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+        }
+        function capnhatkhoa(id) {
+            $('#IdXoa').val(id);
+            $('#modelcapnhat').modal({ backdrop: 'static', keyboard: false })
+        }
+        $('#btnXoa').click(function () {
+            var id = $('#IdXoa').val();
+            $("#divProcessing").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Xoa", "HocVien")',
+                data: { id: id },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#divProcessing").hide();
+                    if (data == 'OK') {
+                        setTimeout(function () { location.reload(); }, 2000);
+                    } else {
+                        toastr.error(data);
+                    }
+                },
+                error: function (req, status, error) {
+                    $("#divProcessing").hide();
+                }
+            });
+        })
+    </script>*@

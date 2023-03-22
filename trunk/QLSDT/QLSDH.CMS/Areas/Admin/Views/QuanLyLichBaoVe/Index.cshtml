@@ -1,0 +1,572 @@
+﻿@using TEMIS.Model
+@{
+    ViewBag.Title = "Quản lý lịch bảo vệ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<ChuyenNganhDaoTao> listChuyenNganhDaoTao = (List<ChuyenNganhDaoTao>)ViewBag.ListChuyenNganhDaoTao;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+}
+<style>
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .x_content a {
+        color: #337ab7 !important;
+    }
+
+    .imgTitle {
+        width: 150px;
+        max-height: auto;
+    }
+</style>
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách lịch bảo vệ</h2>
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label class="control-label">Khóa học</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlKhoaHoc" name="ddlKhoaHoc">
+                                <option value="0">------- Chọn -------</option>
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.Id">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Ngành đào tạo</label>
+                            <select class="form-control col-md-7 col-xs-12" id="ddlChuyenNganhDaoTao" name="ddlChuyenNganhDaoTao">
+                                <option value="0">------- Chọn -------</option>
+                                @foreach (var item in listChuyenNganhDaoTao)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenNganh</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Tên NCS</label>
+                            <input type="text" class="form-control" name="txtMaNCS" id="txtMaNCS" value="" />
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" name="btnSearch" id="btnSearch" value="Tìm kiếm" class="btn btn-success" style="margin-top: 24px;" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="dataresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+             background:#f5f5f5;
+             opacity:0.5;
+             z-index:999;
+             position:absolute;
+             left:0px;
+             top :0px;
+             cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-bodys">
+                <div class="x_content  form-horizontal form-label-left">
+                    <br />
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tendetai">
+                            Tên đề tài <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tendetai" name="tendetai" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="duongdan">
+                            Mã NCS <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="mancs" name="mancs" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenncs">
+                            Tên NCS <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tenncs" name="tenncs" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="khoahoc">
+                            Khóa học <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="khoahoc" name="khoahoc">
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.MaKhoa">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="chuyennganhdaotao">
+                            Chuyên ngành <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="chuyennganhdaotao" name="chuyennganhdaotao">
+                                @foreach (var item in listChuyenNganhDaoTao)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenNganh</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="capbaove">
+                            Cấp bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="capbaove" name="capbaove" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaybaove">
+                            Ngày bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="ngaybaove" name="ngaybaove" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="giobaove">
+                            Giờ bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="giobaove" name="giobaove" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diadiem">
+                            Địa điểm <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="diadiem" name="diadiem" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-bodys">
+                <div class="x_content form-horizontal form-label-left">
+                    <br />
+                    <input type="hidden" id="IdEdit" name="IdEdit" />
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tendetai_edit">
+                            Tên đề tài <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tendetai_edit" name="tendetai_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mancs_edit">
+                            Mã NCS <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="mancs_edit" name="mancs_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenncs_edit">
+                            Tên NCS <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="tenncs_edit" name="tenncs_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="khoahoc_edit">
+                            Khóa học <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="khoahoc_edit" name="khoahoc_edit">
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.MaKhoa">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="chuyennganhdaotao_edit">
+                            Chuyên ngành <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="chuyennganhdaotao_edit" name="chuyennganhdaotao_edit">
+                                @foreach (var item in listChuyenNganhDaoTao)
+                                {
+                                    <option value="@item.Id">@item.TenChuyenNganh</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="capbaove_edit">
+                            Cấp bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="capbaove_edit" name="capbaove_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaybaove_edit">
+                            Ngày bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="ngaybaove_edit" name="ngaybaove_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="giobaove_edit">
+                            Giờ bảo vệ <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="giobaove_edit" name="giobaove_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diadiem_edit">
+                            Địa điểm <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-6 col-xs-12">
+                            <input type="text" id="diadiem_edit" name="diadiem_edit" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            LoadData(0,0,'');
+
+            $('#ddlKhoaHoc').on('change', function (e) {
+                LoadData($('#ddlKhoaHoc').val(), 0, '');
+            });
+
+            $('#ddlChuyenNganhDaoTao').on('change', function (e) {
+                LoadData('', $('#ddlChuyenNganhDaoTao').val(), '');
+            });
+
+            $('#btnSearch').click(function () {
+                LoadData($('#ddlKhoaHoc').val(), $('#ddlChuyenNganhDaoTao').val(), $('#txtMaNCS').val());
+            });
+        });
+
+        function LoadData(makhoahoc,nganhid,mancs) {
+            $('#divProcessing').show();
+            var model = $('#dataresult');
+                $.ajax({
+                    url: '@Url.Action("LoadData", "QuanLyLichBaoVe")',
+                    data: { makhoahoc: makhoahoc, nganhid: nganhid, mancs: mancs},
+                    contentType: 'application/html ; charset:utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        model.empty().html(result);
+                        $('#divProcessing').hide();
+                    },
+                    error: function (error) {
+                        $('#divProcessing').hide();
+                        console.log('lỗi load dữ liệu: ' + error.responseText);
+                    }
+                });
+        }
+
+        function openadd() {
+            $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+        }
+        function openedit(id, tendetai, mancs, tenncs, khoahoc, chuyennganhdaotao, capbaove, ngaybaove, giobaove, diadiem) {
+            $('#IdEdit').val(id);
+            $('#tendetai_edit').val(tendetai);
+            $('#mancs_edit').val(mancs);
+            $("#tenncs_edit").val(tenncs);
+            $("#khoahoc").val(khoahoc);
+            $("#chuyennganhdaotao_edit").val(chuyennganhdaotao);
+            $("#capbaove_edit").val(capbaove);
+            $("#ngaybaove_edit").val(ngaybaove);
+            $("#giobaove_edit").val(giobaove);
+            $("#diadiem_edit").val(diadiem);
+
+            $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+        }
+        function confirmremove(id) {
+            $('#IdXoa').val(id);
+            $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+        }
+
+        $('#btnThem').click(function () {
+            var tendetai = $('#tendetai').val();
+            var mancs = $('#mancs').val();
+            var tenncs = $("#tenncs").val();
+            var khoahoc = $("#khoahoc").val();
+            var chuyennganhdaotao = $("#chuyennganhdaotao").val();
+            var capbaove = $("#capbaove").val();
+            var ngaybaove = $("#ngaybaove").val();
+            var giobaove = $("#giobaove").val();
+            var diadiem = $("#diadiem").val();
+
+            if (tendetai == "") {
+                toastr.error('Tên đề tài không được để trống');
+                return false;
+            }
+            if (mancs == "") {
+                toastr.error('Bạn chưa nhập mã ncs');
+                return false;
+            }
+            if (tenncs == "") {
+                toastr.error('Bạn chưa nhập tên ncs');
+                return false;
+            }
+            if (khoahoc == "") {
+                toastr.error('Bạn chưa chọn khóa học');
+                return false;
+            }
+            if (chuyennganhdaotao == "") {
+                toastr.error('Bạn chưa chọn chuyên ngành đào tạo');
+                return false;
+            }
+            if (capbaove == "") {
+                toastr.error('Bạn chưa nhập cấp bảo vệ');
+                return false;
+            }
+            if (ngaybaove == "") {
+                toastr.error('Bạn chưa nhập ngày bảo vệ');
+                return false;
+            }
+            if (giobaove == "") {
+                toastr.error('Bạn chưa nhập giờ bảo vệ');
+                return false;
+            }
+            if (diadiem == "") {
+                toastr.error('Bạn chưa nhập địa điểm bảo vệ');
+                return false;
+            }
+
+            $("#divProcessing").show();
+            if (window.FormData !== undefined) {
+                var fileData = new FormData();
+                fileData.append('tendetai', tendetai);
+                fileData.append('mancs', mancs);
+                fileData.append('tenncs', tenncs);
+                fileData.append('khoahoc', khoahoc);
+                fileData.append('chuyennganhdaotao', chuyennganhdaotao);
+                fileData.append('capbaove', capbaove);
+                fileData.append('ngaybaove', ngaybaove);
+                fileData.append('giobaove', giobaove);
+                fileData.append('diadiem', diadiem);
+
+                $.ajax({
+                    url: '@Url.Action("ThemMoi", "QuanLyLichBaoVe")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Thêm mới thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+        })
+
+        $('#btnSua').click(function () {
+            var id = $('#IdEdit').val();
+            var tendetai = $('#tendetai_edit').val();
+            var mancs = $('#mancs_edit').val();
+            var tenncs = $("#tenncs_edit").val();
+            var khoahoc = $("#khoahoc").val();
+            var chuyennganhdaotao = $("#chuyennganhdaotao_edit").val();
+            var capbaove = $("#capbaove_edit").val();
+            var ngaybaove = $("#ngaybaove_edit").val();
+            var giobaove = $("#giobaove_edit").val();
+            var diadiem = $("#diadiem_edit").val();
+
+            if (tendetai == "") {
+                toastr.error('Tên đề tài không được để trống');
+                return false;
+            }
+            if (mancs == "") {
+                toastr.error('Bạn chưa nhập mã ncs');
+                return false;
+            }
+            if (tenncs == "") {
+                toastr.error('Bạn chưa nhập tên ncs');
+                return false;
+            }
+            if (khoahoc == "") {
+                toastr.error('Bạn chưa chọn khóa học');
+                return false;
+            }
+            if (chuyennganhdaotao == "") {
+                toastr.error('Bạn chưa chọn chuyên ngành đào tạo');
+                return false;
+            }
+            if (capbaove == "") {
+                toastr.error('Bạn chưa nhập cấp bảo vệ');
+                return false;
+            }
+            if (ngaybaove == "") {
+                toastr.error('Bạn chưa nhập ngày bảo vệ');
+                return false;
+            }
+            if (giobaove == "") {
+                toastr.error('Bạn chưa nhập giờ bảo vệ');
+                return false;
+            }
+            if (diadiem == "") {
+                toastr.error('Bạn chưa nhập địa điểm bảo vệ');
+                return false;
+            }
+
+            $("#divProcessing").show();
+
+            if (window.FormData !== undefined) {
+                var fileData = new FormData();
+                fileData.append('id', id);
+                fileData.append('tendetai', tendetai);
+                fileData.append('mancs', mancs);
+                fileData.append('tenncs', tenncs);
+                fileData.append('khoahoc', khoahoc);
+                fileData.append('chuyennganhdaotao', chuyennganhdaotao);
+                fileData.append('capbaove', capbaove);
+                fileData.append('ngaybaove', ngaybaove);
+                fileData.append('giobaove', giobaove);
+                fileData.append('diadiem', diadiem);
+
+                $.ajax({
+                    url: '@Url.Action("Update", "QuanLyLichBaoVe")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Cập nhật thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+        })
+
+        $('#btnXoa').click(function () {
+            var id = $('#IdXoa').val();
+            $("#divProcessing").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Xoa", "QuanLyLichBaoVe")',
+                data: { id: id },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $("#divProcessing").hide();
+                    if (data == '') {
+                        setTimeout(function () { location.reload(); }, 2000);
+                        toastr.success('Xóa thành công');
+                    } else {
+                        toastr.error(data);
+                    }
+                },
+                error: function (req, status, error) {
+                    $("#divProcessing").hide();
+                }
+            });
+        })
+</script>
+<script>
+    $(function () {
+        $("#ngaybaove").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+        $("#ngaybaove_edit").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+

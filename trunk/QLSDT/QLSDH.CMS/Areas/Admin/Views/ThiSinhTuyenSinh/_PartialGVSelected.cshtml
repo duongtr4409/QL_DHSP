@@ -1,0 +1,39 @@
+﻿@model List<TEMIS.Model.DanhSachCanBoAddForm>
+
+<table id="datatable-4" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">Học hàm học vị</th>
+            <th style="text-align:center; width:30%">Tên GV</th>
+            <th style="text-align:center">Cơ quan công tác</th>
+            <th style="text-align:center">Vai trò</th>
+            <th style="display:none">id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td id="hocham_@item.IdCanBo">@item.HocHamHocVi</td>
+                    <td id="ten_@item.IdCanBo">@item.TenCanBo</td>
+                    <td id="dvct_@item.IdCanBo">
+                        @Html.Raw(item.CoQuanCongTac)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.Raw(item.VaiTro)
+                    </td>
+                    <td style="display:none">@item.IdCanBo</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-4').dataTable({
+            "pageLength": 10
+        });
+    });
+</script>

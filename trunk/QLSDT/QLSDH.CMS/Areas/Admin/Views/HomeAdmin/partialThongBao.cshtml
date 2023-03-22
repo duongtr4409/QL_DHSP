@@ -1,0 +1,77 @@
+﻿@using TEMIS.Model
+@model  List<SysNotification>
+@{
+    List<SysNotification> lstNoti = (List<SysNotification>)Model.Where(x=>x.Status != 1).ToList();
+}
+<a class="dropdown-toggle" aria-expanded="false" onclick="updateStatus()" href="#" data-toggle="dropdown">
+    <i class="fa fa-bell-o" style="color:white"></i>
+    <span class="label label-warning" id="countNoti">
+        @if (lstNoti != null && lstNoti.Count > 0)
+        {
+            @Html.Raw(lstNoti.Count);
+        }
+        else
+        {
+            @Html.Raw("0");
+        }
+    </span>
+</a>
+<ul class="dropdown-menu" style="min-width:250px">
+    <li class="header" style="font-size:14px">Thông báo mới</li>
+    <li>
+        <div class="slimScrollDiv" style="width: auto; height: 200px; overflow:scroll ; position: relative">
+            <ul class="menu" style="width: 100%; height: 200px; overflow: hidden;padding-left:5px">
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <li>
+                            <a onclick="updateStatus(@item.Id)" href="#" style="padding:5px 5px">
+                                <i class="fa fa-bell-o text-aqua" style="padding-right: 5px;"></i>@item.Title - @DateTime.Parse(item.CreatedAt.ToString()).ToString("dd/MM/yyyy hh:mm")
+                            </a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-bell-o text-aqua"></i>Không có thông báo mới
+                        </a>
+                    </li>
+                }
+            </ul>
+            <div class="slimScrollBar" style="background: rgb(0, 0, 0); border-radius: 7px; top: 0px; width: 3px; right: 1px; display: block; position: absolute; z-index: 99; opacity: 0.4;"></div>
+            <div class="slimScrollRail" style="background: rgb(51, 51, 51); border-radius: 7px; top: 0px; width: 3px; height: 100%; right: 1px; display: none; position: absolute; z-index: 90; opacity: 0.2;"></div>
+        </div>
+    </li>
+    <li class="footer"><a href="#">Xem tất cả</a></li>
+</ul>
+<script>
+    function updateStatus(id) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateStatus", "HomeAdmin")',
+                data: { id: id },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+    function updateStatus() {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateStatus", "HomeAdmin")',
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    document.getElementById("countNoti").innerHTML = 0;
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+</script>

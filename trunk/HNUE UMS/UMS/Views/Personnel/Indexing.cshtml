@@ -1,0 +1,175 @@
+﻿@using Resources
+@using Ums.Core.Domain.Data
+@using Ums.Core.Entities.Shared
+<div class="row">
+    <div class="col-9">
+        <select id="drdYear" class="form-control filter">
+            @foreach (Year d in ViewBag.Years)
+            {
+                <option value="@d.Id" @(ViewBag.YearId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdDepartment" name="drdDepartment" class="form-control filter">
+            <option value="0">--Tất cả đơn vị---</option>
+            @foreach (IdName d in ViewBag.Departments)
+            {
+                <option value="@d.Id" @(ViewBag.DepartmentId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdTitle" name="drdTitle" class="form-control filter">
+            <option value="0">--Tất cả chức danh---</option>
+            @foreach (IdName d in ViewBag.Titles)
+            {
+                <option value="@d.Id" @(ViewBag.TitleId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+        <select id="drdRetired" class="form-control filter">
+            <option value="0">--Nghỉ hưu---</option>
+            <option value="1" @(ViewBag.Retired == 1 ? "selected='selected'" : "")>@Actions.Retired</option>
+            <option value="2" @(ViewBag.Retired == 2 ? "selected='selected'" : "")>@Actions.IsWorking</option>
+        </select>
+        <select id="drdMoved" class="form-control filter">
+            <option value="0">--Chuyển công tác---</option>
+            <option value="1" @(ViewBag.Moved == 1 ? "selected='selected'" : "")>@Actions.Moved</option>
+            <option value="2" @(ViewBag.Moved == 2 ? "selected='selected'" : "")>@Actions.IsWorking</option>
+        </select>
+        <input id="Keyword" value="@ViewBag.Keyword" class="form-control" style="width: 200px; float: left; margin-right: 5px" placeholder="Từ khóa..." />
+        <button id="btnFitler" class="btn btn-default">Tìm kiếm</button>
+    </div>
+    <div class="col-2">
+        <select id="drdClass" name="drdClass" class="form-control">
+            <option value="0">--Xếp loại---</option>
+            @foreach (var d in ViewBag.Classes)
+            {
+                <option value="@d.Id" @(ViewBag.ClassId == d.Id ? "selected='selected'" : "")>@d.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-1 text-right">
+        <button type="button" class="btn btn-info btnSetDefault">@Actions.SetDefault</button>
+    </div>
+</div>
+<table class="table table-striped table-bordered table-short table-hover">
+    <thead>
+        <tr>
+            <th>TT</th>
+            <th class="text-center">Mã</th>
+            <th>Tên</th>
+            <th class="text-center">Giới</th>
+            <th class="text-center">Chức danh</th>
+            <th class="text-center">Học hàm, học vị</th>
+            <th class="text-center">Năm bắt đầu CT</th>
+            <th>Chức vụ</th>
+            <th class="text-center">Xếp loại</th>
+            <th class="text-center">Người xếp</th>
+            <th class="text-center">Xếp lúc</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    $(function () {
+        function filter() {
+            window.location.href = "@Url.Action("Indexing")?departmentId=" + $("#drdDepartment").val() + "&moved=" + $("#drdMoved").val() + "&retired=" + $("#drdRetired").val() + "&yearId=" + $("#drdYear").val()+ "&titleId=" + $("#drdTitle").val() + "&keyword=" + $("#Keyword").val();
+        }
+        $(".filter").change(function () {
+            filter();
+        });
+        $("#btnFitler").click(function () {
+            filter();
+        });
+        $(".btnSetDefault").click(function() {
+            if (confirm("@Html.Raw(Actions.ConfirmText)")) {
+                $(this).html("@Actions.Processing");
+                $.post("@Url.Action("SetDefault")?departmentId=" + $("#drdDepartment").val() + "&yearId=" + $("#drdYear").val() + "&titleId=" + $("#drdTitle").val() + "&keyword=" + $("#Keyword").val() + "&classId=" + $("#drdClass").val())
+                    .done(function() {
+                        window.location.reload();
+                    });
+            }
+        });
+        var classifies = JSON.parse('@Html.Raw(ViewBag.Classifies)');
+        $('table.table').DataTable(
+        {
+            processing: true,
+            serverSide: true,
+            filter: false,
+            orderMulti: false,
+            order: [[2, "asc"]],
+            pageLength: 25,
+            iDisplayLength: 25,
+            aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+            dom: '<"top"f>rt<"bottom"ilp><"clear">',
+            ajax: { url: '@Url.Action("GetIndexing")?moved=@ViewBag.Moved&retired=@ViewBag.Retired&yearId=@ViewBag.YearId&departmentId=@ViewBag.DepartmentId&classId=@ViewBag.ClassId&titleId=@ViewBag.TitleId&keyword=@Url.Encode(ViewBag.Keyword)', type: "GET", contentType: "application/json" },
+            columns: [
+                {
+                    "data": "Id",
+                    "className": "text-center",
+                    "bSortable": false,
+                    "width": "50px"
+                },
+                {
+                    "data": "Code",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Name",
+                    "bSortable": true
+                },
+                {
+                    "data": "Gender",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Title",
+                    "className": "text-center",
+                    "bSortable": false
+                },
+                {
+                    "data": "Degree",
+                    "className": "text-center",
+                    "bSortable": false
+                },
+                {
+                    "data": "StartYear",
+                    "className": "text-center",
+                    "bSortable": true
+                },
+                {
+                    "data": "Positions",
+                    "bSortable": false
+                },
+                {
+                    "data": "Classify",
+                    "className": "text-center",
+                    "bSortable": false,
+                    "render": function(data, m, n) {
+                        if (n.Locked) {
+                            return data;
+                        }
+                        var html = "<select id='" + n.Id + "' class='form-control slcClass' style='width:100%'>";
+                        html += "<option value='0'>@Actions.Undefined</option>";
+                        for (var i = 0; i < classifies.length; i++) {
+                            html += "<option " + (n.ClassifyId === classifies[i].Id ? "selected=''" : "") + " value='" + classifies[i].Id + "'>" + classifies[i].Name + "</option>";
+                        }
+                        return html + "</select>";
+                    }
+                },
+                {
+                    "data": "IndexedBy",
+                    "className": "text-center"
+                },
+                {
+                    "data": "IndexedOn",
+                    "className": "text-center"
+                }
+            ]
+        });
+        $(document).on("change", ".slcClass", function () {
+            $.post("@Url.Action("UpdateIndexing")?yearId=" + $("#drdYear").val() +"&staffId=" + $(this).attr("id") + "&classId=" + $(this).val()).done(function () {
+                $.notify("Đã cập nhật");
+            });
+        });
+    });
+</script>

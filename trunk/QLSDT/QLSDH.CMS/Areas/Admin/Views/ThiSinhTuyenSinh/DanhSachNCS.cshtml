@@ -1,0 +1,192 @@
+﻿@using TEMIS.Model;
+@{
+    ViewBag.Title = "DanhSachNCS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<KhoaHoc> lstKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Thông kê file Excel</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                        <li class="nav-item active">
+                            <a class="nav-link active" data-toggle="tab" href="#ds-du-tuyen-ncs" role="tab" aria-controls="home" aria-selected="true">Thống kê danh sách dự tuyển NCS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#ds-so-luong-ncs" role="tab" aria-controls="contact" aria-selected="false">Thống kê danh sách số lượng NCS dự tuyển theo ngành</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active in" id="ds-du-tuyen-ncs" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="control-label">Khoá học</label>
+                                                <select class="form-control" name="ddlKhoaHoc" id="ddlKhoaHoc">
+                                                    <option value="0">------- Chọn khoá tuyển sinh -------</option>
+                                                    @foreach (var item in lstKhoaHoc)
+                                                    {
+                                                        <option value="@item.Id">@item.MaKhoa</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="control-label">Đợt tuyển sinh</label>
+                                                <select class="form-control" name="ddlDot" id="ddlDot"></select>
+                                            </div>
+                                        </div>
+                                        <div class="x_content" style="text-align:center">
+                                            <button type="button" onclick="opendown()" class="btn btn-info">Tạo danh sách dự tuyển NCS</button>
+                                            <a class="btn btn-success" id="hrf_file" style="pointer-events:none"><i class="fa fa-download" title="Tải về"></i>Tải danh sách dự tuyển NCS</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="ds-so-luong-ncs" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="control-label">Khoá học </label>
+                                                <select class="form-control" name="ddlKhoaHoc1" id="ddlKhoaHoc1">
+                                                    <option value="0">------- Chọn khoá tuyển sinh -------</option>
+                                                    @foreach (var item in lstKhoaHoc)
+                                                    {
+                                                        <option value="@item.Id">@item.MaKhoa</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="control-label">Đợt tuyển sinh</label>
+                                                <select class="form-control" name="ddlDot1" id="ddlDot1"></select>
+                                            </div>
+                                        </div>
+                                        <div class="x_content" style="text-align:center">
+                                            <button type="button" onclick="opendown1()" class="btn btn-info">Tạo danh sách số lượng NCS dự tuyển theo ngành</button>
+                                            <a class="btn btn-success" id="hrf_file1" style="pointer-events:none"><i class="fa fa-download" title="Tải về"></i>Tải danh sách số lượng NCS dự tuyển theo ngành</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+<script>
+    function opendown() {
+        var nameBM = '1005';
+        var idKhoaHoc = $('#ddlKhoaHoc').val();
+        var idDotTuyenSinh = $('#ddlDot').val() != null ? $('#ddlDot').val() : 0;
+        if (idKhoaHoc == 0) {
+            toastr.error('Bạn chưa chọn khoá tuyển sinh!');
+            return 0;
+        }
+        if (idDotTuyenSinh == 0) {
+            toastr.error('Bạn chưa chọn đợt tuyển sinh!');
+            return false;
+        }
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("BieuMauExcel", "ThiSinhTuyenSinh")',
+            data: { id: nameBM, idDotTuyenSinh: idDotTuyenSinh, idKhoaHoc: idKhoaHoc },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data != 'Không tìm thấy file' && data != 'error') {
+                    console.log(data)
+                    $("#hrf_file").attr("href", data);
+                    $('#hrf_file').css('pointer-events', 'visible');
+                    toastr.success('File đã được lưu');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        })
+    };
+    function opendown1() {
+        var nameBM = '1005';
+        var idKhoaHoc = $('#ddlKhoaHoc1').val();
+        var idDotTuyenSinh = $('#ddlDot1').val() != null ? $('#ddlDot1').val() : 0;
+        if (idKhoaHoc == 0) {
+            toastr.error('Bạn chưa chọn khoá tuyển sinh!');
+            return 0;
+        }
+        if (idDotTuyenSinh == 0) {
+            toastr.error('Bạn chưa chọn đợt tuyển sinh!');
+            return false;
+        }
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("BieuMauExcel2", "ThiSinhTuyenSinh")',
+            data: { id: nameBM, idDotTuyenSinh: idDotTuyenSinh, idKhoaHoc: idKhoaHoc },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data != 'Không tìm thấy file' && data != 'error') {
+                    console.log(data)
+                    $("#hrf_file1").attr("href", data);
+                    $('#hrf_file1').css('pointer-events', 'visible');
+                    toastr.success('File đã được lưu');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        })
+    };
+    $('#ddlKhoaHoc').on('change', function (e) {
+        var khoahocId = this.value;
+        loadDot(khoahocId, 'ddlDot')
+    });
+    $('#ddlKhoaHoc1').on('change', function (e) {
+        var khoahocId = this.value;
+        loadDot(khoahocId, 'ddlDot1')
+    });
+    function loadDot(khoahocId, divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadDotByKhoaHoc", "ThiSinhTuyenSinh")',
+                data: { khoahocId: khoahocId },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                $('#' + divresult).empty().html(data);
+
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+</script>
+

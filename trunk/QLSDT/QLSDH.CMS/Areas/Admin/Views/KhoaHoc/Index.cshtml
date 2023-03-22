@@ -1,0 +1,380 @@
+﻿@using TEMIS.Model;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý khóa học";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý khóa học</h2>
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="control-label">Khóa học</label>
+                            <select class="form-control" name="ddlKhoahoc" id="ddlKhoahoc">
+                                <option value="0">------- Chọn Khóa -------</option>
+                                @foreach (var item in listKhoaHoc)
+                                {
+                                    <option value="@item.Id">@item.MaKhoa</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-info" style="margin-top: 23px;"><i class="fa fa-search" title="tìm kiếm"></i></button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="result">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="makhoahoc">
+                                Mã khóa học <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="makhoahoc" name="makhoahoc" required="required" class="form-control col-md-7 col-xs-12" maxlength="50">
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenkhoahoc">
+                                    Tên khóa học <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="tenkhoahoc" name="tenkhoahoc" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaykhaigiang">
+                                Ngày khai giảng <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="ngaykhaigiang" name="ngaykhaigiang" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="soluonghocvien">
+                                Số lượng NCS <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="number" id="soluonghocvien" name="soluonghocvien" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal" id="btnCancel">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <input type="hidden" id="IdEdit" name="IdEdit" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="makhoahoc_edit">
+                                Mã khóa học <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="makhoahoc_edit" name="makhoahoc_edit" required="required" class="form-control col-md-7 col-xs-12" maxlength="50">
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenkhoahoc_edit">
+                                    Tên khóa học <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="tenkhoahoc_edit" name="tenkhoahoc" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaykhaigiang_edit">
+                                Ngày khai giảng <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="ngaykhaigiang_edit" name="ngaykhaigiang_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="soluonghocvien_edit">
+                                Số lượng NCS <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="number" id="soluonghocvien_edit" name="soluonghocvien_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#ngaykhaigiang").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+        $("#ngaykhaigiang_edit").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#datatable-buttonss').dataTable( {
+          "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+        LoadKhoaHoc();
+     } );
+    function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    function openedit(id, makhoa, ngaykhaigiang,soluonghocvien) {
+        $('#IdEdit').val(id);
+        $('#makhoahoc_edit').val(makhoa);
+        //$('#tenkhoahoc_edit').val(tenkhoa);
+        $('#ngaykhaigiang_edit').val(ngaykhaigiang);
+        $('#soluonghocvien_edit').val(soluonghocvien);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnCancel').click(function (){
+       $('#makhoahoc').val("");
+       $('#ngaykhaigiang').val("");
+       $('#soluonghocvien').val(0);
+    })
+
+    $('#btnThem').click(function () {
+        var regexPattern = /^([0-9]{2})-([0-9]{2})-([0-9]{4})$/;
+        var makhoa =   $('#makhoahoc').val().trim();
+        //var tenkhoa =  $('#tenkhoahoc').val();
+        var ngaykhaigiang = $('#ngaykhaigiang').val().trim();
+        var soluonghocvien = $('#soluonghocvien').val().trim();
+
+        if (!makhoa) {
+            toastr.error('Mã khóa học không được để trống');
+            return false;
+        }
+        //if (tenkhoa == "") {
+        //    toastr.error('tên khoa không được để trống');
+        //    return false;
+        //}
+
+        if (!ngaykhaigiang) {
+            toastr.error('Ngày khai giảng không được để trống');
+            return false;
+        }
+        if(!regexPattern.test(ngaykhaigiang)){
+            toastr.error('Ngày khai giảng không đúng định dạng');
+            return false;
+        }
+        if (!soluonghocvien) {
+            toastr.error('Số lượng NCS không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "KhoaHoc")',
+            data: { makhoa: makhoa, ngaykhaigiang: ngaykhaigiang, soluonghocvien: soluonghocvien},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // LoadKhoaHoc();
+                    $('#makhoahoc').val("");
+        //var tenkhoa =  $('#tenkhoahoc').val();
+                    $('#ngaykhaigiang').val("");
+                    $('#soluonghocvien').val(0);
+                    setTimeout(function () { location.reload(); }, 2000);
+
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+ 
+
+    $('#btnSua').click(function () {
+        var regexPattern = /^([0-9]{2})-([0-9]{2})-([0-9]{4})$/;
+        var id = $('#IdEdit').val();
+        var makhoa = $('#makhoahoc_edit').val().trim();
+        //var tenkhoa = $('#tenkhoahoc_edit').val();
+        var ngaykhaigiang = $('#ngaykhaigiang_edit').val().trim();
+        var soluonghocvien = $('#soluonghocvien_edit').val().trim();
+
+        if (!makhoa ) {
+            toastr.error('Mã khóa học không được để trống');
+            return false;
+        }
+        //if (tenkhoa ) {
+        //    toastr.error('tên khoa không được để trống');
+        //    return false;
+        //}
+
+        if (!ngaykhaigiang ) {
+            toastr.error('Ngày khai giảng không được để trống');
+            return false;
+        }
+        if (!regexPattern.test(ngaykhaigiang) ) {
+            toastr.error('Ngày khai giảng không đúng định dạng');
+            return false;
+        }
+        if (!soluonghocvien ) {
+            toastr.error('Số lượng NCS không được để trống');
+            return false;
+        }
+
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "KhoaHoc")',
+            data: { id: id, makhoa: makhoa, ngaykhaigiang: ngaykhaigiang, soluonghocvien: soluonghocvien},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // LoadKhoaHoc();
+                    setTimeout(function () { location.reload(); }, 2000);
+
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+    $('#ddlKhoahoc').on('change', function (e) {
+        LoadKhoaHoc();
+    });
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "KhoaHoc")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    // LoadKhoaHoc();
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+    function LoadKhoaHoc() {
+        var khoahocid = $('#ddlKhoahoc').val();
+         $.ajax({
+                type: "GET",
+                 url: '@Url.Action("LoadKhoaHoc", "Khoahoc")',
+             data: { idKhoahoc: khoahocid},
+                 contentType: 'application/html ; charset:utf-8',
+                 type: 'GET',
+                 dataType: 'html',
+                success: function (data) {
+                    $('#result').empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+</script>

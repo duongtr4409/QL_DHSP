@@ -1,0 +1,229 @@
+﻿@using TEMIS.Model;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý tiểu ban cấp khoa";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<KhoaHoc> listKhoahoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    var departmentID = ViewBag.DEPARTEMENTID;
+    var IDKHOA = ViewBag.IDKHOA;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách tiểu ban</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_title">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label">Khóa tuyển sinh</label>
+                                        <select class="form-control" id="ddlKhoahoc" name="ddlKhoahoc">
+                                            <option value="0">--- Chọn khóa tuyển sinh ---</option>
+                                            @foreach (var item in listKhoahoc)
+                                            {
+                                                <option value="@item.Id">@item.MaKhoa</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">Đợt tuyển sinh</label>
+                                        <select class="form-control" id="ddlDotTS"></select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">
+                                            Khoa
+                                        </label>
+                                        <select class="form-control" name="ddlKhoa" id="ddlKhoa">
+                                            <option value="0">------- Chọn Khoa -------</option>
+                                            @foreach (var item in listKhoa)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    @*<div class="col-md-3">
+                                        <label class="control-label">
+                                            Ngành học
+                                        </label>
+                                        <select class="form-control" id="ddlNganh"></select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="control-label">
+                                            Chuyên ngành đào tạo
+                                        </label>
+                                        <select class="form-control" id="ddlChuyenNganh"></select>
+                                    </div>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="x_content">
+                    <div id="divresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Danh sách tiểu ban đã được chọn</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <hr />
+                <div class="x_content">
+                    <div id="divresult_selected"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:1000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadGV();
+        LoadDataSelected();
+        if (@IDKHOA > 0) {
+            loadnganh(@IDKHOA, 'ddlNganh')
+        }
+        $('#ddlNganh').on('change', function (e) {
+            var nganhid = this.value;
+            loadchuyennganh(nganhid, 'ddlChuyenNganh')
+        });
+        $('#ddlNganh').on('change', function (e) {
+            var nganhId = this.value;
+            loadGV1();
+        });
+        $('#ddlKhoahoc').on('change', function (e) {
+            var khoahocid = this.value;
+            loaddotTS(khoahocid, 'ddlDotTS');
+         });
+        $('#ddlDotTS').on('change', function (e) {
+            var khoahocid = this.value;
+            loadGV();
+            LoadDataSelected();
+        });
+        $('#ddlKhoa').on('change', function (e) {
+            var khoaid = this.value;
+            loadGV();
+        });
+    });
+    function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function loadchuyennganh(nganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByNganh", "ThiSinhTuyenSinh")',
+                data: { nganhid: nganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function loaddotTS(khoahocid, divresult) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadDotTSByKhoahoc", "ThiSinhTuyenSinh")',
+            data: { IDkhoahoc: khoahocid},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $('#' + divresult).empty().html(data);
+            },
+            error: function (req, status, error) {
+            }
+        });
+    }
+    function loadGV() {
+        $('#divProcessing').show();
+        var model = $('#divresult');
+        var khoahocid = $('#ddlKhoahoc').val();
+        var dotTS = $('#ddlDotTS').val();
+        var khoaid = $('#ddlKhoa').val();
+        if (khoaid == 0 || khoaid == '' || khoaid == null || khoaid == 'undefine') {
+            khoaid = @departmentID;
+        }
+        if (dotTS == null) {
+                    dotTS = 1;
+                }
+        if (khoahocid == null || khoahocid == 0) {
+                    khoahocid = 2;
+                }
+        $.ajax({
+                url: '@Url.Action("LoadGVByKhoa_XinTieuBan", "ThiSinhTuyenSinh")',
+                data: { departmentID: khoaid, IdKhoahoc: khoahocid, IdDotTS: dotTS },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                     $('#divProcessing').hide();
+                     console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+        });
+    };
+    function LoadDataSelected() {
+        var model = $('#divresult_selected');
+        var khoahocid = $('#ddlKhoahoc').val();
+        var dotTS = $('#ddlDotTS').val();
+        if (khoahocid == '' || khoahocid == 'undefine' || khoahocid == null) {
+            khoahocid = 0;
+        }
+        if (dotTS == '' || dotTS == 'undefine' || dotTS == null) {
+            dotTS = 0;
+        }
+        $.ajax({
+                url: '@Url.Action("LoadGVKhoa_Selected", "ThiSinhTuyenSinh")',
+                data: { departmentID: @departmentID, IdKhoahoc: khoahocid, IdDotTS: dotTS },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                     $('#divProcessing').hide();
+                     console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    };
+
+</script>

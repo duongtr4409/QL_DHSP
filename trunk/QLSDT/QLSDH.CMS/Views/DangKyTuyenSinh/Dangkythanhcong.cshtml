@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "Đăng ký thành công";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+}
+
+<div class="container container-mes">
+    <div class="top-bar">
+        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+    </div>
+    <div class="bottom-bar">
+        <h1>Đăng ký thành công</h1>
+        <p>
+            Chúc mừng bạn đã đăng ký thành công, Xin hãy chờ mail phản hồi từ nhà trường!
+        </p>
+        <a href="/dang-nhap">Đăng nhập</a>
+    </div>
+</div>
+
+<style>
+    .container-mes {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 500px !important;
+        height: 500px !important;
+        padding: 0px !important;
+        box-shadow: 5px 5px 10px 2px #888 !important;
+    }
+
+    .top-bar {
+        text-align: center;
+        background: #29CDB5;
+        width: 500px;
+        height: 300px;
+    }
+
+        .fa-check-circle-o {
+        color: white;
+        margin-top: 5px;
+        font-size: 18em;
+    }
+
+    .bottom-bar {
+        text-align: center;
+    } .bottom-bar> h1{
+        color: #444;
+        font-family: 'Oswald', sans-serif;
+        font-weight: bold;
+        margin-bottom: -10px;
+    }
+
+        .bottom-bar > p {
+            padding-left:30px;
+            padding-right:30px;
+            margin-top:30px;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .bottom-bar > a {
+            background: white;
+            border: 3px solid #29CDB5;
+            color: #444;
+            border-radius: 10px;
+            padding: 10px 20px 10px 20px;
+            outline: none;
+            transition: all 0.3s ease-in;
+        }
+
+        .bottom-bar > a:hover {
+            background: #29CDB5;
+            color: white;
+        }
+
+    }
+
+    
+</style>

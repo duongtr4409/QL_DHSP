@@ -1,0 +1,119 @@
+﻿@using TEMIS.Model
+@{
+    ViewBag.Title = "Danh sách thông báo";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+    List<ThongBao> listThongBao = (List<ThongBao>)ViewBag.ThongBao;
+}
+
+<style type="text/css">
+    a:hover {
+        cursor: pointer;
+    }
+
+    .list li {
+        border-bottom: 2px dotted #aaa;
+        list-style: none;
+        overflow: hidden;
+        padding-bottom: 5px;
+        padding-top: 15px;
+    }
+
+    .widget {
+        padding-left: 0px;
+    }
+
+    .x_title {
+        padding: 20px 0px 20px 0px;
+    }
+
+        .x_title h2 {
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+
+    .newsthumbimg {
+        border: 1px solid #D0D0D0;
+        display: block;
+        padding: 3px;
+        width: 100%;
+        box-shadow: 0 0 5px #999;
+    }
+
+    .img-new-col {
+        padding-right: 0px;
+    }
+
+    .title {
+        margin: 0px;
+        font-size: 16px;
+    }
+
+    .byline {
+        font-size: 12px;
+    }
+
+    .pull-right {
+        padding-top: 15px;
+    }
+
+    .boder-box {
+        border: 1px solid #D0D0D0;
+        box-shadow: 0 0 5px #999;
+        padding: 8px;
+    }
+
+    .list li:last-child {
+        border-bottom: none !important;
+    }
+</style>
+<section class="content-header container" style="margin-bottom:30px">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Thông báo</li>
+    </ol>
+</section>
+<div class="container"><hr style="border-color: #ddd !important;" /></div>
+<div style="clear:both"></div>
+
+<div class="x_panel container">
+    <div class="x_content" style="padding-bottom:20px">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_title">
+                    <h2><i class="fa fa-bullhorn"></i> Thông báo</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="dashboard-widget-content">
+                    <ul class="list widget">
+                        @foreach (var item in listThongBao)
+                        {
+                            <li>
+                                <div class="block">
+                                    <div class="block_content">
+                                        <h4 class="title pull-left">
+                                            <i class="fa fa-bell-o"></i> 
+                                            <a>
+                                                <span style="font-weight:600">@item.Title</span>
+                                                <br />
+
+                                                @if (item.Description!="")
+                                                {
+                                                <span style="margin-left: 20px;    line-height: 30px;">@item.Description</span> 
+                                                }
+                                            </a>
+                                        </h4>
+                                        <div class="byline">
+                                            <span class=" pull-right" style="padding-top:0px">
+                                                <i class="fa fa-clock-o"></i> <span> @DateTime.Parse(item.CreatedAt.ToString()).ToString("dd-MM-yyyy")</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

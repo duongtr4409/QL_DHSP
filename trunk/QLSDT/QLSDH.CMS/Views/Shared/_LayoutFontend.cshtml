@@ -1,0 +1,477 @@
+﻿@using TEMIS.Model;
+@using CoreAPI.Entity;
+@using TEMIS.CMS.Common;
+@{
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+    var loginInfo = (TaiKhoan)Session[PublicConstant.LOGIN_INFO];
+    List<ThongBao> ListThongBao = (List<ThongBao>)ViewBag.ThongBao;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QUẢN LÝ SAU ĐÀO TẠO</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Bootstrap 3.3.4 -->
+    <link href="~/ThemFontend/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!-- FontAwesome 4.3.0 -->
+    @*<link href="~/ThemFontend/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="~/ThemFontend/bootstrap-combined.min.css" rel="stylesheet">
+    <!-- Ionicons 2.0.0 -->
+    <link href="~/ThemFontend/ionicons.min.css" rel="stylesheet" type="text/css">
+    <!-- Theme style -->
+    <link href="~/ThemFontend/AdminLTE.min.css" rel="stylesheet" type="text/css">
+    <link href="~/ThemFontend/_all-skins.min.css" rel="stylesheet" type="text/css">
+    <!-- DATA TABLES -->
+    <link href="~/ThemFontend/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
+    @*<link rel="stylesheet" href="~/ThemFontend/chosen.css">
+        <link href="~/ThemFontend/select2.min.css" rel="stylesheet">*@
+    <style type="text/css" media="all">
+
+        /* fix rtl */
+        .chosen-rtl .chosen-drop {
+            left: -9000px;
+        }
+
+        .content-header > .breadcrumb > li > a > .fa, .content-header > .breadcrumb > li > a > .glyphicon, .content-header > .breadcrumb > li > a > .ion {
+            margin-right: 0px !important;
+            color: #2c539e;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border-radius: 0px !important;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        legend {
+            font-size: 16px !important;
+        }
+
+        .content-header > .breadcrumb {
+            font-size: 13px !important;
+        }
+
+        .main-footer p, .main-footer span {
+            line-height: 25px;
+        }
+
+        .main-footer h5 {
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+    <link href="~/ThemFontend/userstylemain.css" rel="stylesheet">
+    <style type="text/css">
+    </style>
+    <script src="~/ThemFontend/jQuery-2.1.4.min.js"></script>
+    <!-- jQuery UI 1.11.2 -->
+    <script src="~/ThemFontend/jquery-ui.min.js" type="text/javascript"></script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="~/ThemFontend/bootstrap.min.js" type="text/javascript"></script>
+    <!-- DATA TABES SCRIPT -->
+    <script src="~/ThemFontend/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="~/ThemFontend/dataTables.bootstrap.min.js" type="text/javascript"></script>
+    <!-- AdminLTE App -->
+    <script src="~/ThemFontend/app.min.js" type="text/javascript"></script>
+    @*<script type="text/javascript" src="~/ThemFontend/select2.min.js"></script>
+        <script src="~/ThemFontend/chosen.jquery.js" type="text/javascript"></script>
+        <script src="~/ThemFontend/prism.js" type="text/javascript" charset="utf-8"></script>*@
+    <!--Pagination-->
+    @*<link href="~/ThemFontend/simplePagination.css" rel="stylesheet">
+        <script src="~/ThemFontend/jquery.simplePagination.js"></script>*@
+    <!--Start script cho currency number-->
+    @*<script src="~/ThemFontend/ax5core.min.js"></script>
+        <script src="~/ThemFontend/ax5formatter.js"></script>*@
+
+    <!--End script cho currency number-->
+    <!--Start Script cho validate bootstrap-->
+    @*<script src="~/ThemFontend/lodash.min.js"></script>
+        <script src="~/ThemFontend/i.js"></script>
+        <script src="~/ThemFontend/en.js"></script>
+        <script src="~/ThemFontend/jquery-dataentry.js"></script>*@
+    <!--End Script cho validate bootstrap -->
+    <!--nnThuong -freezeHeader (js)-->
+    <script src="~/ThemFontend/tableHeadFixer.js"></script>
+    <!--client with js-->
+    @*<script type="text/javascript" src="~/ThemFontend/app.js"></script>
+        <script type="text/javascript" src="~/ThemFontend/constant.js"></script>*@
+    <style id="rds_highlighting">
+        a.rds_hl_nofollow {
+            text-decoration: line-through !important;
+        }
+
+        img.rds_hl_nofollow {
+            outline: 1px dashed #000;
+        }
+    </style>
+    @{
+        /**/
+
+        var name = User.Identity.Name;
+    }
+    <script>
+        $(document).ajaxError(function (xhr, props) {
+                 if (props.status === 401) {
+                 window.location.href = '@Url.Action("Login", "Account")';
+             }
+        });
+    </script>
+    <link rel="icon" type="image/png" href="~/Images/icon.png" />
+
+</head>
+<body id="#body" class="skin-blue layout-top-nav" cz-shortcut-listen="true">
+    <div class="wrapper" style="padding:0px">
+        <div class="overlay" id="overlay" style="display: none;">
+            <i style="color:#007acc" class="fa fa-refresh fa-spin"></i>
+        </div>
+        <div class="header container-fluid" style="background:#1d446b none repeat scroll 0 0">
+            <div class="row">
+                <div class="col-md-3 xol-xs-9">
+                    <a class="logo" href="@Url.Action("Index","Home")" style="display:flex">
+                        <!-- <img src="~/Images/logo_blue.svg" class="logo_top" style="margin-left:5px" alt="HỆ THỐNG QUẢN LÍ NGHIÊN CỨU SINH"> -->
+                        <img src="~/Images/2bs.jpg" class="logo_top" style="margin-left:5px;width: 40px" alt="CÔNG TY CỔ PHẦN HỆ THỐNG 2BS">
+                        <div style="    display: grid;    padding: 5px 0 5px 5px;    align-items: center; color:white">
+                            <span class="appname">2BS SDH</span>
+                            <span class="title">Công ty Cổ phần 2BS</span>
+                        </div>
+
+                    </a>
+                </div>
+                <nav class="navbar navbar-fixed-top affix-top col-md-9 xol-xs-12" id="mainNav">
+                    <div class="container-fluid header_custom">
+                        <div class="navbar-header" style="background:unset!important">
+                            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse pull-left" style=" width: 100%;   overflow: hidden;text-align:end" id="navbar-collapse">
+                            <ul class="nav navbar-nav" style="float:right">
+                                <!-- Lev 1 -->
+                                <li class="dropdown">
+                                    <a style="color:white!important" href="~/Home/Index" class=""><i class="fa fa-home"></i></a>
+                                </li>
+                                @if (roleInfo != null && roleInfo.Role.Equals(PublicConstant.ROLE_NCS))
+                                {
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="@Url.Action("Index","HoSo")" class=""><i class="fa fa-address-card-o"></i> Hồ sơ</a>
+                                    </li>
+                                }
+                                @if (roleInfo != null && roleInfo.Role.Equals(PublicConstant.ROLE_NCS) && roleInfo.UserName != null)
+                                {
+
+                                    <!-- Lev 1 -->
+                                    <!-- Lev 1 -->
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="~/HocTap/Index" class=""><i class="fa fa-address-book-o"></i> Đào tạo</a>
+                                    </li>
+                                    <!-- Lev 1 -->
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="~/NghienCuu/Index" class=""><i class="fa fa-graduation-cap"></i>Bảo vệ</a>
+                                    </li>
+
+                                }
+
+                                <!-- Lev 1 -->
+                                <li class="dropdown">
+                                    <a style="color:white!important" href="~/LichBaoVe/Index" class=""><i class="fa fa-calendar"></i> Lịch bảo vệ</a>
+                                </li>
+                                <!-- Lev 1 -->
+                                <li class="dropdown">
+                                    <a style="color:white!important" href="~/VanBan/Index" class=""><i class="fa fa-file-text-o"></i> Văn bản - Quy chế</a>
+                                </li>
+
+                                @if (roleInfo != null && roleInfo.Role.Equals(PublicConstant.ROLE_NCS))
+                                {
+                                    <!-- Lev 1 -->
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="~/HocPhi/Index" class=""><i class="fa fa-credit-card"></i> Học phí</a>
+                                    </li>
+                                }
+                                <li class="dropdown">
+                                    <a style="color:white!important" href="~/Home/Index" class=""><i class="fa fa-volume-up"></i> Tin tức</a>
+                                    @*fa-volume-up fa-bell-o*@
+                                </li>
+
+                                @if (roleInfo != null && roleInfo.Role.Equals(PublicConstant.ROLE_NCS))
+                                {
+                                    <li class="dropdown notifications-menu" id="thongbaoresult"></li>
+                                    <!-- Tasks Menu -->
+                                    <!-- User Account Menu -->
+                                    <li class="dropdown user user-menu">
+                                        <!-- Menu Toggle Button -->
+                                        <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">
+                                            <!-- The user image in the navbar-->
+                                            <img class="user-image" alt="User Image" src="~/Images/user.png">
+                                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                            <span style="color:white!important" class="hidden-xs">@loginInfo.Name</span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown_userheader">
+                                            <!-- The user image in the menu -->
+                                            <li class="user-header" style="    background: #2c539e;">
+                                                <img class="img-circle" alt="User Image" src="~/Images/user.png">
+                                                <p style="color:white!important">
+                                                    @loginInfo.Name
+                                                </p>
+                                            </li>
+                                            <!-- Menu Body -->
+                                            <li class="user-body">
+                                                <div class="col-xs-12 text-center">
+                                                </div>
+                                            </li>
+                                            <!-- Menu Footer-->
+                                            <li class="user-footer">
+                                                <div class="pull-left">
+                                                    <a style="color:white!important;background: #2c539e;" class="btn btn-default btn-flat" href="@Url.Action("ChangePassword","Account")" id="btnChageMyPass"><i class="fa fa-exchange"></i> Đổi mật khẩu</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a style="color:white!important;background: #2c539e;" class="btn btn-default btn-flat" href="@Url.Action("LogOff","Account")"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                }
+                                else
+                                {
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="/DangKyTuyenSinh/Index" class=""><i class="fa fa-user"></i> Đăng ký tuyển sinh</a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a style="color:white!important" href="/dang-nhap" class=""><i class="fa fa-lock"></i> Đăng nhập</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                        <!-- Navbar Right Menu -->
+                        @*<div class="navbar-custom-menu">
+                            <ul class="nav navbar-nav">
+                                <!--Boards contains some modules-->
+                                <style type="text/css">
+                                    .user-icon-board {
+                                        color: #2c539e !important;
+                                    }
+
+                                    .board-title {
+                                        color: #2c539e !important;
+                                    }
+
+                                    .header {
+                                        background-color: ghostwhite;
+                                    }
+
+                                    .navbar-nav > .notifications-menu > .dropdown-menu > li .menu, .navbar-nav > .messages-menu > .dropdown-menu > li .menu, .navbar-nav > .tasks-menu > .dropdown-menu > li .menu {
+                                        min-height: initial !important;
+                                        max-height: initial !important;
+                                    }
+
+                                    .navbar-nav > .notifications-menu > .dropdown-menu, .navbar-nav > .messages-menu > .dropdown-menu, .navbar-nav > .tasks-menu > .dropdown-menu {
+                                        min-width: 380px !important;
+                                    }
+                                </style>
+
+                                @if (roleInfo != null && roleInfo.Role.Equals(PublicConstant.ROLE_NCS))
+                                {
+                                    <li class="dropdown notifications-menu" id="thongbaoresult"></li>
+                                    <!-- Tasks Menu -->
+                                    <!-- User Account Menu -->
+                                    <li class="dropdown user user-menu">
+                                        <!-- Menu Toggle Button -->
+                                        <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">
+                                            <!-- The user image in the navbar-->
+                                            <img class="user-image" alt="User Image" src="~/Images/user.png">
+                                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                            <span class="hidden-xs">@loginInfo.Name</span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <!-- The user image in the menu -->
+                                            <li class="user-header">
+                                                <img class="img-circle" alt="User Image" src="~/Images/user.png">
+                                                <p>
+                                                    @loginInfo.Name
+                                                </p>
+                                            </li>
+                                            <!-- Menu Body -->
+                                            <li class="user-body">
+                                                <div class="col-xs-12 text-center">
+                                                </div>
+                                            </li>
+                                            <!-- Menu Footer-->
+                                            <li class="user-footer">
+                                                <div class="pull-left">
+                                                    <a class="btn btn-default btn-flat" href="@Url.Action("ChangePassword","Account")" id="btnChageMyPass"><i class="fa fa-exchange"></i> Đổi mật khẩu</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a class="btn btn-default btn-flat" href="@Url.Action("LogOff","Account")"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                }
+                                else
+                                {
+                                    <li class="dropdown">
+                                        <a href="/DangKyTuyenSinh/Index" class=""><i class="fa fa-user"></i> Đăng ký tuyển sinh</a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/dang-nhap" class=""><i class="fa fa-lock"></i> Đăng nhập</a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>*@
+                        <!-- /.navbar-custom-menu -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+        </div>
+        <div class="content-wrapper" id="main-content-wrapper" style="min-height: 871px;">
+            <div style="clear:both"></div>
+            @RenderBody()
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Footer -->
+        <footer class="main-footer" style="background: #1d446b;color: #fff;">
+            <div class="container" style="padding: 15px 0px 15px 0px;">
+                <div class="col-md-5 col-sm-12">
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1861.978494614246!2d105.78920017195435!3d21.034406902692748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab49babdffeb%3A0xa52e9909a4bd4740!2zMzUgTmcuIDQ1IFRy4bqnbiBUaMOhaSBUw7RuZywgROG7i2NoIFbhu41uZywgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWkgMTAwMDAsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1678855066219!5m2!1svi!2s" style="width:100%; border:0" height="200" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                    <h5>Liên hệ</h5>
+                    <p>Địa chỉ: Tầng 8 Tòa TH - số 35 Ngõ 45 Trần Thái Tông - Cầu Giấy - Hà Nội</p>
+                    <p>Điện thoại:  0105937978</p>
+                    <p>Email: info@2bsystem.com.vn</p>
+                    <p>Website: <a href="https://www.2bsystem.com.vn/" style="color:#fff">2bsystem.com.vn/</a></p>
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <h5>Thống kê truy cập</h5>
+                    <div id="dnn_Footer">
+                        <div class="DnnModule DnnModule-UserOnline DnnModule-408">
+                            <a name="408"></a><div id="dnn_ctr408_ContentPane">
+                                <!-- Start_Module_408 --><div id="dnn_ctr408_ModuleContent" class="DNNModuleContent ModUserOnlineC">
+                                    <div class="userOnline">
+                                        <div><span class="name"><i class="fa fa-user" aria-hidden="true"></i> Online: </span><b id="useronline">3</b></div>
+                                        <div><span class="name"><i class="fa fa-users" aria-hidden="true"></i> Total visit: </span><b id="totalonline">470.650</b></div>
+                                    </div>
+                                    @*<script>
+                                        $(function () {
+                                            $.get("/desktopmodules/Phongtd.com.UserOnline/api/common/getonline").success(function (response) {
+                                                $("#useronline").html(response.Online);
+                                                $("#totalonline").html(response.Total);
+                                            });
+                                        });
+                                    </script>*@
+                                </div><!-- End_Module_408 -->
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <p>Phụ trách kỹ thuật &amp; thiết kế web: 0934.518.629</p>
+                </div>
+            </div>
+            <hr />
+            <div class="container" style="text-align:center; padding:10px">
+                <strong>Copyright © 2020 <a style="color:#fff" href="javascript:void(0)">Phòng Sau đại học - Trường Đại học Sư phạm Hà Nội</a>.</strong>
+            </div>
+        </footer>
+        <div id="alert">
+        </div>
+        <!-- change password modal-->
+        <div class="modal fade" id="myModal_change_pass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Đổi mật khẩu</h4>
+                        <input type="hidden" value="0" id="txtId">
+                    </div>
+                    <div class="modal-body">
+                        <label>Mật khẩu hiện tại (*):</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input type="password" placeholder="Nhập mật khẩu hiện tại" id="txt_oldpass" class="form-control" style="height:30px !important;">
+                        </div>
+                        <div class="clear"></div>
+                        <label>Mật khẩu mới (*):</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <input type="password" placeholder="Mật khẩu mới" id="txt_newpass1" class="form-control" style="height:30px !important;">
+                        </div>
+                        <div class="clear"></div>
+                        <label>Nhập lại mật khẩu mới (*):</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <input type="password" placeholder="Nhập lại mật khẩu mới" id="txt_newpass2" class="form-control" style="height:30px !important;">
+                        </div>
+                        <div id="notif-pass" style="margin-top:20px; height:30px;">
+                            <!--Thông báo việc thay đổi mật khẩu-->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">Hủy bỏ</button>
+                        <button class="btn btn-primary" id="btnSave_Change_Pass">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end change password modal-->
+        <link href="~/Content/toastr.css" rel="stylesheet" />
+        <script src="~/Scripts/toastr.js"></script>
+        <script src="~/Scripts/session.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnChageMyPass').click(function () {
+                    $('#myModal_change_pass').model('show');
+                });
+
+                if ('@TempData["message"]') {
+                    toastr.success('@TempData["message"]');
+                }
+                else if ('@TempData["info"]') {
+                    toastr.info('@TempData["info"]');
+                }
+                else if ('@TempData["error"]') {
+                    toastr.error('@TempData["error"]');
+                }
+                else { }
+            });
+                   SessionUpdater.Setup('@Url.Action("KeepSessionAlive","Home")');
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                loadthongbao();
+            });
+            function loadthongbao() {
+
+                 $.ajax({
+                        type: "GET",
+                         url: '@Url.Action("GetListThongBaoMenu", "Home")',
+                        data: {},
+                         contentType: 'application/html ; charset:utf-8',
+                         type: 'GET',
+                         dataType: 'html',
+                        success: function (data) {
+                            $('#thongbaoresult').empty().html(data);
+                        },
+                        error: function (req, status, error) {
+                        }
+                    });
+            }
+        </script>
+    </div>
+</body>
+</html>

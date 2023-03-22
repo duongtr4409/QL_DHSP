@@ -1,0 +1,174 @@
+﻿@using TEMIS.Model
+@using CoreAPI.Entity
+@model TEMIS.Model.GiangVien
+@{
+    ViewBag.Title = "Cập nhật thông tin giảng viên ngoài trường";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<ChucDanhAPI> listChucDanh = (List<ChucDanhAPI>)ViewBag.ListChucDanh;
+    List<HocHamHocViAPI> listHocHamHocVi = (List<HocHamHocViAPI>)ViewBag.ListHocHamHocVi;
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Cập nhật thông tin giảng viên ngoài trường</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                @using (Html.BeginForm("Edit", "GiangVien", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <form class="form-horizontal form-label-left" novalidate>
+                        @Html.HiddenFor(model => Model.Id)
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hovaten">
+                                Họ và tên <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.HoTen" type="text" id="HoTen" name="HoTen" required="required" class="form-control col-md-7 col-xs-12">
+                                <input type="hidden" name="hdfId" value="@Model.Id" />
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="NgaySinh">
+                                Ngày sinh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @if (Model.NgaySinh != null)
+                                {
+                                    <input type="text" class="form-control has-feedback-left" id="single_cal1" placeholder="ngày sinh" aria-describedby="inputSuccess2Status" name="NgaySinh" value="@DateTime.Parse(Model.NgaySinh.ToString()).ToString("dd.MM.yyyy")">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control has-feedback-left" id="single_cal1" placeholder="ngày sinh" aria-describedby="inputSuccess2Status" name="NgaySinh" value="sssss">
+                                }
+                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Giới Tính <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="GioiTinh" name="GioiTinh" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                                Nơi sinh  <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.NoiSinh" type="text" id="NoiSinh" name="NoiSinh" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                                Hộ khẩu  <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.HoKhau" type="text" id="HoKhau" name="HoKhau" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diachi">
+                                Địa chỉ  <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.DiaChi" type="text" id="DiaChi" name="DiaChi" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dienthoai">
+                                Điện thoại  <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.SoDienThoai" type="text" id="SoDienThoai" name="SoDienThoai" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.Email" type="email" id="Email" name="Email" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Khoa <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="Khoa" name="Khoa" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Chức danh <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="ChucDanh" name="ChucDanh" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @foreach (var item in listChucDanh)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                                Hàm hàm, học vị <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="HocHamHocVi" name="HocHamHocVi" style="height:40px" class="form-control col-md-7 col-xs-12">
+                                    @if (listHocHamHocVi != null)
+                                    {
+                                        foreach (var item in listHocHamHocVi)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-primary btn-sm" })
+
+                                <button id="send" type="submit" class="btn btn-success btn-sm">Cập nhật</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/ThemFontend/jquery-ui.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $('#single_cal1').datepicker({
+        format: 'DD.MM.YYYY'
+    });
+  //  $('#single_cal1').datepicker();
+    $(document).ready(function () {
+        debugger
+        $('#GioiTinh').val('@Model.GioiTinh');
+        $('#ChucDanh').val(@Model.ChucDanhId);
+        $('#HocHamHocVi').val(@Model.HocHamHocViId);
+        $('#Khoa').val(@Model.KhoaId);
+    });
+</script>

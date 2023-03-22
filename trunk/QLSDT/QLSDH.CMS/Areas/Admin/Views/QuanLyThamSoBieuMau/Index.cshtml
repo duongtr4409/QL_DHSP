@@ -1,0 +1,416 @@
+﻿@using TEMIS.Model
+@using TEMIS.CMS.Common
+@{
+    ViewBag.Title = "Quản config";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<BieuMau> listBieuMau = (List<BieuMau>)ViewBag.ListBieuMau;
+
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý cấu hình tham số biểu mẫu</h2>
+
+                    <div class="pull-right">
+                        <button type="button" onclick="openadd()" class="btn btn-success"><i class="fa fa-plus" title="thêm mới"></i> Thêm mới</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="x_content">
+                        <h2 style="color:red"> Lưu ý:</h2>
+                        <p>Quy tắc thêm tham số biểu mẫu: Tên tham số viết liền không dấu và được để trong dấu {}</p>
+                    </div>
+                </div>
+                <div class="x_content">
+                    <div class="x_content">
+                        <div id="dataresult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="loaithamso">
+                                Loại tham số<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @*<input type="text" id="loaithamso" name="loaithamso" required="required" class="form-control col-md-7 col-xs-12">*@
+                                <select id="loaithamso" name="loaithamso" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option value="0">---Chọn biểu mẫu---</option>
+                                    @foreach (var item in listBieuMau)
+                                    {
+                                        <option value="@item.Id">@item.Template</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenthamso">
+                                Tên tham số <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenthamso" name="tenthamso" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="giatrithamso">
+                                Giá trị tham số <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="giatrithamso" name="giatrithamso" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="loaithamso">
+                                Kiểu dữ liệu<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="kieudl" name="kieudl" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option>@PublicConstant.BM_TEXT</option>
+                                    <option>@PublicConstant.BM_NUMBER</option>
+                                    <option>@PublicConstant.BM_DATETIME</option>
+                                    <option>@PublicConstant.BM_GIANGVIEN</option>
+                                    <option>@PublicConstant.BM_BANG</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none" id="fm_cautruc">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cautruchienthi">
+                                Cấu trúc hiển thị
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="cautruc" name="cautruc" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none" id="fm_thutu">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thutuhienthi">
+                                Thứ tự hiển thị
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="number" id="thutuhienthi" name="thutuhienthi" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <input type="hidden" id="IdEdit" name="IdEdit" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="loaithamso_edit">
+                                Loại tham số<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="loaithamso_edit" name="loaithamso_edit" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option value="0">---Chọn biểu mẫu---</option>
+                                    @foreach (var item in listBieuMau)
+                                    {
+                                        <option value="@item.Id">@item.Template</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenthamso_edit">
+                                Tên tham số <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenthamso_edit" name="tenthamso_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="giatrithamso_edit">
+                                Giá trị tham số <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="giatrithamso_edit" name="giatrithamso_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="loaithamso">
+                                Kiểu dữ liệu<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="kieudl_edit" name="kieudl_edit" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option>@PublicConstant.BM_TEXT</option>
+                                    <option>@PublicConstant.BM_NUMBER</option>
+                                    <option>@PublicConstant.BM_DATETIME</option>
+                                    <option>@PublicConstant.BM_GIANGVIEN</option>
+                                    <option>@PublicConstant.BM_BANG</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none" id="frcautruc_edit">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cautruc_edit">
+                                Cấu trúc hiển thị
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="cautruc_edit" name="cautruc_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none" id="frthutu_edit">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thutu_edit">
+                                Thứ tự hiển thị
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="number" id="thutuhienthi_edit" name="thutuhienthi_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        LoadData();
+    });
+
+    function LoadData() {
+        $('#divProcessing').show();
+        var model = $('#dataresult');
+            $.ajax({
+                url: '@Url.Action("LoadData", "QuanLyThamSoBieuMau")',
+                data: { },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+
+     function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    function openedit(tenthamso, giatrithamso, loaithamso, kieudl, cautruc, thutuhienthi) {
+        $('#IdEdit').val(tenthamso);
+        $('#tenthamso_edit').val(tenthamso);
+        $('#giatrithamso_edit').val(giatrithamso);
+        $('#loaithamso_edit').val(loaithamso);
+        $('#kieudl_edit').val(kieudl);
+        $('#cautruc_edit').val(cautruc);
+        $('#thutuhienthi_edit').val(thutuhienthi);
+        if (kieudl == 'Bảng danh sách') {
+            $('#frcautruc_edit').show();
+            $('#frthutu_edit').show();
+        }
+        else {
+            $('#frcautruc_edit').hide();
+            $('#frthutu_edit').hide();
+        }
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    function confirmremove(tenthamso) {
+        $('#IdXoa').val(tenthamso);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+    $("#kieudl").change(function () {
+        var kieudl = $(this).val();
+         if (kieudl == 'Bảng danh sách') {
+             $('#fm_cautruc').show();
+            $('#fm_thutu').show();
+        }
+         else {
+             $('#fm_cautruc').hide();
+             $('#fm_thutu').hide();
+        }
+    });
+    $("#kieudl_edit").change(function () {
+        var kieudl = $(this).val();
+        if (kieudl == 'Bảng danh sách') {
+            $('#frcautruc_edit').show();
+            $('#frthutu_edit').show();
+        }
+        else {
+            $('#frcautruc_edit').hide();
+            $('#frthutu_edit').hide();
+        }
+    });
+    $('#btnThem').click(function () {
+        var tenthamso = $('#tenthamso').val();
+        var giatrithamso = $('#giatrithamso').val();
+        var idbieumau = $('#loaithamso').val();
+        var kieudl = $('#kieudl').val();
+        if (tenthamso == "") {
+            toastr.error('Tên tham số không được để trống');
+            return false;
+        }
+        if (giatrithamso == "") {
+            toastr.error('Giá trị tham số không được để trống');
+            return false;
+        }
+        var cautruc = $('#cautruc').val()
+        var thutuhienthi = $('#thutuhienthi').val()
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "QuanLyThamSoBieuMau")',
+            data: { tenthamso: tenthamso, giatrithamso: giatrithamso, idbm: idbieumau, kieudl: kieudl, cautruc: cautruc, thutuhienthi: thutuhienthi },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    //setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Thêm mới thành công');
+                    LoadData();
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var tenthamso = $('#tenthamso_edit').val();
+        var giatrithamso = $('#giatrithamso_edit').val();
+        var idbm = $('#loaithamso_edit').val();
+        var kieudl = $('#kieudl_edit').val();
+        if (tenthamso == "") {
+            toastr.error('tên tham số không được để trống');
+            return false;
+        }
+        if (giatrithamso == "") {
+            toastr.error('giá trị tham số không được để trống');
+            return false;
+        }
+        if (loaithamso == "") {
+            toastr.error('loại tham số không được để trống');
+            return false;
+        }
+        var cautruc = $('#cautruc_edit').val()
+        var thutuhienthi = $('#thutuhienthi_edit').val()
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Update", "QuanLyThamSoBieuMau")',
+            data: { tenthamso: tenthamso, giatrithamso: giatrithamso, idbm: idbm, kieudl: kieudl, cautruc: cautruc, thutuhienthi: thutuhienthi },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('cập nhật thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var tenthamso = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("XoaThamSo", "QuanLyThamSoBieuMau")',
+            data: { tenthamso: tenthamso },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == '') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Xóa thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+</script>

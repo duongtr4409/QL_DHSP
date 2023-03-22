@@ -1,0 +1,260 @@
+﻿@model TEMIS.CMS.Areas.Admin.Models.ThongBaoXTBViewModel
+@using TEMIS.Model;
+@{
+    ViewBag.Title = "Gửi thông báo tuyển sinh đến các khoa";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<KhoaHoc> listKhoahoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    var departmentID = ViewBag.DEPARTEMENTID;
+}
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Gửi thông báo</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" data-toggle="tab" href="#gui-thong-bao-xtb" role="tab" aria-controls="home" aria-selected="true">Gửi thông báo xin tiểu ban</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#gui-thong-bao-nhap-hoc" role="tab" aria-controls="contact" aria-selected="false">Gửi thông báo nhập học</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade active in" id="gui-thong-bao-xtb" role="tabpanel" aria-labelledby="home-tab">
+                        @using (Html.BeginForm("GuiThongBaoXTB", "ThiSinhTuyenSinh", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreate" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <form action="#" method="post" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                            <div class="x_title">
+                                                <h2>Gửi thông báo tới các khoa có danh sách NCS dự tuyển</h2>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="x_title" style="border-bottom:none !important">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <label class="control-label">Khóa tuyển sinh</label>
+                                                                    <select class="form-control" id="ddlKhoahoc" name="ddlKhoahoc">
+                                                                        <option value="0">--- Chọn khóa tuyển sinh ---</option>
+                                                                        @foreach (var item in listKhoahoc)
+                                                                        {
+                                                                            <option value="@item.Id">@item.MaKhoa</option>
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="control-label">Đợt tuyển sinh</label>
+                                                                    <select class="form-control" id="ddlDotTS" name="ddlDotTS"></select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="x_content" style="padding-top:20px">
+                                                <div>
+                                                    <div class="col-lg-2 col-sm-2">
+                                                        <label>
+                                                            Tiêu đề
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-12">
+                                                        @Html.EditorFor(model => model.TieuDe, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12", @required = "" } })
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top:100px">
+                                                    <div class="col-lg-2 col-sm-2">
+                                                        <label>
+                                                            Nội dung thông báo
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-12">
+                                                        @Html.TextAreaFor(model => model.NoiDungThongBao, new { @id = "noidungthongbao", @required = "" })
+                                                        <script>
+                                                            CKEDITOR.replace('noidungthongbao', {
+                                                                filebrowserBrowseUrl: '/Content/ckfinder/ckfinder.html',
+                                                                filebrowserImageBrowseUrl: '/Content/ckfinder/ckfinder.html?type=Images',
+                                                                filebrowserUploadUrl: '/Content/ckfinder/core/connector/php/connector?command=QuickUpload&type=Files',
+                                                                filebrowserImageUploadUrl: '/Content/ckfinder/core/connector/php/connector?command=QuickUpload&type=Images'
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="text-align:center">
+                                                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" id="btnGuiThongBao" class="btn btn-success" data-dismiss="modal">Gửi thông báo</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="gui-thong-bao-nhap-hoc" role="tabpanel" aria-labelledby="home-tab">
+                        @using (Html.BeginForm("GuiThongBaoXTB", "ThiSinhTuyenSinh", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreate" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <form action="#" method="post" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                            <div class="x_title">
+                                                <h2>Gửi thông báo nhập học tới NCS</h2>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="x_title" style="border-bottom:none !important">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <label class="control-label">Khóa tuyển sinh</label>
+                                                                    <select class="form-control" id="ddlKhoahoc_TrungTuyen" name="ddlKhoahoc_TrungTuyen">
+                                                                        <option value="0">--- Chọn khóa tuyển sinh ---</option>
+                                                                        @foreach (var item in listKhoahoc)
+                                                                        {
+                                                                            <option value="@item.Id">@item.MaKhoa</option>
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="control-label">Đợt tuyển sinh</label>
+                                                                    <select class="form-control" id="ddlDotTS_TrungTuyen" name="ddlDotTS_TrungTuyen"></select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="x_content" style="padding-top:20px">
+                                                <div>
+                                                    <div class="col-lg-2 col-sm-2">
+                                                        <label>
+                                                            Tiêu đề
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-12">
+                                                        @Html.EditorFor(model => model.TieuDe, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12", @required = "" } })
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top:100px">
+                                                    <div class="col-lg-2 col-sm-2">
+                                                        <label>
+                                                            Nội dung thông báo
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-12">
+                                                        @Html.TextAreaFor(model => model.NoiDungThongBao, new { @id = "noidungthongbao2", @required = "" })
+                                                        <script>
+                                                            CKEDITOR.replace('noidungthongbao2', {
+                                                                filebrowserBrowseUrl: '/Content/ckfinder/ckfinder.html',
+                                                                filebrowserImageBrowseUrl: '/Content/ckfinder/ckfinder.html?type=Images',
+                                                                filebrowserUploadUrl: '/Content/ckfinder/core/connector/php/connector?command=QuickUpload&type=Files',
+                                                                filebrowserImageUploadUrl: '/Content/ckfinder/core/connector/php/connector?command=QuickUpload&type=Images'
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="text-align:center">
+                                                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" id="btnGuiThongBao" class="btn btn-success" data-dismiss="modal">Gửi thông báo</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:1000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+<script>
+    $(document).ready(function () {
+        $('#ddlKhoahoc').on('change', function (e) {
+            var khoahocid = this.value;
+            loaddotTS(khoahocid, 'ddlDotTS');
+        });
+        $('#ddlKhoahoc_TrungTuyen').on('change', function (e) {
+            var khoahocid = this.value;
+            loaddotTS(khoahocid, 'ddlDotTS_TrungTuyen');
+        });
+        $('#ddlDotTS').on('change', function (e) {
+            var khoahocid = this.value;
+        });
+     });
+    function loaddotTS(khoahocid, divresult) {
+         $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("LoadDotTSByKhoahoc", "ThiSinhTuyenSinh")',
+                    data: { IDkhoahoc: khoahocid},
+                    dataType: "json",
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $('#' + divresult).empty().html(data);
+                    },
+                    error: function (req, status, error) {
+                    }
+         });
+    }
+    $('#btnGuiThongBao').click(function () {
+        var khoaid = $('#ddlKhoahoc').val();
+        var dotid = $('#ddlDotTS').val();
+        if (khoaid == null || khoaid == 0) {
+            toastr.error("Bạn chưa chọn khóa tuyển sinh!");
+            return false;
+        }
+        if (dotid == null || dotid == 0) {
+            toastr.error("Bạn chưa chọn đợt tuyển sinh!");
+            return false;
+        }
+        @*$("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GuiThongBao", "ThiSinhTuyenSinh")',
+            data: { tieude: tieude, noidungthongbao: noidung, dotid: dotid },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 100);
+                    toastr.success("Gửi phản hồi thành công")
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });*@
+    });
+</script>

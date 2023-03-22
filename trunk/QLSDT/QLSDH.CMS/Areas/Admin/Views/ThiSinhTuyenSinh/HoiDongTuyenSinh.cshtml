@@ -1,0 +1,676 @@
+﻿@using TEMIS.Model
+@using CoreAPI.Entity;
+@using TEMIS.CMS.Common
+@model List<TEMIS.Model.ThamSoBieuMau>
+@{
+    /**/
+
+    ViewBag.Title = "QĐ hội đồng tuyển sinh";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<BieuMau> listBieumau = (List<BieuMau>)ViewBag.ListBieumau;
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<OrganizationInfo> listPhongBan = (List<OrganizationInfo>)ViewBag.ListDivisions;
+    List<OrganizationInfo> listTTVien = (List<OrganizationInfo>)ViewBag.ListInstitues;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Hội đồng Tuyển sinh</h2>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                    <div class="x_content">
+                        <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="text-align:center">Tên tham số</th>
+                                        <th style="text-align:center">Giá trị tham số</th>
+                                        <th style="width:15%!important;text-align:center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Count() > 0)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@item.TenThamSo</td>
+                                                <td>
+                                                    <input value="@item.GiaTriThamSo" style="width:80%" id="@item.Id" class="form-control" />
+
+                                                    @if (item.KieuDuLieu == PublicConstant.BM_GIANGVIEN)
+                                                    {
+                                                        <button type="button" onclick="openaddGV('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                                            <i class="fa fa-plus" title="thêm mới"></i>
+                                                        </button>
+                                                    }
+                                                    @if (item.KieuDuLieu == PublicConstant.BM_BANG)
+                                                    {
+                                                        <button type="button" onclick="openaddTable('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                                            <i class="fa fa-plus" title="thêm mới"></i>
+                                                        </button>
+                                                    }
+
+                                                </td>
+                                                <td style="width:15%; text-align:center">
+                                                    <button type="button" onclick="openedit('@item.Id')" class="btn btn-primary" title="Lưu"><i class="fa fa-save" title="Lưu"></i></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="x_content" style="text-align:center">
+                    <button type="button" onclick="opendown()" class="btn btn-info"> Lưu biểu mẫu</button>
+                    <a class="btn btn-success" id="hrf_file" style="pointer-events:none"><i class="fa fa-download" title="Tải về"></i>Tải biểu mẫu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade modeladd" id="modeladdGV" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:1000px !important; margin-left: -200px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn giảng viên</h4>
+            </div>
+            <div class="modal-body" style="padding:0px!important">
+                <div class="x_content">
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <div class=" col-sm-3 ">
+                                <label class="control-label">
+                                    Chọn Khoa
+                                </label>
+                                <select class="form-control col-md-5 col-xs-12" id="ddlKhoa" name="ddlKhoa">
+                                    <option value="0">--- Chọn Khoa ---</option>
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class=" col-sm-3">
+                                <label class="control-label">
+                                    Chọn hình thức
+                                </label>
+
+                                <select class="form-control col-md-5 col-xs-12" id="loaiGV" name="loaiGV">
+                                    <option value="0">GV trong trường</option>
+                                    <option value="1">GV ngoài trường</option>
+                                </select>
+                            </div>
+                            <div class=" col-sm-3">
+                                <label class="control-label">
+                                    Phòng ban
+                                </label>
+
+                                <select class="form-control col-md-5 col-xs-12" id="ddlPhongBan" name="ddlPhongBan">
+                                    <option value="0">--- Chọn phòng ban ---</option>
+                                    @foreach (var item in listPhongBan)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class=" col-sm-3 2">
+                                <label class="control-label">
+                                    Trung tâm viện nghiên cứu
+                                </label>
+
+                                <select class="form-control col-md-5 col-xs-12" id="ddlVienNC" name="ddlVienNC">
+                                    <option value="0">--- Chọn TT viện nghiên cứu ---</option>
+                                    @foreach (var item in listTTVien)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <label class="control-label">
+                                    Tên Giảng viên <span class="required">*</span>
+                                </label>
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <input class="form-control col-md-7 col-xs-12" id="namegv" name="namegv" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-1 col-sm-11 col-xs-12">
+
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-xs-12" id="tengv" style="text-align:center">
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <input type="hidden" id="hdidinput" class="hdidinput" name="hdidinput" />
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXacnhan" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade modeladd" id="modelAddToTable" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:1000px !important; margin-left: -200px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn hội đồng xét tuyển</h4>
+            </div>
+            <div class="modal-body" style="padding:0px!important">
+                <div class="x_content">
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <div class=" col-sm-3">
+                                <label class="control-label">
+                                    Chọn hình thức
+                                </label>
+
+                                <select class="form-control col-md-5 col-xs-12" id="loaiGV_table" name="loaiGV_table">
+                                    <option value="0">GV trong trường</option>
+                                    <option value="1">GV ngoài trường</option>
+                                </select>
+                            </div>
+                            <div class=" col-sm-3 ">
+                                <label class="control-label">
+                                    Chọn Khoa
+                                </label>
+                                <select class="form-control col-md-5 col-xs-12" id="ddlKhoa_2" name="ddlKhoa_2thee">
+                                    @*<option value="0">--- Chọn Khoa ---</option>*@
+                                    @foreach (var item in listKhoa)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            @*<div class=" col-sm-3">
+                                    <label class="control-label">
+                                        Phòng ban
+                                    </label>
+
+                                    <select class="form-control col-md-5 col-xs-12" id="ddlPhongBan_2" name="ddlPhongBan_2">
+                                        <option value="0">--- Chọn phòng ban ---</option>
+                                        @foreach (var item in listPhongBan)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class=" col-sm-3 2">
+                                    <label class="control-label">
+                                        Trung tâm viện nghiên cứu
+                                    </label>
+
+                                    <select class="form-control col-md-5 col-xs-12" id="ddlVienNC_2" name="ddlVienNC_2">
+                                        <option value="0">--- Chọn TT viện nghiên cứu ---</option>
+                                        @foreach (var item in listTTVien)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>*@
+                            @*<div class=" col-sm-3 2">
+                                    <button type="button" onclick="ressetselect()" class="btn btn-success" style="margin-top:25px"><i class="fa fa-refresh" title="Reset chọn"></i>Reset chọn</button>
+                                </div>*@
+                        </div>
+                        @*<div class="form-group">
+                                <div class=" col-sm-3 ">
+                                    <label class="control-label">
+                                        Số lượng Chủ tịch hội đồng
+                                    </label>
+                                    <input class="form-control col-md-7 col-xs-12" id="sl_chutich" name="sl_chutich" readonly="readonly" />
+                                </div>
+                                <div class=" col-sm-3">
+                                    <label class="control-label">
+                                        Số lượng Phó chủ tịch hội đồng
+                                    </label>
+                                    <input class="form-control col-md-7 col-xs-12" id="sl_phochutich" name="sl_phochutich" readonly="readonly" />
+                                </div>
+                                <div class=" col-sm-3 2">
+                                    <label class="control-label">
+                                        Số lượng Ủy viên thường trực
+                                    </label>
+
+                                    <input class="form-control col-md-7 col-xs-12" id="sl_uvthuongtruc" name="sl_uvthuongtruc" readonly="readonly" />
+                                </div>
+                                <div class=" col-sm-3 2">
+                                    <label class="control-label">
+                                        Số lượng Ủy viên
+                                    </label>
+
+                                    <input class="form-control col-md-7 col-xs-12" id="sl_uv" name="sl_uv" readonly="readonly" />
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12" id="tengv_2" style="text-align:center;">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+
+                <input type="hidden" id="hdidinput_2" class="hdidinput_2" name="hdidinput_2" />
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXacnhan_form" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modelAddKhoa" class="modal fade modeladd">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:1000px !important; margin-left: -200px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn danh sách khoa</h4>
+            </div>
+            <div class="modal-body" style="padding:0px!important">
+                <div class="x_content">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                            <table class="table table-striped jambo_table bulk_action">
+                                <thead>
+                                    <tr class="headings">
+                                        <th style="text-align:center">
+                                            <label class="pos-rel">
+                                            </label>
+                                        </th>
+                                        <th style="text-align:center;">Tên Khoa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="lstKhoa">
+                                    @if (listKhoa.Count() > 0)
+                                    {
+                                        foreach (var item in listKhoa)
+                                        {
+                                            <tr>
+                                                <td class="a-center" style="text-align:center">
+                                                    <label class="pos-rel">
+                                                        <input type="checkbox" id="hdname_@item.Id" name="lstKhoa[]" value="@item.Name" />
+                                                    </label>
+                                                </td>
+                                                <td>@item.Name</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <input type="hidden" id="hdidinput_3" class="hdidinput_3" name="hdidinput_3" />
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXacnhan_Khoa" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable({
+            "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+        //LoadData();
+    });
+    function LoadData() {
+        var nameBM = $("#fileselect").val();
+        $('#divProcessing').show();
+        var model = $('#dataresult');
+        $.ajax({
+                url: '@Url.Action("LoadDataThamsoBM", "ThiSinhTuyenSinh")',
+                data: { idBM: '1' },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+        });
+    }
+
+    function opendown() {
+        //var nameBM = $("#fileselect").val();
+        var nameBM = '1';
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("BieuMauXinTieuBan", "ThiSinhTuyenSinh")',
+            data: {id: nameBM},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data != 'Không tìm thấy file' && data != 'error') {
+                    console.log(data)
+                    $("#hrf_file").attr("href", data);
+                    $('#hrf_file').css('pointer-events', 'visible');
+                    toastr.success('File đã được lưu');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+    function ressetselect() {
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ResetChonCanBo", "ThiSinhTuyenSinh")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    toastr.success('Refresh  thành công');
+                    $('#sl_chutich').val(0);
+                    $('#sl_phochutich').val(0);
+                    $('#sl_uvthuongtruc').val(0);
+                    $('#sl_uv').val(0);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+    $('#fileselect').on('change', function (e) {
+        LoadData();
+    });
+    function openedit(id) {
+        var giatrithamso = $('#' + id).val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("SaveGiaTriThamSo", "ThiSinhTuyenSinh")',
+            data: { idthamso: id, giatrithamso: giatrithamso, idBM: 1 },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    toastr.success('Lưu thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+
+
+    //Script form chọn gv
+    $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        var loaigv = $('#loaiGV').val();
+
+        document.getElementById("ddlVienNC").selectedIndex = 0;
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        loadGiangVien(loaigv, khoaid)
+    });
+    $('#loaiGV').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+        loadGiangVien(loaigv, khoaid)
+    });
+    $('#ddlPhongBan').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+        var phongid = $('#ddlPhongBan').val();
+
+        document.getElementById("ddlVienNC").selectedIndex = 0;
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+
+        loadGiangVien(-1, phongid)
+    });
+
+    $('#ddlVienNC').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+
+        var ttvienncid = $('#ddlVienNC').val();
+
+        console.log(khoaid);
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+
+        loadGiangVien(-1, ttvienncid)
+    });
+     $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        var loaigv = $('#loaiGV').val();
+
+        document.getElementById("ddlVienNC").selectedIndex = 0;
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        loadGiangVien(loaigv, khoaid)
+    });
+    $('#loaiGV').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+        loadGiangVien(loaigv, khoaid)
+    });
+    $('#ddlPhongBan').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+        var phongid = $('#ddlPhongBan').val();
+
+        document.getElementById("ddlVienNC").selectedIndex = 0;
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+
+        loadGiangVien(-1, phongid)
+    });
+
+    $('#ddlVienNC').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+
+        var ttvienncid = $('#ddlVienNC').val();
+
+        console.log(khoaid);
+        document.getElementById("ddlPhongBan").selectedIndex = 0;
+        document.getElementById("ddlKhoa").selectedIndex = 0;
+
+        loadGiangVien(-1, ttvienncid)
+    });
+    function loadGiangVien(LoaiGV, khoaid) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGVByKhoa", "ThiSinhTuyenSinh")',
+                data: { loaigv: LoaiGV, khoaid:khoaid },
+                dataType: 'html',
+                contentType: 'application/html ; charset:utf-8',
+                success: function (data) {
+                    $('#tengv').empty().html(data);
+
+                },
+             error: function (req, status, error) {
+                 console.log("error");
+                 console.log(error);
+             }
+            });
+    }
+    function openaddGV(idinput) {
+        $('#hdidinput').val(idinput);
+        var loaigv = $('#loaiGV').val();
+        var khoaid = $('#ddlKhoa').val();
+        loadGiangVien(loaigv, khoaid)
+        $('#modeladdGV').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('#btnXacnhan').click(function () {
+        var ten_gv = $('#namegv').val();
+        var get_idinput = $('#hdidinput').val();
+        $('#' + get_idinput).val(ten_gv);
+    });
+    $('#btnXacnhan_form').click(function () {
+        var array = $('#array_push').val();
+        console.log(array);
+       var id = $('#hdidinput_2').val();
+        checkgiatriHD(id);
+    });
+
+
+
+    //script Form chức vụ vai trò
+
+    $('#loaiGV_table').on('change', function (e) {
+        var loaigv = this.value;
+        var khoaid = $('#ddlKhoa').val();
+        loadGiangVien_chucVu(khoaid)
+    });
+    $('#ddlKhoa_2').on('change', function (e) {
+        var khoaid = this.value;
+
+        //document.getElementById("ddlVienNC_2").selectedIndex = 0;
+        //document.getElementById("ddlPhongBan_2").selectedIndex = 0;
+        loadGiangVien_chucVu(khoaid)
+    });
+    //$('#ddlPhongBan_2').on('change', function (e) {
+    //    var phongid = $('#ddlPhongBan_2').val();
+
+    //    document.getElementById("ddlVienNC_2").selectedIndex = 0;
+    //    document.getElementById("ddlKhoa_2").selectedIndex = 0;
+
+    //    loadGiangVien_chucVu(phongid)
+    //});
+
+    //$('#ddlVienNC_2').on('change', function (e) {
+    //    var ttvienncid = $('#ddlVienNC_2').val();
+    //           document.getElementById("ddlPhongBan_2").selectedIndex = 0;
+    //    document.getElementById("ddlKhoa_2").selectedIndex = 0;
+
+    //    loadGiangVien_chucVu(ttvienncid)
+    //});
+    function loadGiangVien_chucVu(khoaid) {
+        var loaigv = '1';
+         $.ajax({
+                type: "GET",
+             url: '@Url.Action("LoadGVByKhoa_Form2", "ThiSinhTuyenSinh")',
+             data: { loaigv: loaigv, khoaid: khoaid },
+                dataType: 'html',
+                contentType: 'application/html ; charset:utf-8',
+                success: function (data) {
+                    $('#tengv_2').empty().html(data);
+
+                },
+             error: function (req, status, error) {
+                 console.log("error");
+                 console.log(error);
+             }
+            });
+    }
+
+    function openaddTable(idinput) {
+        $('#hdidinput_2').val(idinput);
+        var khoaid = $('#ddlKhoa_2').val();
+        loadGiangVien_chucVu(khoaid);
+        checkcbduocchon(2, 1, '', '', '');
+        $('#modelAddToTable').modal({ backdrop: 'static', keyboard: false })
+    }
+     function checkcbduocchon(type,idcb, tencb, chucvu, vaitro) {
+         $.ajax({
+                type: "GET",
+             url: '@Url.Action("AddCanBoXinTieuBan", "ThiSinhTuyenSinh")',
+             data: { type: type, idcb: idcb, tencb: tencb, chucvu: chucvu, vaitro: vaitro },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 console.log(data)
+                 if (data == "error") {
+                     toast.error("Lỗi chọn cán bộ!")
+                 }
+                 else {
+                     $('#sl_chutich').val(data.chutichhd);
+                     $('#sl_phochutich').val(data.phochutichhd);
+                     $('#sl_uvthuongtruc').val(data.uvthuongtruc);
+                     $('#sl_uv').val(data.uyvien);
+                 }
+                },
+             error: function (req, status, error) {
+                 toastr.error("Lỗi chọn cán bộ!")
+                 console.log(error);
+             }
+            });
+    }
+    function checkgiatriHD(id) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("DsCanboaddForm", "ThiSinhTuyenSinh")',
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                 console.log(data)
+                 if (data == "error") {
+                     toast.error("Lỗi chọn cán bộ!")
+                 }
+                 else {
+                     $('#' + id).val(data);
+                 }
+                },
+             error: function (req, status, error) {
+                 toastr.error("Lỗi chọn cán bộ!")
+                 console.log(error);
+             }
+            });
+    }
+
+    function openTableKhoa(idinput) {
+        $('#hdidinput_3').val(idinput);
+        $('#modelAddKhoa').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('#btnXacnhan_Khoa').click(function () {
+        var lstKhoas = [];
+        $('.lstKhoa input[type="checkbox"]:checked').each(function () {
+            lstKhoas.push($(this).val());
+        });
+        var id = $('#hdidinput_3').val();
+        $('#' + id).val(lstKhoas.join(','));
+    });
+</script>
+

@@ -1,0 +1,35 @@
+﻿@using Hnue.Helper
+@model Ums.Models.Common.ListModel
+@using Resources
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("RoleGrade", "System", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(i => i.EntityId)
+    <div class="container-fluid">
+        <div class="form-group">
+            <h3>Quyền: @Html.DisplayFor(i => i.EntityName)</h3>
+        </div>
+        <div class="functions">
+            @foreach (var item in Model.List)
+                {
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" @(Model.Selecteds.Contains(item.Value.ToInt()) ? "checked='checked'" : "") name="Selecteds" value="@item.Value" /> <span>@item.Text</span>
+                    </label>
+                </div>
+            }
+            <div class="clear"></div>
+        </div>
+        <hr />
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("450px", "330px");
+</script>

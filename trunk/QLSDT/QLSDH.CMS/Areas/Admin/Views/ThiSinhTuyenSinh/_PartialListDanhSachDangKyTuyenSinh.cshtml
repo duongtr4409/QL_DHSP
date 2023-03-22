@@ -1,0 +1,85 @@
+﻿@using TEMIS.CMS.Common;
+@using TEMIS.Model;
+@model IEnumerable<TEMIS.Model.DangKyTuyenSinh>
+@{
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+}
+<div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+        <thead>
+            <tr role="row">
+                <th><input type="checkbox" name="cball" class="cball" value="" /></th>
+                <th class="text-center">STT</th>
+                <th class="text-center">Tên NCS</th>
+                <th class="text-center">Ngày sinh</th>
+                <th class="text-center">Điện thoại</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Chuyên nghành dự tuyển</th>
+                <th class="text-center">Trạng thái hồ sơ</th>
+                @if (roleInfo.Role.Equals(PublicConstant.ROLE_ADMINSTRATOR) || roleInfo.Role.Equals(PublicConstant.ROLE_CB_PHONG_SDH))
+                {
+                    <th class="text-center" style="width:20%!important;text-align:center">Thao tác</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                int i = 1;
+                foreach (var item in Model)
+                {
+            <tr>
+                <td class="text-center"><input type="checkbox" name="cb" class="cb" value="" /></td>
+                <td class="text-center">@i</td>
+                <td><a target="_blank" href="@Url.Action("Detail", "ThiSinhTuyenSinh" , new { id=item.Id })" style="color:#337ab7"> @item.HoTen</a></td>
+                <td class="text-center">@DateTime.Parse(item.NgaySinh.ToString()).ToString("dd/MM/yyyy")</td>
+                <td class="text-center">@item.SoDienThoai</td>
+                <td>@item.Email</td>
+                <td>@item.TenChuyenNghanhDuTuyen</td>
+                <td>
+                    @if (item.TrangThaiTuyenSinh == PublicConstant.STT_DANGKYMOI || item.TrangThaiTuyenSinh == null)
+                    {
+                        <a>Đăng ký mới</a>
+                    }
+                    else if (item.TrangThaiTuyenSinh == PublicConstant.STT_DANGXULY)
+                    {
+                        <a style="font-weight:bold"><u>Đang xử lý</u></a>
+                    }
+                    else if (item.TrangThaiTuyenSinh == PublicConstant.STT_XETTUYEN)
+                    {
+                        <a>Xét tuyển</a>
+                    }
+                    else
+                    {
+                        <a>Huỷ</a>
+                    }
+                </td>
+                @if (roleInfo.Role.Equals(PublicConstant.ROLE_ADMINSTRATOR) || roleInfo.Role.Equals(PublicConstant.ROLE_CB_PHONG_SDH))
+                {
+                    <td style="width:15%; text-align:center">
+                        <button type="button" onclick="duyethoso('@item.Id','@item.TenDeTai', '@item.KhoaId_NHD1','@item.Id_NHD1','@item.KhoaId_NHD2','@item.Id_NHD2','@item.NHD2', '@item.CoQuanCongTac_NHD2')" class="btn btn-success" title="Duyệt"><i class="fa fa-check" title="Duyệt"></i></button>
+                        @*<a href="@Url.Action("Detail","ThiSinhTuyenSinh", new { id = item.Id })" class="btn btn-success" title="Duyệt"><i class="fa fa-check" title="Duyệt"></i></a>*@
+                        @if (item.NoiDungPhanHoi == null)
+                        {
+                            <button type="button" onclick="phanhoi('@item.Id')" class="btn btn-dark" title="phản hồi"><i class="fa fa-comments-o" title="phản hồi"></i></button>
+                        }
+                        @*<button type="button" onclick="taifile('@item.Url_FileUpload_Zip')" class="btn btn-dark" title="Tải tệp file đính kèm"><i class="fa fa-download" title="Tải tệp file đính kèm"></i></button>*@
+                    </td>
+                }
+
+            </tr>
+                    i = i + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable({
+            "pageLength": 25
+        });
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+</script>

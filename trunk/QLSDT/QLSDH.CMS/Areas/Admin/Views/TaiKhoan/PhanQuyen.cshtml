@@ -1,0 +1,57 @@
+﻿@model TEMIS.CMS.Models.EditUserViewModel
+@{
+    ViewBag.Title = "Phân quyền";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Phân quyền</h2>
+                <div style="clear:both"></div>
+            </div>
+            <div class="x_content">
+                @using (Html.BeginForm("PhanQuyen", "TaiKhoan", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(Model => Model.userName)
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Nhóm quyền</label>
+                            <span class="col-md-10">
+                                @for (var i = 0; i < Model.RolesList.Count(); i++)
+                                {
+                                    SelectListItem item = Model.RolesList.ToList()[i];
+                                    if (i == 4)
+                                    {
+                                        <br />
+                                        <input type="radio" name="SelectedRole" value="@item.Value" checked="@item.Selected" style="width:20px;height:20px" class="checkbox-inline" />
+                                        @Html.Label(item.Value, new { @class = "control-label", @style = "margin-right:20px" })
+
+                                    }
+                                    else
+                                    {
+
+                                        <input type="radio" name="SelectedRole" value="@item.Value" checked="@item.Selected" style="width:20px;height:20px" class="checkbox-inline" />
+                                        @Html.Label(item.Value, new { @class = "control-label", @style = "margin-right:20px" })
+                                    }
+                                }
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10" style="text-align:center; margin-top:30px">
+                                <input type="submit" value="Save" class="btn btn-info btn-md" /> | @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-info btn-md" })
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+

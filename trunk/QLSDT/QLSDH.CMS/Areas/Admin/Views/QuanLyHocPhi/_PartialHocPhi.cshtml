@@ -1,0 +1,85 @@
+﻿@model IEnumerable<TEMIS.Model.HocPhi>
+@using TEMIS.CMS.Common;
+@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@{
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+}
+
+<div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+        <thead>
+            <tr role="row">
+                <th style="text-align:center">Khoa</th>
+                <th style="text-align:center">Mã NCS</th>
+                <th style="text-align:center">Email</th>
+                <th style="text-align:center">Họ và tên</th>
+                <th style="text-align:center">Chuyên ngành</th>
+                <th style="text-align:center">Số tiền(VNĐ)</th>
+                <th style="text-align:center">Bằng chứng</th>
+                <th style="text-align:center">Ghi chú</th>
+                <th style="width:15%!important;text-align:center">Xác nhận đã nộp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenKhoa</td>
+                        <td>@item.MaNCS</td>
+                        <td>@item.UserName</td>
+                        <td>@item.HoTen</td>
+                        <td>@item.TenChuyenNganh</td>
+                        <td>@item.MucNop</td>
+                        <td>
+                            @if (item.File != null)
+                            {
+                                <img class="imgTitle" onclick="xemImg('@item.File')" src="~/Images/BienLai/@item.File" />
+                            }
+                        </td>
+                        <td>@item.NoiDung</td>
+                        <td style="width:15%; text-align:center">
+                            @if (item.TrangThai == null || item.TrangThai == PublicConstant.CHUA_NOP)
+                            {
+                                <a style="color:indigo">Chưa nộp</a>
+                            }
+                            else if (item.TrangThai == PublicConstant.DA_NOP)
+                            {
+                                <p style="color:blue">Đã nộp</p>
+                            }
+                            else if (item.TrangThai == PublicConstant.NOP_LOI)
+                            {
+                                <p style="color:red">Nộp lỗi</p>
+                            }
+                            else
+                            {
+                                if (roleInfo.Role.Equals(PublicConstant.ROLE_CB_PHONG_TAI_CHINH))
+                                {
+                                    <button type="button" class="btn btn-primary" onclick="updateStatu(@item.Id,@PublicConstant.DA_NOP)">Nộp thành công</button>
+                                    <button type="button" class="btn btn-danger" onclick="updateStatu(@item.Id,@PublicConstant.NOP_LOI)">Nộp lỗi</button>
+                                }
+                                else
+                                {
+                                    <p style="color:forestgreen">Chờ xác nhận</p>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable({
+            "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+    });
+
+</script>

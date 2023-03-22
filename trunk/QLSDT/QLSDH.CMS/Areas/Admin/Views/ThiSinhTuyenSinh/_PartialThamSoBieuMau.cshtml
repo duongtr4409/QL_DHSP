@@ -1,0 +1,71 @@
+﻿@using TEMIS.CMS.Common
+@model List<TEMIS.Model.ThamSoBieuMau>
+<div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+        <thead>
+            <tr role="row">
+                <th style="text-align:center">Tên tham số</th>
+                <th style="text-align:center">Giá trị tham số</th>
+                <th style="width:15%!important;text-align:center">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenThamSo</td>
+                        <td>
+                            <input value="@item.GiaTriThamSo" style="width:80%" id="@item.Id" class="form-control" />
+
+                            @if (item.KieuDuLieu == PublicConstant.BM_GIANGVIEN)
+                            {
+                                <button type="button" onclick="openaddGV('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                    <i class="fa fa-plus" title="thêm mới"></i>
+                                </button>
+                            }
+                            @if (item.KieuDuLieu == PublicConstant.BM_BANG)
+                            {
+                                if (item.BieuMauId == 1005 && item.ThuTuHienThi == 2)
+                                {
+                                    <button type="button" onclick="openTableKhoa('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                        <i class="fa fa-plus" title="thêm mới"></i>
+                                    </button>
+                                }
+                                else if (item.BieuMauId == 2003)
+                                {
+                                    <button type="button" onclick="openaddTable('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                        <i class="fa fa-plus" title="thêm mới"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="openaddTable('@item.Id')" class="btn btn-success" style="margin-bottom:0px!important; margin-left:15px!important">
+                                        <i class="fa fa-plus" title="thêm mới"></i>
+                                    </button>
+                                }
+
+                            }
+
+                        </td>
+                        <td style="width:15%; text-align:center">
+                            <button type="button" onclick="openedit('@item.Id')" class="btn btn-primary" title="Lưu"><i class="fa fa-save" title="Lưu"></i></button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable({
+            "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+    });
+</script>

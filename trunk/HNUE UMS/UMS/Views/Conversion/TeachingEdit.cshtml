@@ -1,0 +1,50 @@
+﻿@using Resources
+@model Ums.Models.Conversion.TeachingModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("TeachingEdit", "Conversion", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-6">
+                <label>Nhóm</label>
+                @Html.DropDownListFor(m => m.CategoryId, Model.Categories, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-6">
+                <label>Loại</label>
+                @Html.DropDownListFor(m => m.TeachingTypeId, Model.TeachingTypes, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-12">
+                <label>Tên</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Tỉ lệ</label>
+                @Html.TextBoxFor(m => m.Ratio, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Đơn vị tính</label>
+                @Html.TextBoxFor(m => m.Unit, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Số sinh viên / nhóm</label>
+                @Html.TextBoxFor(m => m.GroupSize, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-12">
+                <label>Ghi chú</label>
+                @Html.TextAreaFor(m => m.Desc, new { @class = "form-control" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("800px", "470px");
+</script>

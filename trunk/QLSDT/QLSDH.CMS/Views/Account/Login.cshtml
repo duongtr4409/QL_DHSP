@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập hệ thống";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    /*@@media (min-width:320px) and (max-width:968px) {
+        .logo-login {
+            width: 100% !important;
+        }
+    }*/
+    a:hover {
+        color: blue !important;
+    }
+
+    .login_form2 {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin: 40px 0;
+        background: rgba(255,255,255,0.5);
+        position: relative;
+    }
+
+    .form-control {
+        height: 38px !important;
+        margin-bottom: 15px !important;
+    }
+</style>
+@*<div style="text-align: center;margin-top: 50px;">
+        <img class="logo-login" src="~/Images/logo.png" />
+    </div>*@
+<div class="container" style="width:80%">
+    <div class="row"><section class="login_content login_form2 col-12 col-md-6 col-lg-4">
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <form class="login_form2 col-12 col-md-6 col-lg-4">
+            <div style="padding-bottom: 40px;"><h3>Đăng nhập dành cho NCS</h3></div>
+            <div>
+                <input type="text" class="form-control v" placeholder="Tên đăng nhập" name="UserName" required="" />
+            </div>
+            <div>
+                <input type="password" class="form-control inputdk" placeholder="Mật khẩu" name="Password" required="" />
+            </div>
+            <div style="width:100%">
+                <input name="submit1" type="submit" class="btn btn-primary" style="float:none;margin-left:0px;margin-top:10px;border-radius: .40rem!important;height:38px!important" value="Đăng nhập quyền NCS">
+            </div>
+            <div style="width:100%; padding-top:20px">
+                <a style="color:black; text-align:center; font-size:16px;" href="@Url.Action("LoginAdmin","Account")" onclick="LoadProcess()">Đăng nhập quyền cán bộ</a>
+            </div>
+            <div class="clearfix"></div>
+            @*<table style="width:100%;margin-top:10px">
+                <tr>
+                    <td style="text-align:right"><a style="color:black" href="#">Quên mật khẩu?</a></td>
+                    <td style="padding:4px"> <span style="color:black">|</span></td>
+                    <td style="text-align:left"> <a style="color:black" href="#">Liên hệ Administrator</a></td>
+                </tr>
+            </table>*@
+            <div><i style="color:black !important;">version 1.0</i></div>
+        </form>
+    }
+</section>
+    </div>
+    
+    <div class="row" style="color:black!important">
+        <div class="footer">
+            <p>© 2020 Trường Đại học Sư phạm Hà Nội</p>
+            <p>Email: p.sdh@hnue.edu.vn - Phone: 024.6296.2496</p>
+            <p>Website: http://sdh.hnue.edu.vn/ </p>
+            <p>Địa chỉ: Tầng 4 Nhà Hiệu bộ - 136 Xuân Thuỷ - Cầu Giấy - Hà Nội</p>
+        </div>
+    </div>
+</div>
+
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:100%;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+<script>
+    function LoadProcess() {
+        $('#divProcessing').show();
+    }
+</script>

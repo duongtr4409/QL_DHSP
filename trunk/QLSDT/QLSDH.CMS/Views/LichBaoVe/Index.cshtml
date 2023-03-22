@@ -1,0 +1,121 @@
+﻿@using TEMIS.Model
+@{
+    ViewBag.Title = "Lịch bảo vệ";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+    List<int> listnam = (List<int>)ViewBag.NamBaoVe;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.KhoaHoc;
+}
+
+<section class="content-header container">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Lịch bảo vệ luận án tiến sĩ</li>
+    </ol>
+</section>
+<form action="#" method="post" autocomplete="off">
+    <section class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="pull-left col-sm-11">
+                                <div class="col-xs-12" style="padding-left:0 !important">
+                                    <div class="col-sm-3">
+                                        <select id="ddLNamTotNghiep" class="select-opt select2-hidden-accessible ui-touched" style="width: 80%;padding: 4px; border: 1px solid #aaa;">
+                                            <option value="">-- Chọn năm bảo vệ--</option>
+                                            @foreach (var item in listnam)
+                                            {
+                                                <option value="@item.ToString()">@item.ToString()</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select id="dllKhoaHoc" class="select-opt select2-hidden-accessible ui-touched" style="width: 80%;padding: 4px; border: 1px solid #aaa;">
+                                            <option value="">-----Khóa----</option>
+                                            @foreach (var item in listKhoaHoc)
+                                            {
+                                                <option value="@item.MaKhoa">@item.MaKhoa</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="keysearch" id="keysearch" value="" placeholder="tên NCS" style="width: 80%;padding: 4px; border: 1px solid #aaa;" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="button" name="btnSearch" id="btnSearch" class="btn btn-default" value="Tìm kiếm" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default" onclick="javascript:void(0)" id="btnrefresh"><i class="fa fa-refresh"></i> Tải lại</a>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div id="tbldata_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div id="dataresult"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div style="text-align:left;" id="tbldataDSTS"></div>
+            </div>
+        </div>
+    </section>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+             background:#f5f5f5;
+             opacity:0.5;
+             z-index:999;
+             position:absolute;
+             left:0px;
+             top :0px;
+             cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+        $(document).ready(function () {
+            LoadData(0,'','');
+        });
+
+        function LoadData(nam,khoahoc,keysearch) {
+            $('#divProcessing').show();
+            var model = $('#dataresult');
+                $.ajax({
+                    url: '@Url.Action("LoadData", "LichBaoVe")',
+                    data: { nam: nam, khoahoc: khoahoc, keysearch: keysearch},
+                    contentType: 'application/html ; charset:utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        model.empty().html(result);
+                        $('#divProcessing').hide();
+                    },
+                    error: function (error) {
+                        $('#divProcessing').hide();
+                        console.log('lỗi load dữ liệu: ' + error.responseText);
+                    }
+                });
+        }
+
+    $('#btnSearch').click(function () {
+        var namtotnghiep = $('#ddLNamTotNghiep').val();
+        var khoahoc = $('#dllKhoaHoc').val();
+        var keysearch = $('#keysearch').val();
+        LoadData(namtotnghiep, khoahoc, keysearch);
+    })
+    $('#btnrefresh').click(function () {
+        var namtotnghiep = $('#ddLNamTotNghiep').val();
+        var khoahoc = $('#dllKhoaHoc').val();
+        var keysearch = $('#keysearch').val();
+        LoadData(namtotnghiep, khoahoc, keysearch);
+    })
+
+</script>

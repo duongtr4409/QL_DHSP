@@ -1,0 +1,27 @@
+danh sách nghành
+http://sdh.hnue.edu.vn/tuyen-sinh/tien-si/p/thong-bao-xet-tuyen-nghien-cuu-sinh-khoa-40-nam-2020-2184
+
+link API
+https://docs.google.com/spreadsheets/d/1loHI_zkaoKkZ9HCvDv4yApnElZxCXqRg7bWVPx-b_0E/edit#gid=1247452332
+
+
+
+
+cbtaichinh01/123456
+cbtaichinh01@gmail.com
+
+cbthuvien01/123456
+cbthuvien01@gmail.com
+
+cbtruongkhoa01/123456
+cbtruongkhoa01@gmail.com
+
+gvhuongdan01/123456
+gvhuongdan01@gmail.com
+
+ncs01/123456
+ncs01@gmail.com
+sdh01/123456
+sdh01@gmail.com
+admin/123456
+admin@gmail.com

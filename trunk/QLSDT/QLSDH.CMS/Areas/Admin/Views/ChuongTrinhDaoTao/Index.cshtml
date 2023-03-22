@@ -1,0 +1,372 @@
+﻿@model IEnumerable<TEMIS.Model.ChuongTrinhDaoTao>
+@{
+    ViewBag.Title = "Quản lý chương trình đào tạo";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý chương trình đào tạo</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="control-label">Chương trình đào tạo</label>
+                            <input type="text" name="txtSearch" class="form-control" value="" />
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="button" class="btn btn-success" name="btnSearch" value="Tìm kiếm" />
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="pull-right">
+                                <button type="button" onclick="openadd()" class="btn btn-success">Thêm mới</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                        <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                            <thead>
+                                <tr role="row">
+                                    <th style="text-align:center">Ngành học</th>
+                                    <th style="text-align:center">Tên viết tắt</th>
+                                    <th style="text-align:center">Nhóm ngành</th>
+                                    <th style="width:15%!important;text-align:center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @*@if (Model != null)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@item.NghanhHoc</td>
+                                                <td>@item.TenVietTat</td>
+                                                <td>@item.ThuocNhomNghanh</td>
+                                                <td style="width:15%; text-align:center">
+                                                    <button type="button" onclick="openedit(@item.Id, '@item.NghanhHoc', '@item.TenVietTat')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                                    <button type="button" onclick="confirmremove(@item.Id)" class="btn btn-danger">Xóa</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }*@
+
+                                <tr>
+                                    <td>Khoa học máy tính</td>
+                                    <td>CS</td>
+                                    <td>CNTT</td>
+                                    <td style="width:15%; text-align:center">
+                                        <button type="button" onclick="openedit(1, 'Khoa học máy tính', 'CS', 'CNTT')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                        <button type="button" onclick="confirmremove(1)" class="btn btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Công nghệ thông tin</td>
+                                    <td>CS</td>
+                                    <td>IT</td>
+                                    <td style="width:15%; text-align:center">
+                                        <button type="button" onclick="openedit(1, 'Công nghệ thông tin', 'IT', 'CNTT')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                        <button type="button" onclick="confirmremove(1)" class="btn btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mạng máy tính và truyền thông dữ liệu</td>
+                                    <td>NET1</td>
+                                    <td>CNTT</td>
+                                    <td style="width:15%; text-align:center">
+                                        <button type="button" onclick="openedit(1, 'Mạng máy tính và truyền thông dữ liệu', 'NET1', 'CNTT')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                        <button type="button" onclick="confirmremove(1)" class="btn btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ngành kỹ thuật mạng</td>
+                                    <td>NET2</td>
+                                    <td>CNTT</td>
+                                    <td style="width:15%; text-align:center">
+                                        <button type="button" onclick="openedit(1, 'Ngành kỹ thuật mạng', 'NET2', 'CNTT')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                        <button type="button" onclick="confirmremove(1)" class="btn btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ngành công nghệ phần mềm</td>
+                                    <td>SW</td>
+                                    <td>CNTT</td>
+                                    <td style="width:15%; text-align:center">
+                                        <button type="button" onclick="openedit(1, 'Ngành công nghệ phần mềm', 'SW', 'CNTT')" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                                        <button type="button" onclick="confirmremove(1)" class="btn btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm mới</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nghanhhoc">
+                                Ngành học <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="nghanhhoc" name="nghanhhoc" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenviettat">
+                                Tên viết tắt <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenviettat" name="tenviettat" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thuocnhomnghanh">
+                                Thuộc nhóm Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="thuocnhomnghanh" name="thuocnhomnghanh" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option value="0">--------- Chọn Ngành ---------</option>
+                                    <option value="Sư phạm kỹ thuật">Sư phạm kỹ thuật</option>
+                                    <option value="CNTT">CNTT</option>
+                                    <option value="toán">Toán</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <input type="hidden" name="IdEdit" id="IdEdit" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nghanhhoc_edit">
+                                Ngành học <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="nghanhhoc_edit" name="nghanhhoc_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenviettat_edit">
+                                Tên viết tắt <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenviettat_edit" name="tenviettat_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thuocnhomnghanh_edit">
+                                Thuộc nhóm Ngành <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="thuocnhomnghanh_edit" name="thuocnhomnghanh_edit" required="required" class="form-control col-md-7 col-xs-12">
+                                    <option value="0">--------- Chọn Ngành ---------</option>
+                                    <option value="Sư phạm kỹ thuật">Sư phạm kỹ thuật</option>
+                                    <option value="CNTT">CNTT</option>
+                                    <option value="toán">Toán</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable').dataTable( {
+          "pageLength": 25
+        } );
+        $('.dataTables_filter input').attr('maxlength', 255)
+     } );
+
+    function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    function openedit(id, nghanhhoc, tenviettat,nhomnghanh) {
+        $('#IdEdit').val(id);
+        $('#nghanhhoc_edit').val(nghanhhoc);
+        $('#tenviettat_edit').val(tenviettat);
+        $('#thuocnhomnghanh_edit').val(nhomnghanh);
+
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnThem').click(function () {
+        var nghanhhoc =  $('#nghanhhoc').val();
+        var tenviettat = $('#tenviettat').val();
+        var nhomnghanh = $('#thuocnhomnghanh').val();
+
+        if (nghanhhoc == "") {
+            toastr.error('ngành học không được để trống');
+            return false;
+        }
+        if (tenviettat == "") {
+            toastr.error('tên viết tắt không được để trống');
+            return false;
+        }
+        if (nhomnghanh == "") {
+            toastr.error('bạn chưa chọn nhóm Ngành');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "ChuongTrinhDaoTao")',
+            data: { nghanhhoc: nghanhhoc, tenviettat: tenviettat, nhomnghanh: nhomnghanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var id = $('#IdEdit').val();
+        var nghanhhoc = $('#nghanhhoc_edit').val();
+        var tenviettat = $('#tenviettat_edit').val();
+        var nhomnghanh = $('#thuocnhomnghanh_edit').val();
+
+        if (nghanhhoc == "") {
+            toastr.error('ngành học không được để trống');
+            return false;
+        }
+        if (tenviettat == "") {
+            toastr.error('tên viết tắt không được để trống');
+            return false;
+        }
+        if (nhomnghanh == "") {
+            toastr.error('bạn chưa chọn nhóm Ngành');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "ChuongTrinhDaoTao")',
+            data: { id: id, nghanhhoc: nghanhhoc, tenviettat: tenviettat, nhomnghanh: nhomnghanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "ChuongTrinhDaoTao")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+</script>

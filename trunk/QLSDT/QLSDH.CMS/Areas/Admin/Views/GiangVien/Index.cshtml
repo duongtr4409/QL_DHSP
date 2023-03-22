@@ -1,0 +1,75 @@
+﻿@using TEMIS.CMS.Areas.Admin.Models
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý giảng viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listkhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý giảng viên trong trường</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="control-label">Khoa</label>
+                            <select class="form-control" name="ddlKhoa" id="ddlKhoa">
+                                @foreach (var item in listkhoa)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="divresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadgiangvien($('#ddlKhoa').val());
+        $('#btnSearch').click(function () {
+            loadgiangvien($('#ddlKhoa').val());
+        });
+        $('#ddlKhoa').on('change', function (e) {
+            loadgiangvien($(this).val());
+        });
+    });
+    function loadgiangvien(khoaid) {
+        $('#divProcessing').show();
+        var model = $('#divresult');
+            $.ajax({
+                url: '@Url.Action("GetListGiangVien", "GiangVien")',
+                data: { khoaid: khoaid },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model.empty().html(result);
+                    $('#divProcessing').hide();
+                },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                    console.log('lỗi load dữ liệu: ' + error.responseText);
+                }
+            });
+    }
+</script>

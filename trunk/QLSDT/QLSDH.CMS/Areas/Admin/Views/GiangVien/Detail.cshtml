@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "Chi tiết giảng viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thông tin giảng viên</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                        Tên truy cập <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="tentruycap" name="tentruycap" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="matkhau">
+                        Mật khẩu <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="matkhau" name="matkhau" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="confirmmatkhau">
+                        Xác nhập mật khẩu <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="confirmmatkhau" name="confirmmatkhau" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="magiaovien">
+                        Mã giáo viên <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="magiaovien" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="magiaovien" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="matinh">
+                        Mã tỉnh <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="matinh" name="matinh" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mahuyen">
+                        Mã huyện <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="mahuyen" name="mahuyen" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="matruong">
+                        Mã trường <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="matruong" name="matruong" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hovaten">
+                        Họ và tên <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="hovaten" name="hovaten" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ngaysinh">
+                        Ngày sinh <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @*<input type="text" id="ngaysinh" name="ngaysinh" required="required" class="form-control col-md-7 col-xs-12">*@
+                        <input type="text" class="form-control has-feedback-left" id="single_cal1" placeholder="First Name" aria-describedby="inputSuccess2Status" name="ngaysinh">
+                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                        <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="socmt">
+                        Số CMT <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="socmt" name="socmt" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dantoc">
+                        Dân tộc <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="dantoc" name="dantoc" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="noisinh">
+                        Nơi sinh  <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="noisinh" name="noisinh" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dienthoai">
+                        Điện thoại  <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="dienthoai" name="dienthoai" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                        Email <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diachi">
+                        Địa chỉ  <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="diachi" name="diachi" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sonamKN">
+                        số năm KN <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="number" id="sonamKN" name="sonamKN" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucdanh">
+                        Mã chức danh  <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="machucdanh" name="machucdanh" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucvu">
+                        Mã chức vụ  <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="machucvu" name="machucvu" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="madiaban">
+                        Mã địa bàn <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="madiaban" name="madiaban" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="matrinhdo">
+                        Mã trình độ <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="matrinhdo" name="matrinhdo" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machuyennganh">
+                        Mã chuyên ngành <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="machuyennganh" name="machuyennganh" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machucvukhac">
+                        Mã chức vụ khác <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="machucvukhac" name="machucvukhac" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="macaphoc">
+                        Mã cấp học <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="macaphoc" name="macaphoc" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idlms">
+                        ID LMS <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="idlms" name="idlms" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">
+                        Vai trò <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="role" name="role" style="height:40px; width:50%">
+                            <option value="giaovien">Giáo viên</option>
+                            <option value="hocvien">NCS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

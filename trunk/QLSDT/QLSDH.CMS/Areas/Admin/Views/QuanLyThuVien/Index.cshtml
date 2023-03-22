@@ -1,0 +1,603 @@
+﻿@using TEMIS.Model;
+@using CoreAPI.Entity;
+@{
+    ViewBag.Title = "Quản lý thư viện";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý khoa</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    @using (Html.BeginForm("Index", "QuanLyThuVien", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="control-label">Khóa</label>
+                                    <select class="form-control" id="ddKhoaHoc">
+                                        <option value="0">------- Chọn Khoa -------</option>
+                                        @foreach (var item in listKhoaHoc)
+                                        {
+                                            <option value="@item.Id">@item.MaKhoa</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Khoa</label>
+                                    <select class="form-control" id="ddlKhoa" name="ddlKhoa">
+                                        <option value="0">------- Chọn Khoa -------</option>
+                                        @foreach (var item in listKhoa)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Ngành</label>
+                                    <select class="form-control" id="ddlNganh"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Chuyên ngành</label>
+                                    <select class="form-control" id="ddlChuyenNganh"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Từ khóa</label>
+                                    <input type="text" id="hoten" name="hoten" placeholder="từ khóa tìm kiếm" required="required" class="form-control">
+                                </div>
+                                <div class="col-md-2" style="padding-top:24px;">
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-search" title="tìm kiếm"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    <hr />
+                    <div id="divresult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:3000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+
+<div class="modal fade modeladd" id="modeladd" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm phiếu nộp bài viết</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenkhoa">
+                                Tên bài viết <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenkhoa" name="tenkhoa" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenviettat">
+                                Tên người nộp <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenviettat" name="tenviettat" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diachi">
+                                Mã NCS <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="MaHV" name="MaHV" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                    Ngày nộp <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="single_cal1" name="ngaytra" required="required" class="form-control col-md-7 col-xs-12 " >
+
+                                </div>
+                            </div>*@
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnThem" class="btn btn-success" data-dismiss="modal">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeledit" id="modeledit" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật</h4>
+            </div>
+            <div class="modal-body">
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                        <input type="hidden" name="IdEdit" id="IdEdit" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenkhoa_edit">
+                                Tên khoa <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenkhoa_edit" name="tenkhoa_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenviettat_edit">
+                                Tên viết tắt <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="tenviettat_edit" name="tenviettat_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="diachi_edit">
+                                Địa chỉ <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="diachi_edit" name="diachi_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dienthoai_edit">
+                                Điện thoại <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="dienthoai_edit" name="dienthoai_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email_edit">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="email_edit" name="email_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modeldelete" id="modeldelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <center>
+                        <input type="hidden" name="IdXoa" id="IdXoa" value="" />
+                        <h3>Bạn có chăc muốn xóa?</h3>
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modelupload" id="modelupload" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload file</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="width:100%; padding:20px">
+                    <center>
+                        <input type="file" name="fupload" id="fupload" value="" />
+                        <input type="hidden" name="hdfId" id="hdfId" value="" />
+                        <input type="hidden" name="hdfLan" id="hdfLan" value="" />
+                        <input type="hidden" name="hdfMaNCS" id="hdfMaNCS" value="" />
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnUpload" class="btn btn-success" data-dismiss="modal">Tải lên</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loaddata();
+        $('#ddKhoaHoc').on('change', function (e) {
+            var khoahocid = this.value;
+            loaddata(khoahocid,0,"");
+        });
+        $('#ddlKhoa').on('change', function (e) {
+            var khoaid = this.value;
+            loadnganh(khoaid, 'ddlNganh')
+        });
+
+        $('#ddlNganh').on('change', function (e) {
+            var nganhid = this.value;
+            loadchuyennganh(nganhid, 'ddlChuyenNganh')
+        });
+
+        //$('#ddlKhoa_them').on('change', function (e) {
+        //    var khoaid = this.value;
+        //    loadnganh(khoaid, 'ddlnganh_them')
+        //});
+
+        //$('#ddlnganh_them').on('change', function (e) {
+        //    var nganhid = this.value;
+        //    loadchuyennganh(nganhid, 'ddlchuyennganh_them')
+        //});
+
+        //$('#ddlKhoaEdit').on('change', function (e) {
+        //    var khoaid = this.value;
+        //    loadnganh(khoaid, 'ddlnganh_edit')
+        //});
+
+        //$('#ddlnganh_edit').on('change', function (e) {
+        //    var nganhid = this.value;
+        //    loadchuyennganh(nganhid, 'ddlchuyennganh_edit')
+        //});
+
+
+    });
+    function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "QuanLyThuVien")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+
+    function loadchuyennganh(nganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByNganh", "QuanLyThuVien")',
+             data: { nganhid: nganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+
+     function loadnganhEdit(nganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhEdit", "QuanLyThuVien")',
+                data: { nganhid: nganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function loadchuyennganhEdit(chuyennganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByCNid", "QuanLyThuVien")',
+             data: { chuyennganhid: chuyennganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function loaddata() {
+        var khoahocid = $('#ddlKhoahoc').val();
+        var chuyennganhid = $('#ddlChuyenNganh').val();
+        var loaihp = $('#ddlhocphan').val();
+        if (chuyennganhid == null) {
+            chuyennganhid = 0;
+        }
+         $.ajax({
+                type: "GET",
+                 url: '@Url.Action("GetListData", "QuanLyThuVien")',
+                 data: { khoahocid: khoahocid, chuyennganhid: chuyennganhid, loaihp: loaihp },
+                 contentType: 'application/html ; charset:utf-8',
+                 type: 'GET',
+                 dataType: 'html',
+                success: function (data) {
+                    $('#divresult').empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+    function openadd() {
+        $('#modeladd').modal({ backdrop: 'static', keyboard: false })
+    }
+    @*function openedit(id, mahocphan, tenhocphan, khoahoc, KhoaId, nganhid, ChuyenNganhId,sodvht, sotietlythuyet, sotietthuchanh,tuchon) {
+        $('#IdEdit').val(id);
+        $('#mahocphan_edit').val(mahocphan);
+        $('#ddlKhoahoc_edit').val(khoahoc);
+        $('#ddlKhoaEdit').val(KhoaId);
+        loadnganhEdit(nganhid, 'ddlnganh_edit')
+        loadchuyennganhEdit(ChuyenNganhId, 'ddlchuyennganh_edit')
+
+        $('#tenhocphan_edit').val(tenhocphan);
+        $('#sodvht_edit').val(sodvht);
+        if (tuchon == true) {
+            $('#ddlloaihp_edit').val(1);
+        }
+        else {
+            $('#ddlloaihp_edit').val(0);
+        }
+        $('#sotietlt_edit').val(sotietlythuyet);
+        $('#sotietth_edit').val(sotietthuchanh);
+        $('#modeledit').modal({ backdrop: 'static', keyboard: false })
+    }
+    function confirmremove(id) {
+        $('#IdXoa').val(id);
+        $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    $('#btnThem').click(function () {
+        var mahocphan = $('#mahocphan').val()
+        var tenhocphan = $('#tenhocphan').val();
+        var sodonvihoctrinh = $('#sodvht').val();
+        var tuchon = $('#ddlloaihp_them').val();
+        var sotietlythuyet = $('#sotietlt').val();
+        var sotietthuchanh = $('#sotietth').val();
+        var khoahocid = $('#ddlKhoahoc_them').val();
+        var khoaid = $('#ddlKhoa_them').val();
+        var nganhid = $('#ddlnganh_them').val();
+        var chuyennganhid = $('#ddlchuyennganh_them').val();
+        if (tenhocphan == "") {
+            toastr.error('Tên học phần không được để trống');
+            return false;
+        }
+        if (mahocphan == "") {
+            toastr.error('Phải nhập mã học phần');
+            return false;
+        }
+
+        if (sodonvihoctrinh == "") {
+            toastr.error('Số đơn vị học trình không được để trống');
+            return false;
+        }
+
+        if (sotietlythuyet == "") {
+            toastr.error('số tiết lý thuyết không được để trống');
+            return false;
+        }
+        if (sotietthuchanh == "") {
+            toastr.error('sô tiết thực hành không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoi", "QuanLyThuVien")',
+            data: {
+                 mahocphan: mahocphan, tenhocphan: tenhocphan, sodonvihoctrinh: sodonvihoctrinh, tuchon: tuchon, sotietlythuyet: sotietlythuyet, sotietthuchanh: sotietthuchanh,
+                khoahocid: khoahocid, khoaid: khoaid, nganhid: nganhid, chuyennganhId: chuyennganhid
+            },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnSua').click(function () {
+        var mahocphan = $('#mahocphan_edit').val()
+        var tenhocphan = $('#tenhocphan_edit').val();
+        var sodonvihoctrinh = $('#sodvht_edit').val();
+        var tuchon = $('#ddlloaihp_them').val();
+        var sotietlythuyet = $('#sotietlt_edit').val();
+        var sotietthuchanh = $('#sotietth_edit').val();
+        var khoahocid = $('#ddlKhoahoc_edit').val();
+        var khoaid = $('#ddlKhoaEdit').val();
+        var nganhid = $('#ddlnganh_edit').val();
+        var chuyennganhid = $('#ddlchuyennganh_edit').val();
+        var id = $('#IdEdit').val();
+
+        if (tenhocphan == "") {
+            toastr.error('tên học phần không được để trống');
+            return false;
+        }
+        if (sodonvihoctrinh == "") {
+            toastr.error('số đơn vị học trình không được để trống');
+            return false;
+        }
+
+        if (tuchon == "") {
+            toastr.error('tự chọn không được để trống');
+            return false;
+        }
+        if (sotietlythuyet == "") {
+            toastr.error('số tiết lý thuyết không được để trống');
+            return false;
+        }
+        if (sotietthuchanh == "") {
+            toastr.error('sô tiết thực hành không được để trống');
+            return false;
+        }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "QuanLyThuVien")',
+            data: {
+                id: id, mahocphan: mahocphan, tenhocphan: tenhocphan, sodonvihoctrinh: sodonvihoctrinh, tuchon: tuchon, sotietlythuyet: sotietlythuyet, sotietthuchanh: sotietthuchanh,
+                khoahocid: khoahocid, khoaid: khoaid, nganhid: nganhid, chuyennganhId: chuyennganhid
+            },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+
+    $('#btnXoa').click(function () {
+        var id = $('#IdXoa').val();
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Xoa", "QuanLyThuVien")',
+            data: { id: id },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })*@
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnUpload').click(function () {
+            var id = $('#hdfId').val();
+            var mancs = $('#hdfMaNCS').val();
+            var lan = $('#hdfLan').val();
+
+            $("#divProcessing").show();
+            if (window.FormData !== undefined) {
+                var fileUpload = $("#fupload").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                fileData.append('hdfId', id);
+                fileData.append('hdfMaNCS', mancs);
+                fileData.append('hdfLan', lan);
+                $.ajax({
+                    url: '@Url.Action("UploadSoLanNop", "QuanLyThuVien")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Upload hồ sơ thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+        });
+    });
+
+    function uploadsolannop(id, mancs, lan) {
+        $('#hdfId').val(id);
+        $('#hdfMaNCS').val(mancs);
+        $('#hdfLan').val(lan);
+        $('#modelupload').modal({ backdrop: 'static', keyboard: false })
+    }
+
+    function removesolannop(id,lan) {
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("XoaSoLanNop", "QuanLyThuVien")',
+            data: { id: id,lan:lan },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == '') {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    toastr.success('Xóa thành công');
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    }
+</script>

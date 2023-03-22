@@ -1,0 +1,61 @@
+﻿@model  TEMIS.CMS.Areas.Admin.Models.TinTucViewModel
+@using TEMIS.Model;
+@{
+    ViewBag.Title = "Chi tiết tin tức";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+<div class="container" style="background:#fff">
+    <div class="page-header titcle" style="margin:10px">
+        <h13>Chi tiết tin tức</h13>
+    </div>
+    <div class="form-horizontal" style="margin:10px">
+        <div class="form-group">
+            <label class="control-label col-md-2">Tiêu đề</label>
+            <div class="col-md-10">
+                <label class="form-control">
+                    @Model.TieuDe
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Mô tả ngắn</label>
+            <div class="col-md-10">
+                <label class="form-control"> @Html.Raw(Model.MoTaNgan)</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Nội dung</label>
+            <div class="col-md-10" style="overflow:hidden">
+                <p> @Html.Raw(Model.NoiDung)</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Ảnh</label>
+            <div class="col-md-10">
+                @if (Model.AnhDaiDien != null)
+                {
+                    <div class="divimage">
+                        <img src="~/Images/TinTuc/@Model.AnhDaiDien" width="150" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Danh mục</label>
+            <div class="col-md-10">
+                <label class="form-control"> @Html.Raw(Model.TenDanhMuc)</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10" style="margin-top:50px">
+                @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+                <a href="@Url.Action("Edit", "TinTuc" , new { id=Model.Id })" class="btn btn-success">Cập nhật</a>
+            </div>
+        </div>
+    </div>
+</div>

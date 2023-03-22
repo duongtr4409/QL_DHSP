@@ -1,0 +1,178 @@
+﻿@model List<TEMIS.Model.HocPhi>
+@using TEMIS.CMS.Common
+@{
+    ViewBag.Title = "Học phí";
+    Layout = "~/Views/Shared/_LayoutFontend.cshtml";
+}
+<form action="#" method="post" autocomplete="off">
+    <!-- Navigation begin  -->
+    <section class="content-header container">
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-home"></i> Trang chủ</a></li>
+            <li class="active">Học phí</li>
+        </ol>
+    </section>
+    <!-- End Navigation -->
+    <!-- Content -->
+    <section class="content">
+        <div class="container">
+            <div style="width:100%; float:left">
+                <div id="tbldata_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="tbldata" class="table table-bordered table-hover dataTable no-footer" role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="width:30px" class="sorting_disabled" rowspan="1" colspan="1">Stt</th>
+                                        <th class="sorting_disabled dt-body-left" rowspan="1" colspan="1">Khoản cần nộp</th>
+                                        <th class="sorting_disabled" rowspan="1" colspan="1">Mức nộp</th>
+                                        <th class="sorting_disabled" rowspan="1" colspan="1">Tình trạng nộp</th>
+                                        <th class="sorting_disabled" rowspan="1" colspan="1">Ảnh đính kèm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr role="row" class="odd">
+                                            <td>1</td>
+                                            <td class=" dt-body-left">@item.NoiDung</td>
+                                            <td>@item.MucNop</td>
+                                            <td>
+                                                @if (item.TrangThai == PublicConstant.CHUA_NOP || item.TrangThai == null)
+                                                {
+                                                    <a>Chưa nộp</a>
+                                                }else if(item.TrangThai == PublicConstant.DA_NOP){
+                                                    <a>Đã nộp</a>
+                                                }
+                                                else if(item.TrangThai == PublicConstant.NOP_LOI)
+                                                {
+                                                    <a>Nộp lỗi</a>
+                                                }
+                                                else
+                                                {
+                                                    <a>Chờ duyệt</a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.TrangThai == PublicConstant.NOP_LOI || item.TrangThai == PublicConstant.CHUA_NOP || item.TrangThai == null)
+                                                {
+                                                    <a title="tải file lên" onclick="uploadFile(@item.Id, '@item.MaNCS')" style="cursor:pointer"><i class="fa fa-upload"></i></a>
+                                                }
+                                                else{
+                                                    <img style="width:150px;height:200px;cursor:pointer" onclick="xemImg('@item.File')" src="~/Images/BienLai/@item.File" alt="your image" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div id="tbldata_processing" class="dataTables_processing" style="display: none;">Đang tải dữ liệu...</div>
+                        </div>
+                    </div><div class="row"><div class="col-sm-5"></div><div class="col-sm-7"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<div class="modal fade modelupload" id="modelupload" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload file</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="width:100%; padding:20px">
+                    <center>
+                        <input type="file" name="fupload" id="fupload" value="" onchange="readURL(this)" />
+                        <img id="blah" src="#" alt="your image" hidden />
+                        <input type="hidden" name="hdfId" id="hdfId" value="" />
+                    </center>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                <button type="button" id="btnUpload" class="btn btn-success" data-dismiss="modal">Tải lên</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modelImg" class="modal fade modelImg">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:unset;min-height: 50px;background-color:unset">
+                <button type="button" class="close" data-dismiss="modal" style="font-size:50px;margin:0px 5px">&times;</button>
+            </div>
+            <div class="modal-content">
+                <iframe id="Url_Anh" style="width: 100%;height: 600px;text-align:center"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#tbldata').dataTable({
+        "pageLength": 25
+    });
+    $('.dataTables_filter input').attr('maxlength', 255)
+    $(document).ready(function () {
+        $('#btnUpload').click(function () {
+            var id = $('#hdfId').val();
+            $("#divProcessing").show();
+            if (window.FormData !== undefined) {
+                var fileUpload = $("#fupload").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                fileData.append('hdfId', id);
+                $.ajax({
+                    url: '@Url.Action("UploadHocPhi", "HocPhi")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (data) {
+                        $("#divProcessing").hide();
+                        if (data == 'OK') {
+                            setTimeout(function () { location.reload(); }, 2000);
+                            toastr.success('Upload ảnh nộp học phí thành công');
+                        } else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+        });
+    });
+    function uploadFile(id, mancs) {
+        $('#hdfId').val(id);
+        $('#modelupload').modal({ backdrop: 'static', keyboard: false })
+    }
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+                document.getElementById("blah").hidden = false;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function xemImg(url) {
+        document.getElementById("Url_Anh").src = "/Images/BienLai/" + url;
+        $('#modelImg').modal({ backdrop: 'static', keyboard: false })
+    }
+    $('iframe').load(function () {
+        $('iframe').contents().find("body")
+            .append($("<style type='text/css'>  body{text-align:center}  </style>"));
+    });
+</script>

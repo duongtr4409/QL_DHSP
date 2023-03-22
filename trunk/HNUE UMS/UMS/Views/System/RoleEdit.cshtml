@@ -1,0 +1,24 @@
+﻿@using Resources
+@model Ums.Models.System.RoleModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("RoleEdit", "System", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="form-group">
+            <label>Tên</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+            <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+            <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("320px", "220px");
+</script>

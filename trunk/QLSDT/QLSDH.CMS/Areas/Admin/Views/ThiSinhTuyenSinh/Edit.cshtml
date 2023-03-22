@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "Cập nhật thông tin nghiên cứu viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lb-themmoi {
+        display: inline-block;
+        max-width: 100% !important;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        font-weight: 700 !important
+    }
+
+    .input-themmoi {
+        display: block;
+        width: 100% !important;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    hr {
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Cập nhật thông tin nghiên cứu viên</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="col-xs-4">
+                        <label class="lb-themmoi">
+                            Mã HV
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="K30 NCS 018">
+                        <label class="lb-themmoi">
+                            Họ tên
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Nguyễn Anh Vinh">
+                        <label class="lb-themmoi">
+                            Ngày sinh
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="04/10/1989">
+                        <label class="lb-themmoi">
+                            Giới tính
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Nam">
+                        <label class="lb-themmoi">
+                            Điện thoại
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="0988077796">
+                        <label class="lb-themmoi">
+                            Email
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="vinhnq@gmail.com">
+                        <label class="lb-themmoi">
+                            Nơi sinh
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Quản Ninh">
+                        <label class="lb-themmoi">
+                            Địa chỉ
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Khoa CNTT, Trường ĐHSP Hà Nội">
+                        <label class="lb-themmoi">
+                            Cơ Quan
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Trường ĐHSP Hà Nội" style="margin-bottom:20px">
+
+                    </div>
+                    <div class="col-xs-8">
+                        <label class="lb-themmoi">
+                            Khoa
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Công nghệ thông tin">
+                        <label class="lb-themmoi">
+                            Khóa
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="K36">
+                        <label class="lb-themmoi">
+                            Ngành
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="CNTT">
+                        <label class="lb-themmoi">
+                            Mã Số
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="9440117">
+
+                        <label class="lb-themmoi">
+                            Văn bằng đại học
+                        </label>
+                        <div class="input-themmoi">
+                            <a href="#" style="color:blue; width: 100%">
+                                VB đại học
+                            </a>
+                        </div>
+
+                        <label class="lb-themmoi">
+                            Văn bằng thạc sĩ
+                        </label>
+                        <div class="input-themmoi">
+                            <a href="#" style="color:blue; width: 100%">
+                                VB thạc sĩ
+                            </a>
+                        </div>
+
+                        <label class="lb-themmoi">
+                            Văn bằng (chứng chỉ) ngoại ngữ
+                        </label>
+                        <div class="input-themmoi">
+                            <a href="#" style="color:blue; width: 100%">
+                                VB ngoại ngữ
+                            </a>
+                        </div>
+
+                    </div>
+                    <hr style="width:100%;text-align:left;margin-left:0; margin-top: 100px" />
+                    <div class=" col-xs-12">
+                        <label class="lb-themmoi">
+                            Đề tài
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="Đề xuất lộ trình xây dựng khung kiến trúc tổng thể tại các tổ chức giáo dục đại học ở Việt Nam	">
+                        <label class="lb-themmoi">
+                            Người hướng dẫn 1
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" value="PGS.TS Đào Thị Phương Diệp ">
+                        <label class="lb-themmoi">
+                            Người hướng dẫn 2
+                        </label>
+                        <input type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" style=" width:100%">
+                        <label class="lb-themmoi">
+                            Trạng thái
+                        </label>
+                        <select class="input-themmoi" required="required" style=" width:30% !important">
+                            <option>Đã duyệt</option>
+                            <option>Chưa duyệt</option>
+                        </select>
+                        <label class="lb-themmoi">
+                            Phản hồi tới NCS
+                        </label>
+                        <textarea type="text" id="mamodule" name="mamodule" class="input-themmoi" required="required" style=" width:100%; height: 100px">
+
+                        </textarea>
+                        <label class="lb-themmoi">
+                            Gửi tệp cho NCS
+                        </label>
+                        <input type="file" id="mamodule" name="mamodule" class="input-themmoi" required="required" style=" width:100%">
+                    </div>
+
+                </form>
+                <div class="modal-footer" style="text-align:center">
+                    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+                    <button type="button" id="btnSua" class="btn btn-success" data-dismiss="modal">Lưu</button>
+                    <button type="button" id="btnXoa" class="btn btn-success" data-dismiss="modal">Duyệt hồ sơ</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //$('#btnSua').click(function () {
+    //    var id = $('#IdEdit').val();
+    //    var mamodule = $('#mamodule_edit').val();
+    //    var tenmodule = $('#tenmodule_edit').val();
+    //    var machuongtrinh = $('#machuongtrinh_edit').val();
+    //    var mamon = $('#mamon_edit').val();
+    //    var madot = $('#madot_edit').val();
+    //    var thoiluong = $('#thoiluong_edit').val();
+    //    var songaytt = $('#songaytt_edit').val();
+    //    var songayonline = $('#songayonline_edit').val();
+    //    var sogiothuchanh = $('#sogiothuchanh_edit').val();
+
+    //    if (mamodule == "") {
+    //        toastr.error('Mã Module Không được để trống');
+    //        return false;
+    //    }
+    //    if (tenmodule == "") {
+    //        toastr.error('Tên Module không được để trống');
+    //        return false;
+    //    }
+    //    if (machuongtrinh == "") {
+    //        toastr.error('mã chương trình Không được để trống');
+    //        return false;
+    //    }
+    //    if (mamon == "") {
+    //        toastr.error('mã môn Không được để trống');
+    //        return false;
+    //    }
+    //    if (madot == "") {
+    //        toastr.error('mã đợt Không được để trống');
+    //        return false;
+    //    }
+    //    if (thoiluong == "") {
+    //        toastr.error('thời lượng Không được để trống');
+    //        return false;
+    //    }
+    //    else if (thoiluong < 0) {
+    //        toastr.error('Thời lượng không thể là số âm');
+    //        return false;
+    //    }
+    //    if (songaytt == "") {
+    //        toastr.error('số ngày thực hành Không được để trống');
+    //        return false;
+    //    }
+    //    else if (songaytt < 0) {
+    //        toastr.error('Số ngày thực hành không thể là số âm');
+    //        return false;
+    //    }
+    //    if (songayonline == "") {
+    //        toastr.error('số ngày online Không được để trống');
+    //        return false;
+    //    }
+    //    else if (songayonline < 0) {
+    //        toastr.error('Số ngày online không thể là số âm');
+    //        return false;
+    //    }
+    //    if (sogiothuchanh == "") {
+    //        toastr.error('số giờ thực hành Không được để trống');
+    //        return false;
+    //    }
+    //    else if (sogiothuchanh < 0) {
+    //        toastr.error('Số giờ thực hành không thể là số âm');
+    //        return false;
+    //    }
+
+        $("#divProcessing").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Sua", "Module")',
+            data: { id: id, mamodule: mamodule, tenmodule: tenmodule, machuongtrinh: machuongtrinh, mamon: mamon, madot: madot, thoiluong: thoiluong, songaytt: songaytt, songayonline: songayonline, sogiothuchanh: sogiothuchanh},
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    window.location.href = '@Url.Action("Index", "Module")';
+                    //setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        LoadListChuongTrinh();
+        LoadListMonHoc();
+    });
+    function LoadListChuongTrinh() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaChuongTrinh", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#machuongtrinh_edit').html(result);
+                @*$('#machuongtrinh_edit').val(@Model.MaChuongTrinh);*@
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+    function LoadListMonHoc() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaMonHoc", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#mamon_edit').html(result);
+                @*$('#mamon_edit').val(@Model.MaMon);*@
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+</script>
+

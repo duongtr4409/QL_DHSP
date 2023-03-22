@@ -1,0 +1,117 @@
+﻿@model TEMIS.Model.SP_ThongTinKHoaHocGiaVien_Result
+@{
+    ViewBag.Title = "Thông tin khóa học tham gia";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Thông tin khóa học tham gia</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Tên giáo viên <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.HoVaTen</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Tên chương trình <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.TenChuongTrinh</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Tên modul <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.TenModule</label>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Ngày bắt đầu <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.NgayBatDau</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Ngày kết thúc <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.NgayKetThuc</label>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Tiến độ học tập <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.TienDoHocTap</label>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Kết quả tiến trình <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.KetQuaTienTrinh</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Kết quả chung <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.KetQuaChung</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Kết quả cuối khóa <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">@Model.KetQuaCuoiKhoa</label>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tentruycap">
+                            Trạng thái <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <label class="form-control col-md-7 col-xs-12">
+                                @if (Model.TrangThai == false)
+                                {
+                                    @Html.Raw("Đang học")
+                                }
+                                else
+                                {
+                                    @Html.Raw("Đã kết thúc")
+                                }
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Không có khóa học nào</h2>
+}

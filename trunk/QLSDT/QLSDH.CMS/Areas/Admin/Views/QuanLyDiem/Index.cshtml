@@ -1,0 +1,381 @@
+﻿@model IEnumerable<TEMIS.Model.Diem>
+@using TEMIS.CMS.Areas.Admin.Models;
+@using CoreAPI.Entity;
+@using TEMIS.Model;
+@using TEMIS.CMS.Common;
+@{
+    /**/
+
+    ViewBag.Title = "Quản lý đào tạo NCS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<KhoaHoc> listKhoaHoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    var roleInfo = (UserRoles)Session[PublicConstant.ROLE_INFO];
+    var IDKHOA = ViewBag.IDKHOA;
+}
+<form action="#" method="post" autocomplete="off">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Quản lý đào tạo NCS</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                        <li class="nav-item active">
+                            <a class="nav-link active" id="quanly-theoncs-ul" data-toggle="tab" href="#quanly-theoncs" role="tab" aria-controls="home" aria-selected="true">Danh sách NCS đang học</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="quanly-theomon-ul" data-toggle="tab" href="#quanly-theomon" role="tab" aria-controls="contact" aria-selected="false">Danh sách NCS theo học phần</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active in" id="quanly-theoncs" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        Chương trình đào tạo NCS
+                                    </h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <div class="container">
+                                        <div class="row">
+                                            @if (roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT) || roleInfo.Role.Equals(PublicConstant.ROLE_GIANG_VIEN_HD))
+                                            {
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Ngành học</label>
+                                                    <select class="form-control" id="ddlNganh"></select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Khoa</label>
+                                                    <select class="form-control" name="khoa" id="ddlKhoa">
+                                                        <option value="0">------- Chọn Khoa -------</option>
+                                                        @foreach (var item in listKhoa)
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Ngành học</label>
+                                                    <select class="form-control" id="ddlNganh"></select>
+                                                </div>
+                                            }
+
+                                            <div class="col-md-2">
+                                                <label class="control-label">Khóa</label>
+                                                <select class="form-control" id="ddlkhoahoc">
+                                                    @foreach (var item in listKhoaHoc)
+                                                    {
+                                                        <option value="@item.Id">@item.MaKhoa</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="control-label"> Họ tên</label>
+                                                <input type="text" id="hoten" name="hoten" required="required" class="form-control">
+                                            </div>
+                                            <div class="col-md-2" style="padding-top:24px;">
+                                                <a id="btnSearch" class="btn btn-info "><i class="fa fa-search" title="tìm kiếm"></i></a>
+                                            </div>
+                                            @if (roleInfo.Role.Equals(PublicConstant.ROLE_ADMINSTRATOR) || roleInfo.Role.Equals(PublicConstant.ROLE_CB_PHONG_SDH))
+                                            {
+                                                <div class="col-md-2" style="padding-top:24px;">
+                                                    <a class="btn btn-info" title="Upload Excel" onclick="uploadFile()"><i class="fa fa-upload"> Upload Excel</i></a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <hr />
+                                    <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="quanly-theomon" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        Quản lý NCS theo học phần
+                                    </h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <div class="container">
+                                        <div class="row">
+                                            @if (roleInfo.Role.Equals(PublicConstant.ROLE_TRUONG_KHOA_DT) || roleInfo.Role.Equals(PublicConstant.ROLE_GIANG_VIEN_HD))
+                                            {
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Ngành học</label>
+                                                    <select class="form-control" id="ddlNganh_mon"></select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Khoa</label>
+                                                    <select class="form-control" name="khoa" id="ddlKhoa_mon">
+                                                        <option value="0">------- Chọn Khoa -------</option>
+                                                        @foreach (var item in listKhoa)
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Ngành học</label>
+                                                    <select class="form-control" id="ddlNganh_mon"></select>
+                                                </div>
+                                            }
+
+                                            <div class="col-md-2">
+                                                <label class="control-label">Khóa</label>
+                                                <select class="form-control" id="ddlkhoahoc_mon">
+                                                    @foreach (var item in listKhoaHoc)
+                                                    {
+                                                        <option value="@item.Id">@item.MaKhoa</option>
+                                                    }
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-2" style="padding-top:24px;">
+                                                <a id="btnSearch2" class="btn btn-info "><i class="fa fa-search" title="tìm kiếm"></i></a>
+                                            </div>
+                                            @if (roleInfo.Role.Equals(PublicConstant.ROLE_ADMINSTRATOR) || roleInfo.Role.Equals(PublicConstant.ROLE_CB_PHONG_SDH))
+                                            {
+                                                <div class="col-md-2" style="padding-top:24px;">
+                                                    <a class="btn btn-info" title="Upload Excel" onclick="uploadFile()"><i class="fa fa-upload"> Upload Excel</i></a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <hr />
+                                    <div id="datatable_wrapper_mon" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="divProcessing" style="position:fixed;top:0px; left:0px; height:1000px;width :100%;text-align:center;
+         background:#f5f5f5;
+         opacity:0.5;
+         z-index:999;
+         position:absolute;
+         left:0px;
+         top :0px;
+         cursor: wait; display:none">
+    <img style="position: absolute;top: 50%;" src="~/Images/processing.gif" alt="" width="70" height="70" />
+</div>
+<div class="modal fade modelupload" id="modelupload" role="dialog">
+    @using (Html.BeginForm("UploadExcelFile", "QuanLyDiem", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload Excel</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="width:100%; padding:20px">
+                        <center>
+                            <input type="file" id="dataFile" name="upload" value="" />
+                            <br />
+                            <a href="~/FileMauExcel/FileMauUpLoadDiem.xlsx" style="color:red"><span class="fa fa-file-excel-o" style="color: #1abb9c !important"></span> Tải file mẫu</a>
+                        </center>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align:center">
+                    <button type="button" class="btn btn-primar" data-dismiss="modal">Hủy</button>
+                    <input type="submit" id="btnImport" value="Import Excel" class="btn btn-info btn-form" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#datatable-buttonss').dataTable({
+                "pageLength": 25
+        });
+        $('.dataTables_filter input').attr('maxlength', 255)
+        if (@IDKHOA > 0) {
+            loadnganh(@IDKHOA, 'ddlNganh');
+            loadnganh(@IDKHOA, 'ddlNganh_mon');
+        }
+
+        loaddata();
+        loaddata_mon();
+        });
+    $('#ddlkhoahoc').on('change', function (e) {
+        loaddata();
+    });
+
+    $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        loadnganh(khoaid, 'ddlNganh')
+        loaddata();
+    });
+    $('#ddlNganh').on('change', function (e) {
+            var nganhid = this.value;
+            //loadmonhoc(nganhid, 'ddlMonHoc')
+            loaddata();
+    });
+
+    $('#ddlkhoahoc_mon').on('change', function (e) {
+        console.log("hello");
+        loaddata_mon();
+    });
+
+    $('#ddlKhoa_mon').on('change', function (e) {
+        var khoaid = this.value;
+        loadnganh(khoaid, 'ddlNganh_mon');
+        console.log("hello");
+
+        loaddata_mon();
+    });
+    $('#ddlNganh_mon').on('change', function (e) {
+        console.log("hello");
+        loaddata_mon();
+    });
+    $('#btnSearch').click(function () {
+            loaddata();
+    });
+    $('#btnSearch2').click(function () {
+        loaddata_mon();
+    });
+    function loadnganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadNganhByKhoa", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    }
+
+    function loadmonhoc(nganhid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadMonHocByNganh", "QuanLyHocPhi")',
+                data: { nganhid: nganhid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                 console.log(data);
+                    $('#' + divresult).empty().html(data);
+            },
+                error: function (req, status, error) {
+            }
+        });
+    }
+
+    function loaddata_mon() {
+        //theo mon
+        $('#divProcessing').show();
+        var model_mon = $('#datatable_wrapper_mon');
+        var idKhoa_mon = $('#ddlKhoa_mon').val();
+        var idNganh_mon = $('#ddlNganh_mon').val();
+        //var idMonHoc = $('#ddlMonHoc').val();
+        var idKhoaHoc_mon = $('#ddlkhoahoc_mon').val();
+        if (idKhoa_mon == null) {
+            idKhoa_mon = 0;
+        }
+        if (idNganh_mon == null) {
+            idNganh_mon = 0;
+        }
+        if (idKhoaHoc_mon == null) {
+            idKhoaHoc_mon = 0;
+        }
+        $.ajax({
+        url: '@Url.Action("LoadDataHP_mon", "QuanLyDiem")',
+            data: { idKhoa: idKhoa_mon, idNganh: idNganh_mon, idKhoaHoc: idKhoaHoc_mon},
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    model_mon.empty().html(result);
+                    $('#divProcessing').hide();
+            },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                console.log('lỗi load dữ liệu: ' + error.responseText);
+            }
+        });
+    }
+    function loaddata() {
+        //theo cns
+        $('#divProcessing').show();
+        var model = $('#datatable_wrapper');
+        var idKhoa = $('#ddlKhoa').val();
+        var idNganh = $('#ddlNganh').val();
+        //var idMonHoc = $('#ddlMonHoc').val();
+        var idKhoaHoc = $('#ddlkhoahoc').val();
+        var strtenNCS = $('#hoten').val();
+        if (idKhoa == null || idKhoa == 'undefined') {
+            idKhoa = @IDKHOA;
+        }
+        if (idNganh == null) {
+            idNganh = 0;
+        }
+        if (idKhoaHoc == null) {
+            idKhoaHoc = 0;
+        }
+
+
+        $.ajax({
+        url: '@Url.Action("LoadDataNCS", "QuanLyDiem")',
+                data: { idKhoa: idKhoa, idNganh: idNganh, idKhoaHoc: idKhoaHoc, strtenNCS: strtenNCS },
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                model.empty().html(result);
+                    $('#divProcessing').hide();
+            },
+                error: function (error) {
+                    $('#divProcessing').hide();
+                console.log('lỗi load dữ liệu: ' + error.responseText);
+            }
+        });
+    }
+    function uploadFile() {
+        $('#modelupload').modal({ backdrop: 'static', keyboard: false })
+    }
+</script>

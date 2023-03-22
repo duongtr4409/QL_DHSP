@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "UpLoad giảng viên từ Excel";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var listError = (List<TEMIS.CMS.Areas.Admin.Models.ImportExelFail>)TempData["listError"];
+}
+
+<h2>UpLoadExcel</h2>
+<div class="row">
+    @using (Html.BeginForm("UploadExcelFile", "GiangVien", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <div class="row" style="text-align:center">
+            <div class="col-sm-12">
+                <div class="panel panel-dblues" style="border: 1px solid #76b51b;margin-bottom: 0px;">
+
+                    <div class="panel-body txtct" style="padding: 25px;">
+                        <div class="form-group">
+                            <p style="color:red">Lưu ý: Tải file mẫu về máy để nhập dữ liệu theo đúng định dạng của hệ thống</p>
+                            <input type="file" id="dataFile" name="upload" style="display:inline !important;" />
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" id="btnImport" value="Tải lên" class="btn btn-info btn-form btn-primary" />&nbsp;
+                            <a href="~/FileMauExcel/FileMauUpGiangVien.xlsx" style="color:red">Tải về file excel mẫu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <script>
+        $(document).ready(function () {
+            $('#btnImport').click(function () {
+                if ($('#dataFile').val() == "") {
+                    toastr.error('Bạn chưa chọn file excel nếu bạn chưa có file mẫu vui lòng ấn "Tải về file excel mẫu"');
+                    return false;
+                }
+            })
+        });
+    </script>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        @if (listError != null && listError.Count > 0)
+        {
+            <h3>Danh sách tài khoản import lỗi</h3>
+            <br />
+            <table id="datatable-buttonss" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+                <thead>
+                    <tr role="row">
+                        <th style="background: #6fb3e0; color: #fff;">Số thứ tự</th>
+                        <th style="background: #6fb3e0; color: #fff;">Số điện thoại</th>
+                        <th style="background: #6fb3e0; color: #fff;">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listError)
+                    {
+                        <tr>
+                            <td style="text-align:center"> @item.STT </td>
+                            <td> @item.HoTen</td>
+                            <td style="color:red"> @item.Message</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

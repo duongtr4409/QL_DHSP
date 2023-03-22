@@ -1,0 +1,232 @@
+﻿@{
+    ViewBag.Title = "Thêm mới Module";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Thêm mới Module bồi dưỡng</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form class="form-horizontal form-label-left" novalidate>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamodule">
+                            Mã Module <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="mamodule" name="mamodule" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tenmodule">
+                            Tên Module <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="tenmodule" name="tenmodule" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="machuongtrinh">
+                            Tên chương trình <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="machuongtrinh" class="pull-right col-md-12 col-xs-12" style="line-height: 1.42857143;    height: 34px; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+
+                            </select>
+                        </div>
+                        @*<div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="machuongtrinh" name="machuongtrinh" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="mamon">
+                            Tên môn học <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="mamon" class="pull-right col-md-12 col-xs-12" style="line-height: 1.42857143;    height: 34px; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc"></select>
+                        </div>
+                        @*<div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="mamon" name="mamon" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="madot">
+                            Mã đợt <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="madot" name="madot" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thoiluong">
+                            Thời lượng <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="thoiluong" name="thoiluong" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songaytt">
+                            Số ngày thực tập <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="songaytt" name="songaytt" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="songayonline">
+                            Số ngày Online <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="songayonline" name="songayonline" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sogiothuchanh">
+                            Số giờ thực hành <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="sogiothuchanh" name="sogiothuchanh" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            @*<button type="submit" class="btn btn-primary">Cancel</button>*@
+                            @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-primary" })
+
+                            <button id="addModule" type="submit" class="btn btn-success">Thêm mới</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#addModule').click(function () {
+            var mamodule = $('#mamodule').val();
+            var tenmodule = $('#tenmodule').val();
+            var machuongtrinh = $('#machuongtrinh').val();
+            var mamon = $('#mamon').val();
+            var madot = $('#madot').val();
+            var thoiluong = $('#thoiluong').val();
+            var songaytt = $('#songaytt').val();
+            var songayonline = $('#songayonline').val();
+            var sogiothuchanh = $('#sogiothuchanh').val();
+
+            if (mamodule == "") {
+                toastr.error('Mã Module Không được để trống');
+                return false;
+            }
+            if (tenmodule == "") {
+                toastr.error('Tên Module không được để trống');
+                return false;
+            }
+            if (machuongtrinh == "") {
+                toastr.error('mã chương trình Không được để trống');
+                return false;
+            }
+            if (mamon == "") {
+                toastr.error('mã môn Không được để trống');
+                return false;
+            }
+            if (madot == "") {
+                toastr.error('mã đợt Không được để trống');
+                return false;
+            }
+            if (thoiluong == "") {
+                toastr.error('thời lượng Không được để trống');
+                return false;
+            }
+            else if (thoiluong < 0) {
+                toastr.error('Thời lượng không thể là số âm');
+                return false;
+            }
+            if (songaytt == "") {
+                toastr.error('số ngày thực hành Không được để trống');
+                return false;
+            }
+            else if (songaytt < 0) {
+                toastr.error('Số ngày thực hành không thể là số âm');
+                return false;
+            }
+            if (songayonline == "") {
+                toastr.error('số ngày online Không được để trống');
+                return false;
+            }
+            else if (songayonline < 0) {
+                toastr.error('Số ngày online không thể là số âm');
+                return false;
+            }
+            if (sogiothuchanh == "") {
+                toastr.error('số giờ thực hành Không được để trống');
+                return false;
+            }
+            else if (sogiothuchanh < 0) {
+                toastr.error('Số giờ thực hành không thể là số âm');
+                return false;
+            }
+
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("ThemMoiModule", "Module")',
+            data: { mamodule: mamodule, tenmodule: tenmodule, machuongtrinh: machuongtrinh, mamon: mamon, madot: madot, thoiluong: thoiluong, songaytt: songaytt, songayonline: songayonline, sogiothuchanh: sogiothuchanh },
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+                $("#divProcessing").hide();
+                if (data == 'OK') {
+                    window.location.href = '@Url.Action("Index", "Module")';
+                    //setTimeout(function () { location.reload(); }, 2000);
+                } else {
+                    toastr.error(data);
+                }
+            },
+            error: function (req, status, error) {
+                $("#divProcessing").hide();
+            }
+        });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        LoadListChuongTrinh();
+        LoadListMonHoc();
+    });
+    function LoadListChuongTrinh() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaChuongTrinh", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#machuongtrinh').html(result);
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+    function LoadListMonHoc() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadMaMonHoc", "HomeAdmin")',
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $('#mamon').html(result);
+            },
+            error: function (req, status, error) {
+                // do something with error
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <form>
+                        <h1>Tạo tài khoản</h1>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Họ tên" name="hoten" required="" />
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Tài khoản" name="UserName" required="" />
+                        </div>
+                        <div>
+                            <input type="email" class="form-control" placeholder="Email" name="email" required="" />
+                        </div>
+                        <div>
+                            <input type="password" class="form-control" placeholder="Mật khẩu" name="Password" required="" />
+                        </div>
+                        <div>
+                            <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" name="ConfirmPassword" required="" />
+                        </div>
+                        <div>
+                            <select class="form-control" id="Type" name="Type">
+                                <option value="hocvien">NCS</option>
+                                <option value="giangvien">Giảng Viên</option>
+                            </select>
+                        </div>
+                        <div style="text-align:center">
+                            <br />
+                            <center><input name="submit" type="submit" class="btn btn-danger btn-sm submitreg" value="Đăng ký" style="float:none; margin-left:0px"></center>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="separator">
+                            <p class="change_link">
+                                Bạn đã có tài khoản ?
+                                <a href="@Url.Action("Login", "Account")" class="to_register"> Đăng nhập </a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div>
+                                <h1><i class="fa fa-book"></i> QUẢN LÝ SAU ĐÀO TẠO</h1>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </section>
+        </div>
+    </div>
+</div>

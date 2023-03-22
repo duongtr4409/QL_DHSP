@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Crash";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Log crash: @ViewBag.LogFile</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content" style="text-align:center">
+                <textarea id="txtLogs" style="height:800px;width:99%;background: black; color: white;">
+                </textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        var txtFile = new XMLHttpRequest();
+        txtFile.open("GET", "http://@Request.UrlReferrer.Authority/Log/error.txt", true);
+        txtFile.onreadystatechange = function () {
+            if (txtFile.readyState === 4) {
+                // Makes sure the document is ready to parse.
+                if (txtFile.status === 200) {
+                    // Makes sure it's found the file.
+                    document.getElementById("txtLogs").innerHTML = txtFile.responseText;
+                }
+            }
+        }
+        txtFile.send(null)
+    }
+
+
+</script>

@@ -1,0 +1,180 @@
+﻿@model List<TEMIS.CMS.Areas.Admin.Controllers.GiangVien_ChucVuView>
+<style>
+    #datatable-2 > tbody > tr > td {
+        padding: 4px !important;
+    }
+</style>
+<table id="datatable-3" class="table table-striped jambo_table bulk_action">
+    <thead>
+        <tr class="headings">
+            <th style="text-align:center">
+                <label class="pos-rel">
+
+                </label>
+            </th>
+            <th style="text-align:center">Học hàm học vị</th>
+            <th style="text-align:center; width:30%">Tên GV</th>
+            <th style="text-align:center">Cơ quan công tác</th>
+            <th style="text-align:center">Vai trò</th>
+            <th style="display:none">id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="a-center" style="text-align:center">
+                        <label class="pos-rel" id="@item.idgv">
+                            @if (item.vaitro != null)
+                            {
+                                <input type="checkbox" class="clbitem" checked id="idbox_@item.idgv">
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="clbitem" id="idbox_@item.idgv">
+                            }
+                            <span class="lbl"></span>
+                            <input type="hidden" id="hdname_@item.idgv" class="form-control" name="hdname" value="@item.name" />
+                            <input type="hidden" id="hdchucvu_@item.idgv" class="form-control" name="hdchucvu" value="@item.chucvu" />
+                            <input type="hidden" id="idgv_@item.idgv" class="form-control" name="hdidgv" value="@item.idgv" />
+                        </label>
+                    </td>
+                    <td id="hocham_@item.idgv">@item.hochamhocvi</td>
+                    <td id="ten_@item.idgv">@item.name</td>
+                    <td id="dvct_@item.idgv">
+                        @item.donvicongtac
+                    </td>
+                    <td style="text-align:center">
+                        <select class="form-control col-md-5 col-xs-12" id="vaitro_select_@item.idgv">
+                            @if (item.vaitro != null)
+                            {
+                                if (item.vaitro.Equals("Trưởng tiểu ban"))
+                                {
+                                    <option value="Trưởng tiểu ban" selected>Trưởng tiểu ban</option>
+                                }
+                                else
+                                {
+                                <option value="Trưởng tiểu ban">Trưởng tiểu ban</option>
+                                }
+                                if (item.vaitro.Equals("Ủy viên"))
+                                {
+                                    <option value="Ủy viên" selected>Ủy viên</option>
+                                }
+                                else
+                                {
+                                    <option value="Ủy viên">Ủy viên</option>
+                                }
+                                if (item.vaitro.Equals("Thư ký"))
+                                {
+                                    <option value="Thư ký" selected>Thư ký</option>
+                                }
+                                else
+                                {
+                                    <option value="Thư ký">Thư ký</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="Trưởng tiểu ban">Trưởng tiểu ban</option>
+                                <option value="Ủy viên">Ủy viên</option>
+                                <option value="Thư ký">Thư ký</option>
+                            }
+                        </select>
+                    </td>
+                    <td style="display:none">@item.idgv</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#datatable-3').dataTable({
+            "pageLength": 10
+        });
+
+    });
+    $(document).ready(function () {
+        $('#datatable-3').on("change", ".clbitem", function (event) {
+            if ($(this).is(":checked")) {
+                $(this).parent().parent().parent().addClass('selected');
+                console.log(event.target.parentNode.id);
+                var idlb = event.target.parentNode.id;
+                var hocham = $('#hocham_' + idlb).text();
+                var coquan = $('#dvct_' + idlb).text();
+                var cvu = '';
+                var ten = $('#ten_' + idlb).text();
+                var vtro = $('#vaitro_select_' + idlb).val();
+                addCanBo(0, idlb, ten, cvu, vtro, hocham, coquan);
+                LoadDataSelected();
+            }
+            else {
+                $(this).parent().parent().parent().addClass('selected2');
+                console.log(event.target.parentNode.id);
+                var idlb = event.target.parentNode.id;
+                var hocham = $('#hocham_' + idlb).text();
+                var coquan = $('#dvct_' + idlb).text();
+                var cvu = '';
+                var ten = $('#ten_' + idlb).text();
+                var vtro = $('#vaitro_select_' + idlb).val();
+                addCanBo(1, idlb, ten, cvu, vtro, hocham, coquan);
+                LoadDataSelected();
+            }
+        });
+
+    });
+    function addCanBo(type, idcb, tencb, chucvu, vaitro, hocham, coquan) {
+        console.log("id can bo = " + idcb);
+        $("#divProcessing").show();
+        var idKH = $("#ddlKhoahoc").val();
+        var iddotTS = $("#ddlDotTS").val();
+        if (iddotTS == null) {
+            toastr.error("Bạn chưa chọn đợt tuyển sinh!");
+            $("#idbox_" + idcb).prop('checked', false);
+            $("#divProcessing").hide();
+            return false;
+        }
+        if (idKH == null || idKH ==0) {
+            toastr.error("Bạn chưa chọn khóa tuyển sinh!");
+            $("#idbox_" + idcb).prop('checked', false);
+            $("#divProcessing").hide();
+            return false;
+        }
+         $.ajax({
+                type: "GET",
+             url: '@Url.Action("AddCanBoXinTieuBanCapKHOA", "ThiSinhTuyenSinh")',
+             data: { type: type, idcb: idcb, tencb: tencb, chucvu: chucvu, vaitro: vaitro, hocham: hocham, coquan: coquan, idbm: 1005, idkhoahoc: idKH, dotTS: iddotTS },
+                 dataType: "json",
+                 contentType: 'application/json',
+                 success: function (data) {
+                 console.log(data)
+                     if (data.mess.match("Error") && data.mess.match("tối đa")) {
+                         toastr.error(data.mess)
+                         $("#idbox_" + idcb).prop('checked', false);
+                     }
+                     else if (data.mess.match("Error") && data.mess.match("tối thiểu")) {
+                         $("#idbox_" + idcb).prop('checked', true);
+                     }
+                     else {
+                         $('#sl_chutich').val(data.chutichhd);
+                         $('#sl_phochutich').val(data.phochutichhd);
+                         $('#sl_uvthuongtruc').val(data.uvthuongtruc);
+                         $('#sl_uv').val(data.uyvien);
+                         if (type == 0) {
+                             toastr.success("Chọn cán bộ thành công")
+                         }
+                         else if (type == 1) {
+                             toastr.success("Đã xóa chọn cán bộ")
+                         }
+                         }
+                         $("#divProcessing").hide();
+                    },
+                 error: function (req, status, error) {
+                     toastr.error("Lỗi chọn cán bộ!");
+                     console.log(error);
+                 }
+            });
+    }
+</script>

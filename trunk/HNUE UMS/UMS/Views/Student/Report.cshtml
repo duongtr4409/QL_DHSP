@@ -1,0 +1,122 @@
+﻿<div class="container-fluid">
+    <select id="slcYear" class="form-control filter" value="@ViewBag.Year">
+        <option value="0">---Năm học---</option>
+        @foreach (var i in ViewBag.Years)
+        {
+            <option value="@i">@i</option>
+        }
+    </select>
+    @*<select id="slcDepartments" class="form-control filter" value="@ViewBag.FacultyId">
+        <option value="0">---Khoa---</option>
+        @foreach (var i in ViewBag.Faculties)
+        {
+            <option value="@i.Id">@i.Name</option>
+        }
+    </select>*@
+    @*<select id="slcCourse" class="form-control filter" value="@ViewBag.Course">
+        <option value="0">---Khóa---</option>
+        @foreach (var i in ViewBag.Courses)
+        {
+            <option value="@i">@i</option>
+        }
+    </select>*@
+    <div class="clear"></div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Mã SV</th>
+                <th>Họ tên</th>
+                <th>Năm học</th>
+                <th class="text-center">TBCHT</th>
+                <th class="text-center">TBC Tích lũy</th>
+                <th class="text-center">Tổng số học trình</th>
+                <th class="text-center">Tổng số học trình tích lũy</th>
+                <th class="text-center">Tổng số học trình học lại</th>
+                <th class="text-center">Tổng số học trình thi lại</th>
+                <th class="text-center">Tổng số môn</th>
+                <th class="text-center">Tổng số môn thi lại</th>
+                <th class="text-center">Tổng số môn học lại</th>
+                <th class="text-center">Xếp loại học tập</th>
+                <th class="text-center">Xếp loại tích lũy</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $(".filter").change(function () {
+            window.location.href = '@Url.Action("Report")?year=' + $("#slcYear").val() + "&course=" + $("#slcCourse").val() + "&FacultyId=" + $("#slcDepartments").val();
+        });
+        $('table.table').DataTable(
+         {
+             processing: true,
+             serverSide: true,
+             filter: false,
+             orderMulti: false,
+             pageLength: 25,
+             iDisplayLength: 25,
+             aLengthMenu: [[25, 50, 100], [25, 50, 100]],
+             dom: '<"top"f>rt<"bottom"ilp><"clear">',
+                ajax: { url: '@Url.Action("GetReport")?FacultyId=@ViewBag.FacultyId&course=@ViewBag.Course&year=@ViewBag.Year', type: "GET", contentType: "application/json" },
+             columns: [
+                 {
+                     "data": "Ma_sv",
+                     "bSortable": true
+                 },
+                 {
+                     "data": "Ho_ten",
+                     "bSortable": true
+                 },
+                 {
+                     "data": "Nam_hoc",
+                     "bSortable": true
+                 },
+                 {
+                     "data": "TBCHT4",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "TBCHT4_tich_luy",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_hoc_trinh",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_hoc_trinh_tich_luy",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_hoc_trinh_thi_lai",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_hoc_trinh_hoc_lai",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_mon",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_mon_thi_lai",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "Tong_so_mon_hoc_lai",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "xep_loai_hoc_tap",
+                     "className": "text-center"
+                 },
+                 {
+                     "data": "xep_loai_tich_luy",
+                     "className": "text-center"
+                 }
+             ]
+         });
+    });
+</script>

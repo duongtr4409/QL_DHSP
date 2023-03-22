@@ -1,0 +1,116 @@
+﻿@using Resources
+@model Ums.Models.Personnel.StaffModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Html.BeginForm("StaffEdit", "Personnel", FormMethod.Post, new { @id = "formData", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Mã cán bộ</label>
+                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Đơn vị</label>
+                @Html.DropDownListFor(m => m.DepartmentId, Model.Departments, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Giảng dạy cho</label>
+                @Html.DropDownListFor(m => m.TeachingInId, Model.Departments, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-6">
+                <label>Tên cán bộ</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Giới tính</label>
+                @Html.DropDownListFor(m => m.Gender, Model.Genders, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Ngày sinh</label>
+                @Html.TextBoxFor(m => m.Birthday, new { @class = "form-control datepicker" })
+            </div>
+            <div class="form-group col-3">
+                <label>Học hàm, Học vị</label>
+                @Html.DropDownListFor(m => m.DegreeId, Model.Degrees, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Chức danh</label>
+                @Html.DropDownListFor(m => m.TitleId, Model.Titles, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Bậc lương</label>
+                @Html.DropDownListFor(m => m.Level, Model.Levels, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Mốc nâng lương</label>
+                @Html.TextBoxFor(m => m.SalaryRaiseOn, new { @class = "form-control datepicker" })
+            </div>
+            <div class="form-group col-3">
+                <label>Năm bắt đầu CT</label>
+                @Html.TextBoxFor(m => m.StartYear, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Tháng bắt đầu CT</label>
+                @Html.TextBoxFor(m => m.StartMonth, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Năm hết tập sự</label>
+                @Html.TextBoxFor(m => m.TrialYear, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Tháng hết tập sự</label>
+                @Html.TextBoxFor(m => m.TrialMonth, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Thâm niên vượt khung</label>
+                @Html.TextBoxFor(m => m.FrameExceeded, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Số tài khoản ngân hàng</label>
+                @Html.TextBoxFor(m => m.AccountNumber, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Mã số thuế</label>
+                @Html.TextBoxFor(m => m.TaxNumber, new { @class = "form-control number" })
+            </div>
+            <div class="form-group col-3">
+                <label>Thử việc</label>
+                <div class="form-control">
+                    <label style="margin-top: 5px">@Html.CheckBoxFor(m => m.IsProbation) Đang thử việc</label>
+                </div>
+            </div>
+            <div class="form-group col-2">
+                <label>Nghỉ hưu</label>
+                <div class="form-control">
+                    <label style="margin-top: 5px">@Html.CheckBoxFor(m => m.IsRetired) Đã nghỉ hưu</label>
+                </div>
+            </div>
+            <div class="form-group col-2">
+                <label>Chuyển công tác</label>
+                <div class="form-control">
+                    <label style="margin-top: 5px">@Html.CheckBoxFor(m => m.IsMoved) Đã chuyển CT</label>
+                </div>
+            </div>
+            <div class="form-group col-2">
+                <label>Ngày nghỉ việc</label>
+                @Html.TextBoxFor(m => m.RetireOrMoveDate, new { @class = "form-control datepicker" })
+            </div>
+            <div class="form-group col-6">
+                <label>Nơi chuyển công tác tới</label>
+                @Html.TextBoxFor(m => m.MovedTo, new { @class = "form-control" })
+            </div>
+            <div class="text-center col-12">
+                <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>
+                <button name="act_continue" value="false" onclick="$(this).val(true)" type="submit" class="btn btn-danger">@Html.Raw(Actions.UpdateNew)</button>
+                <a class="btn btn-default" href="javascript:window.parent.closemodal()">@Html.Raw(Actions.Back)</a>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    window.parent.setmodalsize("1000px", "650px");
+</script>

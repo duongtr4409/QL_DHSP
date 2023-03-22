@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1c744fa424b0431fa775c07bc8fc5aa6" Name="Diagram1" ZoomLevel="68">
+        <EntityTypeShape EntityType="TEMIS_systemModel.BieuMau" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ChuongTrinhDaoTao" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ChuyenMucVanBan" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanhMucThongTin" Width="1.625" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanhMucTinTuc" Width="1.5" PointX="2.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.GiangVien" Width="1.5" PointX="10.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HocPhan" Width="1.5" PointX="10.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.Khoa" Width="1.5" PointX="12.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.KhoaHoc" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.KhoaHoc_HocVien" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.MonHoc" Width="1.5" PointX="14.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.MucHocPhi" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.NCS" Width="1.5" PointX="0.75" PointY="16.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.NganhDaoTao" Width="1.5" PointX="2.75" PointY="16.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.PhongThi" Width="1.5" PointX="4.75" PointY="16.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.Roles" Width="1.5" PointX="16.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.SysLog" Width="1.5" PointX="16.75" PointY="13.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ThamSoBieuMau" Width="1.5" PointX="18.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ThuVien" Width="1.5" PointX="18.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.TinTuc" Width="1.5" PointX="6.75" PointY="18.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.TruongThongTin" Width="1.75" PointX="8.75" PointY="18.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.VanBan" Width="1.5" PointX="20.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.BaoVeCapBoMon" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.BaoVeCapTruong" Width="1.5" PointX="11.75" PointY="17.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.LuanAnTienSi" Width="1.5" PointX="3.75" PointY="20.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.PhanBienDocLap" Width="1.5" PointX="13.75" PointY="20.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.SauBaoVe" Width="1.5" PointX="15.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.CongTrinhKhoaHoc" Width="1.5" PointX="21.375" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanhSachChuyenDe" Width="1.5" PointX="21.375" PointY="10.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.TieuBanChamChuyenDe" Width="1.5" PointX="21.375" PointY="14.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.BaoVeTongQuan" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.BaoVe_NCS" Width="1.5" PointX="0.75" PointY="22.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanhSachHoiDong" Width="1.5" PointX="23.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.KetQuaBaoVe" Width="1.5" PointX="23.375" PointY="4.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.QuyetDinh" Width="1.5" PointX="6.375" PointY="23.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.NguoiHuongDan" Width="1.5" PointX="8.375" PointY="23.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HoiDongPhanBienDocLap" Width="1.5" PointX="23.375" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.Diem" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.GiayToBaoVeLuanAn" Width="1.5" PointX="7.375" PointY="14.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.LichBaoVe" Width="1.5" PointX="23.375" PointY="13.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.TruongThongTin_NCS" Width="1.5" PointX="16.375" PointY="23.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HoSoThamDinh" Width="1.5" PointX="7.375" PointY="9.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ThongTinDeTai" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HocPhan_GiangVien" Width="1.5" PointX="10.375" PointY="23.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.SysSetting" Width="1.5" PointX="18.375" PointY="23.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.User" Width="1.5" PointX="23.375" PointY="24.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.UserRoles" Width="1.5" PointX="17.375" PointY="17.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ChuyenNganhDaoTao" Width="1.5" PointX="25.375" PointY="3.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.ThongBao" Width="1.5" PointX="25.375" PointY="8.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.City" Width="1.5" PointX="14.375" PointY="17.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.District" Width="1.5" PointX="25.375" PointY="12.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.Ward" Width="1.5" PointX="12.375" PointY="25.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HocPhiNCS" Width="1.5" PointX="25.375" PointY="15.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DotTuyenSinh" Width="1.5" PointX="7.375" PointY="5.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.SysNotification" Width="1.5" PointX="3.375" PointY="12.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.HocPhi" Width="1.5" PointX="22.375" PointY="18.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.SysComment" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DangKyTuyenSinh" Width="1.5" PointX="20.375" PointY="24.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanhSachCanBoAddForm" Width="1.5" PointX="19.375" PointY="18.75" />
+        <EntityTypeShape EntityType="TEMIS_systemModel.DanToc" Width="1.5" PointX="0.75" PointY="13.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

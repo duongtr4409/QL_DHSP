@@ -31,7 +31,9 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         private GenericUnitOfWork _unitOfWork = new GenericUnitOfWork();
         private Model.TEMIS_systemEntities db = new Model.TEMIS_systemEntities();
         public string parthdowload = "Upload\\FileBMDowload\\";
-        public string url_download = "http://qlncs.hnue.edu.vn/upload/FileBMDowload/";
+        //public string url_download = "http://qlncs.hnue.edu.vn/upload/FileBMDowload/";
+        public string url_download = "http://192.168.100.23:2806/";
+
 
         public HocVienController()
         {
@@ -350,7 +352,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
 
                     ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                     ws.Cells[1, 1, 1, 4].Merge = true;
-                    ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                    ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                     ws.Cells[2, 1, 2, 6].Merge = true;
                     ws.Cells[3, 1].Value = "HỘI ĐỒNG TUYỂN SINH NCS NĂM 2020";
                     ws.Cells[3, 1, 3, 4].Merge = true;

@@ -55,13 +55,18 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             try
             {
                 List<HocPhi> list_data = new List<HocPhi>();
-                if (khoaid <= 0)
+                
+                if (khoaid <= 0 && khoahocid <= 0)
                 {
                     list_data = _unitOfWork.GetRepositoryInstance<HocPhi>().GetAllRecords().ToList();
                 }
-                else if (khoahocid >0)
+                else if (khoahocid != 0 && khoaid != 0)
                 {
-                    list_data = _unitOfWork.GetRepositoryInstance<HocPhi>().GetListByParameter(x => x.KhoaHoc == khoahocid && x.Khoa==khoaid).ToList();
+                    list_data = _unitOfWork.GetRepositoryInstance<HocPhi>().GetListByParameter(x => x.KhoaHoc == khoahocid && x.Khoa == khoaid).ToList();
+                }
+                else if (khoahocid > 0 && khoaid <= 0)
+                {
+                    list_data = _unitOfWork.GetRepositoryInstance<HocPhi>().GetListByParameter(x => x.KhoaHoc == khoahocid).ToList();
                 }
                 else
                 {

@@ -159,7 +159,7 @@
                 <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tenhocphan">
-                            Tên đề tài
+                            Tên đề tài <span class="required">*</span>
                         </label>
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <textarea type="text" id="tendetai" name="tendetai" required="required" class="form-control col-md-7 col-xs-12">
@@ -181,7 +181,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
-                                    Chọn Khoa
+                                    Chọn Khoa <span class="required">*</span>
                                 </label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <select name="ddlKhoa_1" id="ddlKhoa_1" class="form-control">
@@ -195,7 +195,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
-                                    Đề xuất người hướng dẫn 1
+                                    Đề xuất người hướng dẫn 1 <span class="required">*</span>
                                 </label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <select id="ddlGV_1" class="form-control"></select>
@@ -216,7 +216,7 @@
                             </div>
                             <div class="form-group" id="gv2_khoa">
                                 <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
-                                    Chọn Khoa
+                                    Chọn Khoa <span class="required">*</span>
                                 </label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <select name="ddlKhoa_2" id="ddlKhoa_2" class="form-control">
@@ -230,7 +230,7 @@
                             </div>
                             <div class="form-group" id="gv2_ten">
                                 <label class="control-label col-md-4 col-sm-4 col-xs-12">
-                                    Đề xuất người hướng dẫn 2
+                                    Đề xuất người hướng dẫn 2 <span class="required">*</span>
                                 </label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <select id="ddlGV_2" class="form-control"></select>
@@ -238,14 +238,14 @@
                             </div>
                             <div class="form-group" hidden id="gv2_ten2">
                                 <label class="control-label col-md-4 col-sm-4 col-xs-12">
-                                    Đề xuất người hướng dẫn 2
+                                    Đề xuất người hướng dẫn 2 <span class="required">*</span>
                                 </label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <input name="tenGV_2" type="text" id="tenGV_2" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group" hidden id="gv2_coquancongtac">
-                                <label class="control-label col-md-4 col-sm-4 col-xs-12">Cơ quan công tác</label>
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">Cơ quan công tác <span class="required">*</span></label>
                                 <div class="col-md-8 col-sm-8 col-xs-12">
                                     <input name="coquancongtacGV_2" type="text" id="coquancongtacGV_2" class="form-control inputdk">
                                 </div>
@@ -379,18 +379,20 @@
         $('#modeldelete').modal({ backdrop: 'static', keyboard: false })
     }
     function duyethoso(id, tendetai, khoaId_NHD1, id_NHD1, khoaId_NHD2, id_NHD2, NHD2, CoQuanCongTac_NHD2) {
+        
+        $('#Idhoso').val(id);
+        $('#tendetai').val(tendetai);
+
+
         $('#ddlKhoa_1').val(0);
-        loadGV2(0, 'ddlGV_1');
+        // loadGV2(0, 'ddlGV_1');
         $('#loaiGV_2').val(0);
         $("#gv2_khoa").show();
         $("#gv2_ten").show();      
         $("#gv2_ten2").hide();
         $("#gv2_coquancongtac").hide();
         $('#tenGV_2').val();
-
-
-        $('#Idhoso').val(id);
-        $('#tendetai').val(tendetai);
+        $('#ddlGV_1').text("");
 
         if (khoaId_NHD1 != '' && id_NHD1 != '') {
             $('#ddlKhoa_1').val(khoaId_NHD1);
@@ -446,11 +448,31 @@
             toastr.error('Chưa chọn người hướng dẫn 1');
             return false;
         }
-        if ((loaiGV_2 == 0 && ddlGV_2 == 0) || (loaiGV_2 == 1 && tenGV_2 == "" && coquancongtacGV_2 =="")) {
-            toastr.error('Chưa chọn người hướng dẫn 2');
-            return false;
+        //if ((loaiGV_2 == 0 && ddlGV_2 == 0) || (loaiGV_2 == 1 && tenGV_2 == "" && coquancongtacGV_2 =="")) {
+        //    toastr.error('Chưa chọn người hướng dẫn 2');
+        //    return false;
+        //}
+
+        if ($('#tenGV_2').val() != '' && $("#loaiGV_2").val() == 1) {
+            if ($('#coquancongtacGV_2').val() == '') {
+                toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
+                return false;
+            }
+
         }
 
+        if ($('#ddlKhoa_2').val() != 0 && $("#loaiGV_2").val() == 0) {
+            if ($('#ddlGV_2').val() == 0) {
+                toastr.error('Bạn chưa chọn Người hướng dẫn 2');
+                return false;
+            }
+
+        }
+
+        if(ddlGV_1 == ddlGV_2 && ddlKhoa_1 == ddlKhoa_2){
+            toastr.error('Người hướng dẫn 1 và 2 không được giống nhau')
+            return false;
+        }
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
@@ -538,6 +560,31 @@
     }
 </script>
 <script>
+    $('#loaiGV_2').on('change', function (e) {
+        var loaiGV = this.value;
+        if (loaiGV == 1) {
+            $("#gv2_khoa").hide();
+            $("#gv2_ten").hide();
+            $("#gv2_ten2").show();
+            $("#gv2_coquancongtac").show();
+
+        } else {
+            $("#gv2_khoa").show();
+            $("#gv2_ten").show();
+            $("#gv2_ten2").hide();
+            $("#gv2_coquancongtac").hide();
+        }
+    });
+
+    $('#ddlKhoa_1').on('change', function (e) {
+        var khoaid = this.value;
+        loadGV_V2(khoaid, 'ddlGV_1');
+    });
+    $('#ddlKhoa_2').on('change', function (e) {
+        var khoaid = this.value;
+        loadGV_V2(khoaid, 'ddlGV_2');
+    });
+
     $(document).ready(function () {
         $('#loaiGV_2').on('change', function (e) {
             var loaiGV = this.value;
@@ -589,7 +636,6 @@
                 dataType: "json",
                 contentType: 'application/json',
              success: function (data) {
-                 console.log(data);
                  $('#' + divresult).empty().html(data);
 
                 },
@@ -597,6 +643,23 @@
                 }
             });
     };
+
+    function loadGV_V2(khoaid, divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGiangVienByKhoa_2", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 $('#' + divresult).empty().html(data);
+
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+
     function loadGV2(khoaid, divresult,id_NHD) {
          $.ajax({
                 type: "GET",
@@ -606,7 +669,7 @@
                 contentType: 'application/json',
              success: function (data) {
                  $('#' + divresult).empty().html(data);
-                 $('#ddlGV_1').val(id_NHD);
+                 $('#'+ divresult).val(id_NHD);
 
                 },
                 error: function (req, status, error) {

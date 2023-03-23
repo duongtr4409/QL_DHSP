@@ -648,5 +648,38 @@ namespace TEMIS.CMS.Controllers
             }
             return Json(str, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult LoadChuyenNganhByKhoaCapNhat(int khoaid, int chuyennganhdutuyenid)
+        {
+            string str = "";
+            try
+            {
+                List<ChuyenNganhDaoTao> listData = _unitOfWork.GetRepositoryInstance<ChuyenNganhDaoTao>().GetListByParameter(x => x.KhoaId == khoaid).ToList();
+                if (listData.Count > 0)
+                {
+                    str += "<option value=\"0\">--------- chọn --------</option>";
+                    foreach (var item in listData)
+                    {
+                        if (item.Id == chuyennganhdutuyenid)
+                        {
+                            str += "<option selected value=\"" + item.Id + "\">" + item.TenChuyenNganh + "</option>";
+                        }
+                        else
+                        {
+                            str += "<option value=\"" + item.Id + "\">" + item.TenChuyenNganh + "</option>";
+                        }
+                       
+                    }
+                }
+                else
+                {
+                    str += "<option value=\"0\">--------- chọn --------</option>";
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Json(str, JsonRequestBehavior.AllowGet);
+        }
     }
 }

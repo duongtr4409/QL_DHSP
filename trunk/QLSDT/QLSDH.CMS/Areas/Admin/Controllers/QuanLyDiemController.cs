@@ -193,7 +193,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
 
                         //ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                         //ws.Cells[1, 1, 1, 3].Merge = true;
-                        //ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                        //ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                         //ws.Cells[2, 1, 2, 5].Merge = true;
 
                         //ws.Cells[1, 6].Value = "CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM";

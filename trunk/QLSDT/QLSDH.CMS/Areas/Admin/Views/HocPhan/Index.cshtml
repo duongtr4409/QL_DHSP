@@ -495,11 +495,11 @@
             });
     }
 
-     function loadnganhEdit(nganhid,divresult) {
+     function loadnganhEdit(nganhid,divresult,khoaid) {
          $.ajax({
                 type: "GET",
-                url: '@Url.Action("LoadNganhEdit", "ThiSinhTuyenSinh")',
-                data: { nganhid: nganhid },
+                url: '@Url.Action("LoadNganhByKhoaEdit", "ThiSinhTuyenSinh")',
+                data: { nganhid: nganhid ,khoaid:khoaid},
                 dataType: "json",
                 contentType: 'application/json',
                 success: function (data) {
@@ -509,11 +509,11 @@
                 }
             });
     }
-    function loadchuyennganhEdit(chuyennganhid,divresult) {
+    function loadchuyennganhEdit(chuyennganhid,divresult,nganhid) {
          $.ajax({
                 type: "GET",
-                url: '@Url.Action("LoadChuyenNganhByCNid", "ThiSinhTuyenSinh")',
-             data: { chuyennganhid: chuyennganhid },
+                url: '@Url.Action("LoadChuyenNganhByNganhEdit", "ThiSinhTuyenSinh")',
+             data: { chuyennganhid: chuyennganhid,nganhid:nganhid },
                 dataType: "json",
                 contentType: 'application/json',
                 success: function (data) {
@@ -554,8 +554,8 @@
         $('#mahocphan_edit').val(mahocphan);
         $('#ddlKhoahoc_edit').val(khoahoc);
         $('#ddlKhoaEdit').val(KhoaId);
-        loadnganhEdit(nganhid, 'ddlnganh_edit')
-        loadchuyennganhEdit(ChuyenNganhId, 'ddlchuyennganh_edit')
+        loadnganhEdit(nganhid, 'ddlnganh_edit',KhoaId)
+        loadchuyennganhEdit(ChuyenNganhId, 'ddlchuyennganh_edit',nganhid)
 
         $('#tenhocphan_edit').val(tenhocphan);
         $('#sodvht_edit').val(sodvht);

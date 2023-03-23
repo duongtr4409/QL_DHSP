@@ -60,7 +60,11 @@ namespace Ums.Website.Controllers
 
         public JsonResult SearchUsers(string keyword)
         {
-            var users = _userService.Gets().Where(i => (i.Name.Contains(keyword) || i.Email == keyword) && i.Id != WorkContext.UserInfo.Id).Select(i => new { i.Id, i.Email, i.Name, i.UserType, i.Avatar }).ToList();
+            //var users = _userService.Gets().Where(i => ( i.Name.Contains(keyword) || i.Email == keyword ) && i.Id != WorkContext.UserInfo.Id).Select(i => new { i.Id, i.Email, i.Name, i.UserType, i.Avatar }).ToList();
+            keyword = SearchUtils.RemoveSign4VietnameseString(keyword.Trim().ToLower());
+            var users = _userService.Gets().Where(i => i.Id != WorkContext.UserInfo.Id).Select(i => new { i.Id, i.Email, i.Name, i.UserType, i.Avatar }).ToList().Where(i =>
+                SearchUtils.searchVietNameseString(i.Name, keyword) || SearchUtils.searchVietNameseString(i.Email, keyword)
+            );
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
@@ -104,5 +108,71 @@ namespace Ums.Website.Controllers
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
+    }
+
+    public class SearchUtils
+    {
+        private static readonly string[] VietnameseSigns = new string[]
+        {
+
+            "aAeEoOuUiIdDyY",
+
+            "áàạảãâấầậẩẫăắằặẳẵ",
+
+            "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
+
+            "éèẹẻẽêếềệểễ",
+
+            "ÉÈẸẺẼÊẾỀỆỂỄ",
+
+            "óòọỏõôốồộổỗơớờợởỡ",
+
+            "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
+
+            "úùụủũưứừựửữ",
+
+            "ÚÙỤỦŨƯỨỪỰỬỮ",
+
+            "íìịỉĩ",
+
+            "ÍÌỊỈĨ",
+
+            "đ",
+
+            "Đ",
+
+            "ýỳỵỷỹ",
+
+            "ÝỲỴỶỸ"
+        };
+
+        public static string RemoveSign4VietnameseString(string str)
+        {
+            for (int i = 1; i < VietnameseSigns.Length; i++)
+            {
+                for (int j = 0; j < VietnameseSigns[i].Length; j++)
+                    str = str.Replace(VietnameseSigns[i][j], VietnameseSigns[0][i - 1]);
+            }
+            return str;
+        }
+
+
+        public static bool searchVietNameseString(string data, string key)      // tham số key đã lowerCase và loại bỏ ký tự tiếng việt
+        {
+            try
+            {
+                if (data == null && key == null) return true;
+                else if (data == null) return false;
+                else
+                {
+                    return RemoveSign4VietnameseString(data.ToLower()).Contains(key);
+                }
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+
     }
 }

@@ -499,6 +499,31 @@
         $('#modelduyeths').modal({ backdrop: 'static', keyboard: false })
     }
 
+    $('#loaiGV_2').on('change', function (e) {
+        var loaiGV = this.value;
+        if (loaiGV == 1) {
+            $("#gv2_khoa").hide();
+            $("#gv2_ten").hide();
+            $("#gv2_ten2").show();
+            $("#gv2_coquancongtac").show();
+
+        } else {
+            $("#gv2_khoa").show();
+            $("#gv2_ten").show();
+            $("#gv2_ten2").hide();
+            $("#gv2_coquancongtac").hide();
+        }
+    });
+
+    $('#ddlKhoa_1').on('change', function (e) {
+        var khoaid = this.value;
+        loadGV_V2(khoaid, 'ddlGV_1');
+    });
+    $('#ddlKhoa_2').on('change', function (e) {
+        var khoaid = this.value;
+        loadGV_V2(khoaid, 'ddlGV_2');
+    });
+
     $(document).ready(function () {
         $('#loaiGV_2').on('change', function (e) {
             var loaiGV = this.value;
@@ -550,6 +575,23 @@
                 }
             });
     };
+
+    function loadGV_V2(khoaid, divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadGiangVienByKhoa_2", "ThiSinhTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+             success: function (data) {
+                 $('#' + divresult).empty().html(data);
+
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+
     function loadGV2(khoaid, divresult,id_NHD) {
          $.ajax({
                 type: "GET",
@@ -577,6 +619,7 @@
         var ddlKhoa_2 = $('#ddlKhoa_2').val();
         var ddlGV_2 = $('#ddlGV_2').val();
         var tenGV_2 = $('#tenGV_2').val();
+        var coquancongtacGV_2 = $('#coquancongtacGV_2').val();
 
         if (detai == "") {
             toastr.error('Chưa điền tên đề tài');
@@ -586,16 +629,38 @@
             toastr.error('Chưa chọn người hướng dẫn 1');
             return false;
         }
-        if ((loaiGV_2 == 0 && ddlGV_2 == 0) || (loaiGV_2 == 1 && tenGV_2 == "") || (loaiGV_2 == 1 && ddlGV_2 == null)) {
-            toastr.error('Chưa chọn người hướng dẫn 2');
+        //if ((loaiGV_2 == 0 && ddlGV_2 == 0) || (loaiGV_2 == 1 && tenGV_2 == "") || (loaiGV_2 == 1 && ddlGV_2 == null)) {
+        //    toastr.error('Chưa chọn người hướng dẫn 2');
+        //    return false;
+        //}
+
+        if ($('#tenGV_2').val() != '' && $("#loaiGV_2").val() == 1) {
+            if ($('#coquancongtacGV_2').val() == '') {
+                toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
+                return false;
+            }
+
+        }
+
+        if ($('#ddlKhoa_2').val() != 0 && $("#loaiGV_2").val() == 0) {
+            if ($('#ddlGV_2').val() == 0) {
+                toastr.error('Bạn chưa chọn Người hướng dẫn 2');
+                return false;
+            }
+
+        }
+        if (ddlGV_1 == ddlGV_2 && ddlKhoa_1 == ddlKhoa_2) {
+            toastr.error('Người hướng dẫn 1 và 2 không được giống nhau')
             return false;
         }
+
+
 
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
             url: '@Url.Action("DuyetHoSo", "ThiSinhTuyenSinh")',
-            data: { id: id, tendetai: detai, ddlKhoa_1: ddlKhoa_1, ddlGV_1: ddlGV_1, loaiGV_2: loaiGV_2, ddlKhoa_2: ddlKhoa_2, ddlGV_2: ddlGV_2, tenGV_2: tenGV_2},
+            data: { id: id, tendetai: detai, ddlKhoa_1: ddlKhoa_1, ddlGV_1: ddlGV_1, loaiGV_2: loaiGV_2, ddlKhoa_2: ddlKhoa_2, ddlGV_2: ddlGV_2, tenGV_2: tenGV_2, coquancongtacGV_2: coquancongtacGV_2 },
             dataType: "json",
             contentType: 'application/json',
             success: function (data) {

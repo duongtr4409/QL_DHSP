@@ -102,7 +102,8 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                         if (file != null && !string.IsNullOrEmpty(file.FileName))
                         {
                             // upload file mới
-                            namefile = Server.MapPath("~/" + urlFile + file.FileName);
+                            //namefile = Server.MapPath("~/" + urlFile + file.FileName);
+                            namefile = System.Web.Hosting.HostingEnvironment.MapPath("~/" + urlFile + file.FileName);
                             file.SaveAs(namefile);
 
                             vb.URL = file.FileName;

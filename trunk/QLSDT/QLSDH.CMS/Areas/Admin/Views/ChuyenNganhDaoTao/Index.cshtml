@@ -5,6 +5,7 @@
     ViewBag.Title = "Quản lý chuyên ngành đào tạo";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<OrganizationInfo> listKhoa = (List<OrganizationInfo>)ViewBag.ListKhoa;
+    List<ChuyenNganhDaoTao> ListChuyenNganhDaoTao = (List<ChuyenNganhDaoTao>)ViewBag.ListChuyenNganhDaoTao;
 }
 <form action="#" method="post" autocomplete="off">
     <div class="row">
@@ -223,7 +224,6 @@
 
 <script>
     $(document).ready(function () {
-
         LoadData(0);
 
         $('#ddlKhoa').on('change', function (e) {
@@ -343,6 +343,15 @@
             return false;
         }
 
+        let currentChuyenNganhDaoTao = @Html.Raw(Json.Encode(ViewBag.ListChuyenNganhDaoTao));
+
+        if(currentChuyenNganhDaoTao.some((val)=>{
+            return val.MaChuyenNganh == machuyennganh && val.KhoaId == khoa && val.TenChuyenNganh == tenchuyennganh && val.MaSoCN_ThS == manganhthacsi
+        })){
+            toastr.error("Chuyên ngành đã tồn tại");
+            return false;
+        }
+// Tên CN, Mã TS, Mã CN
         $("#divProcessing").show();
         $.ajax({
             type: "GET",

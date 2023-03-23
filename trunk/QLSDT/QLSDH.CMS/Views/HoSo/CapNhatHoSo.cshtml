@@ -414,6 +414,20 @@
                     <h3>VIII. Thông tin dự tuyển</h3>
                     <hr />
                 </div>
+
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <label>Khoa dự tuyển(<span class="required">*</span>)</label>
+                    <select name="ddlKhoa" id="ddlKhoa" class="form-control inputdk">
+                        @if (listKhoa != null)
+                        {
+                            <option value="0">-------- Chọn ------</option>
+                            foreach (var item in listKhoa)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <label>Chuyên ngành dự tuyển (<span class="required">*</span>)</label>
                     <select name="chuyennganhdt" id="chuyennganhdt" class="form-control inputdk">
@@ -486,7 +500,7 @@
                             GV ngoài trường
                         </label>
                     </div>
-                    <select name="loaiGV_2" id="loaiGV_2" class="form-control inputdk" hidden style="display: none">
+                    <select name="loaiGV_2" id="loaiGV_2" class="form-control inputdk" style="display: none">
                         <option value="0">GV trong trường</option>
                         <option value="1">GV ngoài trường</option>
                     </select>
@@ -508,7 +522,7 @@
 
                 <div class="col-md-4 col-sm-12 col-xs-12" hidden id="gv2_ten2">
                     <label>Người hướng dẫn 2</label>
-                    <input name="tenGV_2" type="text" id="tenGV_2" class="form-control inputdk">
+                    <input name="tenGV_2" type="text" id="tenGV_2" class="form-control inputdk" value="@Model.NHD2">
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12" hidden id="gv2_coquancongtac">
                     <label>Cơ quan công tác</label>
@@ -641,13 +655,13 @@
         loadFormDistrictByCity('@ViewBag.IdCity', 'cmnd_huyen', '@Html.Raw(Model.Quan_CMND)');
         loadFormWardByDistrict('@Html.Raw(Model.Quan_CMND)', 'cmnd_xa', '@Html.Raw(Model.Xa_CMND)');
         $('#canbo').val('@Model.HienLaCanBo');
-        $('#chuyennganhdt').val(@Model.ChuyenNghanhDuTuyenId);
+        ////$('#chuyennganhdt').val(@Model.ChuyenNghanhDuTuyenId);
         $('#dtdt').val('@Model.DoiTuongDuTuyen');
 
+        $('#ddlKhoa').val(@Model.KhoaId);
         $('#ddlKhoa_1').val(@Model.KhoaId_NHD1);
         loadFormGV('@Model.KhoaId_NHD1', 'ddlGV_1', '@Model.Id_NHD1');
-        console.log('KhoaId_NHD2', '@Model.KhoaId_NHD2');
-        console.log('Id_NHD2', '@Model.Id_NHD2');
+
         if ('@Model.KhoaId_NHD2' != 0 && '@Model.KhoaId_NHD2' != '') {
             $('#ddlKhoa_2').val(@Model.KhoaId_NHD2);
 
@@ -658,9 +672,10 @@
             $("#gv2_coquancongtac").hide();
             $("#loaiGV_2").val(0);
             $("#cb2_in").attr('checked', 'checked');
+            $("#tenGV_2").val("");
 
             loadFormGV('@Model.KhoaId_NHD2', 'ddlGV_2', '@Model.Id_NHD2')
-        } else {
+        } else if('@Model.CoQuanCongTac_NHD2' != "") {
             //$('#loaiGV_2').val(1);
             //$("#gv2_khoa").hide();
             //$("#gv2_ten").hide();
@@ -675,14 +690,51 @@
             $("#loaiGV_2").val(1);
 
             $("#cb2_out").attr('checked', 'checked');
-            $("#tenGV_2").val('@Model.NHD2');
-            
+            ////$("#tenGV_2").val('@Model.NHD2');
+
             ////$("#coquancongtacGV_2").val(decodeURIComponent('@Model.CoQuanCongTac_NHD2'));
 
         }
+
+        loadchuyennganhcapnhat('@Model.KhoaId', 'chuyennganhdt', '@Model.ChuyenNghanhDuTuyenId');
     });
 </script>
 <script>
+    $('#ddlKhoa').on('change', function (e) {
+        var khoaid = this.value;
+        console.log("khoaid", khoaid);
+        loadchuyennganh(khoaid, 'chuyennganhdt', 0);
+    });
+
+    function loadchuyennganh(khoaid,divresult) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByKhoa", "DangKyTuyenSinh")',
+                data: { khoaid: khoaid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+    function loadchuyennganhcapnhat(khoaid,divresult, chuyennganhdutuyenid) {
+         $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadChuyenNganhByKhoaCapNhat", "DangKyTuyenSinh")',
+                data: { khoaid: khoaid, chuyennganhdutuyenid: chuyennganhdutuyenid },
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (data) {
+                    $('#' + divresult).empty().html(data);
+                },
+                error: function (req, status, error) {
+                }
+            });
+    };
+
     function xemImg(url) {
         document.getElementById("Url_Anh").src = "/Upload/TaiLieu/" + url;
         $('#modelImg').modal({ backdrop: 'static', keyboard: false })
@@ -716,12 +768,14 @@
                 $("#gv2_ten2").show();
                 $("#gv2_coquancongtac").show();
                 $("#loaiGV_2").val(1);
+
             } else {
                 $("#gv2_khoa").show();
                 $("#gv2_ten").show();
                 $("#gv2_ten2").hide();
                 $("#gv2_coquancongtac").hide();
                 $("#loaiGV_2").val(0);
+                
             }
         });
         $('#cmnd_tinhthanh').on('change', function (e) {
@@ -1031,12 +1085,21 @@
             //    }
             //    $('#thoigiandt').val(36);
             //}
-            //if ($('#tenGV_2').val() != '') {
-            //    if ($('#coquancongtacGV_2').val() == '') {
-            //        toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
-            //    }
-            //    return false;
-            //}
+            if ($('#tenGV_2').val() != '' && $("#loaiGV_2").val() == 1) {
+                if ($('#coquancongtacGV_2').val() == '') {
+                    toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
+                    return false;
+                }
+
+            }
+
+            if ($('#ddlKhoa_2').val() != 0 && $("#loaiGV_2").val() == 0) {
+                if ($('#ddlGV_2').val() == 0) {
+                    toastr.error('Bạn chưa chọn Người hướng dẫn 2');
+                    return false;
+                }
+
+            }
 
             //console.log('file', $('#filesyll')[0].files[0]);
             //return false;

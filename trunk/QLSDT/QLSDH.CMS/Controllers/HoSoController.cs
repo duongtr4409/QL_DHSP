@@ -258,9 +258,12 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 int khoaId_NHD2 = 0;
                 int Id_NHD2 = 0;
                 string loaiGV_2 = form["loaiGV_2"] != null ? form["loaiGV_2"] : "";
+                string coquancongtac2 = form["coquancongtacGV_2"] != null && form["coquancongtacGV_2"] != "" && form["loaiGV_2"] != "0" ? form["coquancongtacGV_2"] : "";
 
                 if (loaiGV_2 == "0")
                 {
+                    nguoihuongdan2 = "";
+                    coquancongtac2 = "";
                     khoaId_NHD2 = form["ddlKhoa_2"] != null && form["ddlKhoa_2"] != "0" ? int.Parse(form["ddlKhoa_2"]) : 0;
                     Id_NHD2 = form["ddlGV_2"] != null && form["ddlGV_2"] != "0" ? int.Parse(form["ddlGV_2"]) : 0;
                     listGV = await CoreAPI.CoreAPI.GetListGiangVien(khoaId_NHD2);
@@ -279,7 +282,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                     Id_NHD2 = 0;
                     nguoihuongdan2 = form["tenGV_2"] != null ? form["tenGV_2"] : "";
                 }
-                string coquancongtac2 = form["coquancongtacGV_2"] != null && form["coquancongtacGV_2"] != "" ? form["coquancongtacGV_2"] : "";
+                
 
 
 
@@ -541,7 +544,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                     dk.Id_NHD2 = Id_NHD2;
                     dk.NHD2 = nguoihuongdan2;
                 }
-                else if (nguoihuongdan2 != "")
+                else
                 {
                     dk.KhoaId_NHD2 = 0;
                     dk.Id_NHD2 = 0;
@@ -563,6 +566,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 var cndt = _unitOfWork.GetRepositoryInstance<ChuyenNganhDaoTao>().GetFirstOrDefaultByParameter(x => x.Id == ChuyenNghanhDuTuyenId);
                 dk.TenNganh = cndt.TenNganh;
                 dk.TenChuyenNghanhDuTuyen = TenChuyenNghanhDuTuyen;
+                dk.KhoaId = cndt.KhoaId;
                 dk.DoiTuongDuTuyen = DoiTuongDuTuyen;
                 dk.ThoiGianHinhThucDaoTao = ThoiGianHinhThucDaoTao;
                 dk.CreatedAt = DateTime.Now;

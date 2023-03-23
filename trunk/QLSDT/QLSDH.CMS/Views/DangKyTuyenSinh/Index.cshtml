@@ -328,7 +328,14 @@
                     </div>
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <label>Hệ đào tào</label>
-                        <input name="hedtts" type="text" id="hedtts" class="form-control inputdk">
+                        @*<input name="hedtts" type="text" id="hedtts" class="form-control inputdk">*@
+                        <select name="hedtts" id="hedtts" class="form-control inputdk">
+                            <option value="0">---Chọn---</option>
+                            <option value="Chính quy">Chính quy</option>
+                            <option value="Chính quy liên thông">Chính quy liên thông</option>
+                            <option value="Từ xa">Từ xa</option>
+                            <option value="Vừa học vừa làm">Vừa học vừa làm</option>
+                        </select>
                     </div>
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <label>Ngành TN</label>
@@ -600,12 +607,14 @@
                 $("#gv2_ten2").show();
                 $("#gv2_coquancongtac").show();
                 $("#loaiGV_2").val(1);
+
             } else {
                 $("#gv2_khoa").show();
                 $("#gv2_ten").show();
                 $("#gv2_ten2").hide();
                 $("#gv2_coquancongtac").hide();
                 $("#loaiGV_2").val(0);
+
             }
         });
         $('#cmnd_tinhthanh').on('change', function (e) {
@@ -762,12 +771,21 @@
                 toastr.error('Loại tốt nghiệp đại học không được để trống');
                 return false;
             }
-            //if ($('#tenGV_2').val() != '') {
-            //    if ($('#coquancongtacGV_2').val() == '') {
-            //        toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
-            //    }
-            //    return false;
-            //}
+            if ($('#tenGV_2').val() != '' && $("#loaiGV_2").val() == 1) {
+                if ($('#coquancongtacGV_2').val() == '') {
+                    toastr.error('Bạn chưa nhập cơ quan công tác của CÁN BỘ HƯỚNG DẪN 2 không được để trống');
+                    return false;
+                }
+
+            }
+
+            if ($('#ddlKhoa_2').val() != 0 && $("#loaiGV_2").val() == 0) {
+                if ($('#ddlGV_2').val() == 0) {
+                    toastr.error('Bạn chưa chọn Người hướng dẫn 2');
+                    return false;
+                }
+
+            }
 
             //if ($('#tentruong_vb2').val() == '') {
             //    toastr.error('Tên trường tốp nghiệp văn bằng 2 không được để trống');

@@ -36,6 +36,7 @@ using System.IO.Compression;
 using System.Data.Entity.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Configuration;
+using TEMIS.CMS.Models;
 
 namespace TEMIS.CMS.Areas.Admin.Controllers
 {
@@ -150,6 +151,39 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             }
             return Json(str, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult LoadNganhByKhoaEdit(int khoaid,int nganhid)
+        {
+            string str = "";
+            try
+            {
+                List<NganhDaoTao> listData = _unitOfWork.GetRepositoryInstance<NganhDaoTao>().GetListByParameter(x => x.KhoaId == khoaid).ToList();
+                if (listData.Count > 0)
+                {
+                    str += "<option value=\"0\">--------- Chọn Ngành --------</option>";
+                    foreach (var item in listData)
+                    {
+                        if(item.Id== nganhid)
+                        {
+                            str += "<option selected value=\"" + item.Id + "\">" + item.TenNganh + "</option>";
+
+                        }
+                        else
+                        {
+                            str += "<option value=\"" + item.Id + "\">" + item.TenNganh + "</option>";
+
+                        }
+                    }
+                }
+                else
+                {
+                    str += "<option value=\"0\">--------- Chọn Ngành --------</option>";
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Json(str, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult LoadNganhEdit(int nganhid)
         {
             string str = "";
@@ -191,6 +225,39 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             }
             return Json(str, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult LoadChuyenNganhByNganhEdit(int nganhid,int chuyennganhid)
+        {
+            string str = "";
+            try
+            {
+                List<ChuyenNganhDaoTao> listData = _unitOfWork.GetRepositoryInstance<ChuyenNganhDaoTao>().GetListByParameter(x => x.NganhId == nganhid).ToList();
+                if (listData.Count > 0)
+                {
+                    str += "<option value=\"0\">--------- Chọn --------</option>";
+                    foreach (var item in listData)
+                    {
+                        if (item.Id == chuyennganhid)
+                        {
+                            str += "<option selected value=\"" + item.Id + "\">" + item.TenChuyenNganh + "</option>";
+
+                        }
+                        else
+                        {
+                            str += "<option value=\"" + item.Id + "\">" + item.TenChuyenNganh + "</option>";
+
+                        }
+                    }
+                }
+                else
+                {
+                    str += "<option value=\"0\">--------- Chọn --------</option>";
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Json(str, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult LoadChuyenNganhByCNid(int chuyennganhid)
         {
             string str = "";
@@ -208,7 +275,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             return Json(str, JsonRequestBehavior.AllowGet);
         }
 
-        public async System.Threading.Tasks.Task<JsonResult> LoadGiangVienByKhoa(int khoaid, int id_NHD)
+        public async System.Threading.Tasks.Task<JsonResult> LoadGiangVienByKhoa(int khoaid, int id_NHD=0)
         {
             string str = "";
             try
@@ -240,6 +307,34 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             }
             return Json(str, JsonRequestBehavior.AllowGet);
         }
+        public async System.Threading.Tasks.Task<JsonResult> LoadGiangVienByKhoa_2(int khoaid)
+        {
+            string str = "";
+            try
+            {
+                List<GiangVienAPI> listGVtrong = await CoreAPI.CoreAPI.GetListGiangVien(khoaid);
+
+                if (listGVtrong.Count > 0)
+                {
+                    str += "<option value=\"0\">--------- Chọn --------</option>";
+                    foreach (var item in listGVtrong)
+                    {
+              
+                         str += "<option value=\"" + item.Id + "\">" + item.Name + "</option>";
+   
+                    }
+                }
+                else
+                {
+                    str += "<option value=\"0\">--------- Chọn --------</option>";
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Json(str, JsonRequestBehavior.AllowGet);
+        }
+
         public async System.Threading.Tasks.Task<JsonResult> LoadGiangVienByKhoaWithHHHV(int khoaid, int? id_NHD = -1)
         {
             string str = "";
@@ -1108,24 +1203,38 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                             return Json("Giảng viên trong trường không tồn tại!", JsonRequestBehavior.AllowGet);
                         }
                     }
-                    if (loaiGV_2 == 0)
+                    if (loaiGV_2 == 0 )
                     {
-                        listGV = await CoreAPI.CoreAPI.GetListGiangVien(ddlKhoa_2);
-                        var giangvien = listGV.Where(x => x.Id == ddlGV_2).FirstOrDefault();
-                        if (giangvien != null)
+                        if (ddlGV_2 != 0)
                         {
-                            gv.KhoaId_NHD2 = ddlKhoa_2;
-                            gv.Id_NHD2 = ddlGV_2;
-                            gv.NHD2 = giangvien.Name;
+                            listGV = await CoreAPI.CoreAPI.GetListGiangVien(ddlKhoa_2);
+                            var giangvien = listGV.Where(x => x.Id == ddlGV_2).FirstOrDefault();
+                            if (giangvien != null)
+                            {
+                                gv.KhoaId_NHD2 = ddlKhoa_2;
+                                gv.Id_NHD2 = ddlGV_2 != 0 ? ddlGV_2 : 0;
+                                gv.NHD2 = giangvien.Name;
+                                gv.CoQuanCongTac_NHD2 = "";
+                            }
+                            else
+                            {
+                                TempData["error"] = "Giảng viên trong trường không tồn tại!";
+                                return Json("Giảng viên trong trường không tồn tại!", JsonRequestBehavior.AllowGet);
+                            }
                         }
                         else
                         {
-                            TempData["error"] = "Giảng viên trong trường không tồn tại!";
-                            return Json("Giảng viên trong trường không tồn tại!", JsonRequestBehavior.AllowGet);
+                            gv.KhoaId_NHD2 = 0;
+                            gv.Id_NHD2 = 0;
+                            gv.NHD2 = "";
+                            gv.CoQuanCongTac_NHD2 = "";
                         }
+
                     }
-                    else
+                    else if(loaiGV_2 != 0)
                     {
+                        gv.KhoaId_NHD2 = 0;
+                        gv.Id_NHD2 = 0;
                         gv.NHD2 = tenGV_2;
                         gv.CoQuanCongTac_NHD2 = coquancongtacGV_2;
                     }
@@ -2195,7 +2304,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                             ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                             ws.Cells[1, 1, 1, 3].Merge = true;
                             ws.Cells[1, 1, 1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                            ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                             ws.Cells[2, 1, 2, 3].Merge = true;
                             ws.Cells[2, 1, 2, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
@@ -2319,7 +2428,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                             ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                             ws.Cells[1, 1, 1, 3].Merge = true;
                             ws.Cells[1, 1, 1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                            ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                             ws.Cells[2, 1, 2, 3].Merge = true;
                             ws.Cells[2, 1, 2, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
@@ -3693,7 +3802,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
 
                         ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                         ws.Cells[1, 1, 1, 3].Merge = true;
-                        ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                        ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                         ws.Cells[2, 1, 2, 5].Merge = true;
 
                         ws.Cells[1, 6].Value = "CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM";
@@ -3850,7 +3959,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
 
                         ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                         ws.Cells[1, 1, 1, 4].Merge = true;
-                        ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                        ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                         ws.Cells[2, 1, 2, 6].Merge = true;
                         ws.Cells[3, 1].Value = "HỘI ĐỒNG TUYỂN SINH NCS NĂM 2020";
                         ws.Cells[3, 1, 3, 4].Merge = true;
@@ -3979,7 +4088,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
 
                         ws.Cells[1, 1].Value = "BỘ GIÁO DỤC VÀ ĐÀO TẠO";
                         ws.Cells[1, 1, 1, 4].Merge = true;
-                        ws.Cells[2, 1].Value = "TRƯỜNG ĐẠI HỌC SƯ PHẠM HÀ NỘI";
+                        ws.Cells[2, 1].Value = "Công ty Cổ phần Hệ thống 2B";
                         ws.Cells[2, 1, 2, 6].Merge = true;
                         ws.Cells[3, 1].Value = "HỘI ĐỒNG TUYỂN SINH NCS NĂM 2020";
                         ws.Cells[3, 1, 3, 4].Merge = true;

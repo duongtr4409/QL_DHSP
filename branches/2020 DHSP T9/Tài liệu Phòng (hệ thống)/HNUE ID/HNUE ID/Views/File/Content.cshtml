@@ -1,7 +1,7 @@
 ﻿@using Resources
 <div class="text-right">
-    <a href="@Url.Action("FolderEdit")" class="btn btn-primary" onclick="return showmodal(this)"><i class="fa fa-folder"></i> Tạo thư mục</a>
-    <a href="@Url.Action("ContentEdit")" class="btn btn-primary" onclick="return showmodal(this)"><i class="fa fa-file"></i> Tải lên</a>
+    <a href="@Url.Action("FolderEdit")?parentId=@ViewBag.ParentId" class="btn btn-primary" onclick="return showmodal(this)"><i class="fa fa-folder"></i> Tạo thư mục</a>
+    <a href="@Url.Action("ContentEdit")?parentId=@ViewBag.ParentId" class="btn btn-primary" onclick="return showmodal(this)"><i class="fa fa-file"></i> Tải lên</a>
 </div>
 <table class="table table-striped table-bordered table-short table-hover">
     <thead>

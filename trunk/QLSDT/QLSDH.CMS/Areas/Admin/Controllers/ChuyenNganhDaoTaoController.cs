@@ -24,7 +24,9 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         public async Task<ActionResult> Index()
         {
             List<OrganizationInfo> list = await CoreAPI.CoreAPI.GetListKhoa();
+            List<ChuyenNganhDaoTao> list_data = _unitOfWork.GetRepositoryInstance<ChuyenNganhDaoTao>().GetAllRecords().ToList();
             ViewBag.ListKhoa = list;
+            ViewBag.ListChuyenNganhDaoTao = list_data;
             return View();
         }
 

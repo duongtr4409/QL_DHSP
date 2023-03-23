@@ -180,7 +180,6 @@
 <script>
     $(document).ready(function () {
         LoadData(0);
-
         $('#ddlKhoa').on('change', function (e) {
             var valueSelected = this.value;
             LoadData(valueSelected);
@@ -248,6 +247,12 @@
             return false;
         }
         const currentNganhDaoTao = @Html.Raw(Json.Encode(ViewBag.listNganhDaoTao));
+        if(currentNganhDaoTao.some(i=>{
+           return i.TenNganh == tennganh;
+        })){
+            toastr.error("Ngành đã tồn tại");
+            return false;
+        }
         if(currentNganhDaoTao.some(i=>{
            return i.MaNganh == manganh;
         })){

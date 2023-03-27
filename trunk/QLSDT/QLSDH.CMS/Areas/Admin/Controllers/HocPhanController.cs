@@ -27,6 +27,9 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             List<KhoaHoc> listKhoaHoc = _unitOfWork.GetRepositoryInstance<KhoaHoc>().GetAllRecords().ToList();
             ViewBag.ListKhoaHoc = listKhoaHoc;
 
+            List<HocPhan> listHocPhan = _unitOfWork.GetRepositoryInstance<HocPhan>().GetAllRecords().ToList();
+            ViewBag.listHocPhan = listHocPhan;
+
             List<OrganizationInfo> listDivisions = await CoreAPI.CoreAPI.GetListDivisions();
             ViewBag.ListDivisions = listDivisions;
 

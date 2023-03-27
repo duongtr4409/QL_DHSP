@@ -38,6 +38,10 @@ class DMLoaiHinhNghienCuu extends Component {
 
   onSearch = (value, property) => {
     let oldFilterData = this.state.filterData;
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = {value, property};
     let filterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data

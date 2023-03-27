@@ -33,6 +33,10 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         public string parthdowload = "Upload\\FileBMDowload\\";
         //public string url_download = "http://qlncs.hnue.edu.vn/upload/FileBMDowload/";
         public string url_download = "http://192.168.100.23:2806/";
+        //link local
+        public string url_domain = "http://localhost:50498/";
+        // link public
+        //public string url_domain = "https://qlsdh.2bsystem.com.vn/";
 
 
         public HocVienController()
@@ -460,13 +464,14 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                     var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                     var filePathdowload = System.IO.Path.Combine(systemPath, filename_new);
                     // Create a new WebClient instance.
-                    WebClient myWebClient = new WebClient();
+                    //WebClient myWebClient = new WebClient();
 
                     // Download the Web resource and save it into the current filesystem folder.
-                    myWebClient.DownloadFile(filePath, filePathdowload);
+                    //myWebClient.DownloadFile(filePath, filePathdowload);
 
-                    return Json(url_download + filename_new, JsonRequestBehavior.AllowGet);
-
+                    //return Json(url_download + filename_new, JsonRequestBehavior.AllowGet);
+                    return Json(url_domain + parthdowload + filename_new, JsonRequestBehavior.AllowGet);
+                    
 
                 }
             }

@@ -77,7 +77,7 @@
                             Tên văn bản <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-6 col-xs-12">
-                            <input type="text" id="tenvanban" name="tenvanban" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="tenvanban" name="tenvanban" required="required" class="form-control col-md-7 col-xs-12" maxlength="500">
                         </div>
                     </div>
                     <div class="form-group">
@@ -95,6 +95,7 @@
                         </label>
                         <div class="col-md-9 col-sm-6 col-xs-12">
                             <select class="form-control col-md-7 col-xs-12" id="ChuyenMuc" name="ChuyenMuc">
+                                <option value="0">------- Chọn chuyên mục -------</option>
                                 @foreach (var item in listChuyenMuc)
                                 {
                                     <option value="@item.Id">@item.TenChuyenMuc</option>
@@ -107,7 +108,7 @@
                             Đầu mục <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-6 col-xs-12">
-                            <input type="text" id="daumuc" name="daumuc" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="daumuc" name="daumuc" required="required" class="form-control col-md-7 col-xs-12" maxlength="500">
                         </div>
                     </div>
                 </div>
@@ -136,7 +137,7 @@
                             Tên văn bản <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-6 col-xs-12">
-                            <input type="text" id="tenvanban_edit" name="tenvanban_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="tenvanban_edit" name="tenvanban_edit" required="required" class="form-control col-md-7 col-xs-12" maxlength="500">
                         </div>
                     </div>
                     <div class="form-group">
@@ -153,7 +154,7 @@
                             Đầu mục <span class="required">*</span>
                         </label>
                         <div class="col-md-9 col-sm-6 col-xs-12">
-                            <input type="text" id="daumuc_edit" name="daumuc_edit" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="daumuc_edit" name="daumuc_edit" required="required" class="form-control col-md-7 col-xs-12" maxlength="500">
                         </div>
                     </div>
                     <div class="form-group">
@@ -248,28 +249,32 @@
         }
 
         $('#btnThem').click(function () {
-            var tieude = $('#tenvanban').val();
-            var daumuc = $('#daumuc').val();
+            var tieude = $('#tenvanban').val().trim();
+            var daumuc = $('#daumuc').val().trim();
             var chuyemuc = $("#ChuyenMuc").val();
 
-            if (tenvanban == "") {
+            if (tieude == "") {
                 toastr.error('Tên văn bản không được để trống');
+                return false;
+            }
+             if (!chuyemuc || chuyemuc==0) {
+                toastr.error('bạn chưa chọn chuyên mục');
                 return false;
             }
             if (daumuc == "") {
                 toastr.error('bạn chưa nhập đầu mục');
                 return false;
             }
-            if (chuyemuc == "") {
-                toastr.error('bạn chưa chọn chuyên mục');
-                return false;
-            }
 
-            $("#divProcessing").show();
             if (window.FormData !== undefined) {
-                debugger
-                 var fileUpload = $("#fupload").get(0);
+                var fileUpload = $("#fupload").get(0);
                 var files = fileUpload.files;
+
+                if(files.length <= 0){
+                    toastr.error("Đường dẫn không được bỏ trống")
+                    return false;
+                }
+                $("#divProcessing").show();
                 var fileData = new FormData();
                 for (var i = 0; i < files.length; i++) {
                     fileData.append(files[i].name, files[i]);
@@ -304,29 +309,32 @@
 
         $('#btnSua').click(function () {
             var id = $('#IdEdit').val();
-            var tieude = $('#tenvanban_edit').val();
+            var tieude = $('#tenvanban_edit').val().trim();
             var url = $('#duongdan_edit').val();
-            var daumuc = $('#daumuc_edit').val();
+            var daumuc = $('#daumuc_edit').val().trim();
             var chuyemuc = $("#ChuyenMuc").val();
 
-            if (tenvanban == "") {
+            if (tieude == "") {
                 toastr.error('Tên văn bản không được để trống');
+                return false;
+            }
+            if (!chuyemuc || chuyemuc==0) {
+                toastr.error('bạn chưa chọn chuyên mục');
                 return false;
             }
             if (daumuc == "") {
                 toastr.error('bạn chưa nhập đầu mục');
                 return false;
             }
-            if (chuyemuc == "") {
-                toastr.error('bạn chưa chọn chuyên mục');
-                return false;
-            }
-
-            $("#divProcessing").show();
 
             if (window.FormData !== undefined) {
                 var fileUpload = $("#fupload_edit").get(0);
                 var files = fileUpload.files;
+                if(files.length <= 0){
+                    toastr.error("Đường dẫn không được bỏ trống")
+                    return false;
+                }
+                $("#divProcessing").show();
                 var fileData = new FormData();
                 for (var i = 0; i < files.length; i++) {
                     fileData.append(files[i].name, files[i]);

@@ -50,7 +50,10 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         //public string url_download = "http://14.225.5.64:8765/upload/FileBMDowload/";
         public string url_download = "http://qlncs.hnue.edu.vn/upload/FileBMDowload/";
         public string EmailSendTest = WebConfigurationManager.AppSettings["Email_Send_Test"].ToString();
+        //link local
         public string url_domain = "http://localhost:50498/";
+        // link public
+        //public string url_domain = "https://qlsdh.2bsystem.com.vn/";
         //public string url_domain = "http://qlncs.hnue.edu.vn/";
 
         // GET: Admin/ThiSinhTuyenSinh
@@ -620,8 +623,10 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 int khoaId_NHD2 = 0;
                 int Id_NHD2 = 0;
                 string loaiGV_2 = form["loaiGV_2"] != null ? form["loaiGV_2"] : "";
+                string coquancongtac2 = form["coquancongtacGV_2"] != null && form["coquancongtacGV_2"] != "" && form["loaiGV_2"] != "0" ? form["coquancongtacGV_2"] : "";
                 if (loaiGV_2 == "0")
                 {
+                    coquancongtac2 = "";
                     khoaId_NHD2 = form["ddlKhoa_2"] != null ? int.Parse(form["ddlKhoa_2"]) : 0;
                     Id_NHD2 = form["ddlGV_2"] != null ? int.Parse(form["ddlGV_2"]) : 0;
                     listGV = await CoreAPI.CoreAPI.GetListGiangVien(khoaId_NHD2);
@@ -687,7 +692,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 if (NgoaiNgu == "") { TempData["error"] = "Ngoại ngữ không được để trống"; return RedirectToAction("ThemMoi"); }
                 if (LoaiVanBangNgoaiNgu == "") { TempData["error"] = "Loại văn bằng chứng chỉ ngoại ngữ không được để trống"; return RedirectToAction("ThemMoi"); }
                 if (Url_ChungChiNgoaiNgu == "") { TempData["error"] = "Bạn chưa đính kèm văn bằng, chứng chỉ ngoại ngữ"; return RedirectToAction("ThemMoi"); }
-                if (BoTucKienThuc == "") { TempData["error"] = "Bổ túc kiến thức không được để trống"; return RedirectToAction("ThemMoi"); }
+                //if (BoTucKienThuc == "") { TempData["error"] = "Bổ túc kiến thức không được để trống"; return RedirectToAction("ThemMoi"); }
                 if (ChuyenNghanhDuTuyenId == 0) { TempData["error"] = "Bạn chưa chọn chuyên nghành dự tuyển"; return RedirectToAction("ThemMoi"); }
                 if (DoiTuongDuTuyen == "") { TempData["error"] = "Bạn chưa chọn đối tường dự tuyển"; return RedirectToAction("ThemMoi"); }
                 if (ThoiGianHinhThucDaoTao == "") { TempData["error"] = "Bạn chưa chọn thời gian và hình thức đào tạo"; return RedirectToAction("ThemMoi"); }
@@ -822,6 +827,8 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 dk.DiemTrungBinh_VB2 = DiemTrungBinh_VB2;
                 dk.LoaiTotNghiep_VB2 = LoaiTotNghiep_VB2;
                 dk.Url_FileUpload_VB2 = Url_FileUpload_VB2;
+
+                dk.CoQuanCongTac_NHD2 = coquancongtac2;
 
 
                 //Người hướng dẫn
@@ -4192,21 +4199,23 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                     System.IO.File.WriteAllBytes(filePath, bin);
 
                     var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    //var systemPath = Server.MapPath("~/" + parthdowload + filename_new);
+
                     var filePathdowload = System.IO.Path.Combine(systemPath, filename_new);
                     // Create a new WebClient instance.
-                    WebClient myWebClient = new WebClient();
+                    //WebClient myWebClient = new WebClient();
 
                     // Download the Web resource and save it into the current filesystem folder.
-                    myWebClient.DownloadFile(filePath, filePathdowload);
+                    //myWebClient.DownloadFile(filePath, filePathdowload);
 
-                    return Json(url_download + filename_new, JsonRequestBehavior.AllowGet);
+                    return Json(url_domain + parthdowload + filename_new, JsonRequestBehavior.AllowGet);
 
 
                 }
             }
             catch (Exception ex)
             {
-                return Json("error", JsonRequestBehavior.AllowGet);
+                return Json(ex, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -4378,14 +4387,16 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                     System.IO.File.WriteAllBytes(filePath, bin);
 
                     var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    //var systemPath = Server.MapPath("~/" + parthdowload + filename_new);
+
                     var filePathdowload = System.IO.Path.Combine(systemPath, filename_new);
                     // Create a new WebClient instance.
-                    WebClient myWebClient = new WebClient();
+                    //WebClient myWebClient = new WebClient();
 
                     // Download the Web resource and save it into the current filesystem folder.
-                    myWebClient.DownloadFile(filePath, filePathdowload);
+                    //myWebClient.DownloadFile(filePath, filePathdowload);
 
-                    return Json(url_download + filename_new, JsonRequestBehavior.AllowGet);
+                    return Json(url_domain + parthdowload + filename_new, JsonRequestBehavior.AllowGet);
 
 
                 }
@@ -4568,6 +4579,30 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
                 else
                 {
                     str += " <option>UVTT, Trưởng ban</option><option>Ủy viên</option>";
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return Json(str, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult LoadChuyenNganhByKhoa(int khoaid)
+        {
+            string str = "";
+            try
+            {
+                List<ChuyenNganhDaoTao> listData = _unitOfWork.GetRepositoryInstance<ChuyenNganhDaoTao>().GetListByParameter(x => x.KhoaId == khoaid).ToList();
+                if (listData.Count > 0)
+                {
+                    str += "<option value=\"0\">--------- chọn --------</option>";
+                    foreach (var item in listData)
+                    {
+                        str += "<option value=\"" + item.Id + "\">" + item.TenChuyenNganh + "</option>";
+                    }
+                }
+                else
+                {
+                    str += "<option value=\"0\">--------- chọn --------</option>";
                 }
             }
             catch (Exception)

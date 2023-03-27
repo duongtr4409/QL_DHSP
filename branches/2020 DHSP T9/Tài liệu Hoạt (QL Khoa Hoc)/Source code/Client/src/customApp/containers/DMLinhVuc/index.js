@@ -56,6 +56,10 @@ class DMLinhVuc extends Component {
 
   onFilter = (value, property) => {
     let oldFilterData = { ...this.state.filterData };
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = { value, property };
     let filterData = getFilterData(oldFilterData, onFilter, null);
     this.setState(

@@ -9,7 +9,8 @@
     @Html.HiddenFor(m => m.Id)
     <div class="form-group">
         <label>Tên nhóm</label>
-        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @maxlength = 500})
+
     </div>
     <div class="text-center">
         <button type="submit" class="btn btn-primary">@Html.Raw(Actions.Update)</button>

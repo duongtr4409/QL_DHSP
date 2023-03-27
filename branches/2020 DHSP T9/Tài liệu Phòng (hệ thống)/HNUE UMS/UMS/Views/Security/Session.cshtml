@@ -21,6 +21,7 @@
             filter: false,
             order: [[3, "desc"]],
             orderMulti: false,
+            "scrollX": true,
             pageLength: 25,
             iDisplayLength: 25,
             aLengthMenu: [[25, 50, 100], [25, 50, 100]],
@@ -56,7 +57,7 @@
                     "bSortable": false,
                     "className": "text-center",
                     "render": function (data) {
-                        return '<a class="btn-table-delete" href="@Url.Action("IdDelete")?id=' + data + '" onclick="@Actions.Confirm"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        return '<a class="btn-table-delete" href="@Url.Action("SessionDelete")?id=' + data + '" onclick="@Actions.Confirm"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                     }
                 }
             ]

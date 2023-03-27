@@ -270,7 +270,7 @@
             success: function (data) {
                 $("#divProcessing").hide();
                 if (data == 'OK') {
-                    //setTimeout(function () { location.reload(); }, 2000);
+                    setTimeout(function () { location.reload(); }, 2000);
                     toastr.success('Thêm mới thành công');
                      $('#manganh').val("");
                      $('#tennganh').val("");
@@ -306,7 +306,19 @@
             toastr.error('Bạn chưa chọn khoa');
             return false;
         }
-
+        const currentNganhDaoTao = @Html.Raw(Json.Encode(ViewBag.listNganhDaoTao));
+        if(currentNganhDaoTao.some(i=>{
+           return i.TenNganh == tennganh;
+        })){
+            toastr.error("Ngành đã tồn tại");
+            return false;
+        }
+        if(currentNganhDaoTao.some(i=>{
+           return i.MaNganh == manganh;
+        })){
+            toastr.error("Mã ngành đã tồn tại");
+            return false;
+        }
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
@@ -317,9 +329,9 @@
             success: function (data) {
                 $("#divProcessing").hide();
                 if (data == 'OK') {
-                    //setTimeout(function () { location.reload(); }, 2000);
+                    setTimeout(function () { location.reload(); }, 2000);
                     toastr.success('Cập nhật thành công');
-                    LoadData();
+                    // LoadData();
                 } else {
                     toastr.error(data);
                 }
@@ -342,9 +354,9 @@
             success: function (data) {
                 $("#divProcessing").hide();
                 if (data == '') {
-                    //setTimeout(function () { location.reload(); }, 2000);
+                    setTimeout(function () { location.reload(); }, 2000);
                     toastr.success('Xóa thành công');
-                    LoadData();
+                    // LoadData();
                 } else {
                     toastr.error(data);
                 }

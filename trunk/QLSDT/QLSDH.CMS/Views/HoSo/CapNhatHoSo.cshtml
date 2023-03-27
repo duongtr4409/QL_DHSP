@@ -796,6 +796,8 @@
         //    $('#xaphuong').val(this.html);
         //});
 
+        $("input[type=text]").attr('maxlength', '255');
+
     });
     function loadFormGV(khoaid, divresult, id_GV) {
          $.ajax({
@@ -1107,62 +1109,98 @@
             if ($('#filesyll')[0].files[0] && $('#filesyll')[0].files[0].type != 'image/png' && $('#filesyll')[0].files[0].type != 'image/jpeg' && $('#filesyll')[0].files[0].type != 'image/gif' && $('#filesyll')[0].files[0].type != 'image/jpg') {
                 toastr.error('File ảnh sơ yếu lý lịch chưa đúng định dạng');
                 return false;
+                if ($('#filesyll')[0].files[0].size > 1000000) {
+                    toastr.error('File ảnh sơ yếu lý lịch có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
 
             if ($('#filecvgt')[0].files[0] && $('#filecvgt')[0].files[0].type != 'application/pdf') {
                 toastr.error('File công văn giới thiệu chưa đúng định dạng PDF');
                 return false;
+                if ($('#filecvgt')[0].files[0].size > 1000000) {
+                    toastr.error('File công văn giới thiệu có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
             if ($('#filegksk')[0].files[0] && $('#filegksk')[0].files[0].type != 'application/pdf') {
                 toastr.error('File giấy khám sức khỏe chưa đúng định dạng PDF');
                 return false;
+                if ($('#filegksk')[0].files[0].size > 1000000) {
+                    toastr.error('File giấy khám sức khỏe có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
             if ($('#filetgt')[0].files[0] && $('#filetgt')[0].files[0].type != 'application/pdf') {
                 toastr.error('File thư giới thiệu chưa đúng định dạng PDF');
                 return false;
+                if ($('#filetgt')[0].files[0].size > 1000000) {
+                    toastr.error('File thư giới thiệu có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
 
             if ($('#filebbkh')[0].files[0] && $('#filebbkh')[0].files[0].type != 'application/pdf') {
                 toastr.error('File bài báo khoa học chưa đúng định dạng PDF');
                 return false;
+                if ($('#filebbkh')[0].files[0].size > 1000000) {
+                    toastr.error('File bài báo khoa học có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
             if ($('#filedcnc')[0].files[0] && $('#filedcnc')[0].files[0].type != 'application/pdf') {
                 toastr.error('File đề cương nghiên cứu chưa đúng định dạng PDF');
                 return false;
+                if ($('#filedcnc')[0].files[0].size > 1000000) {
+                    toastr.error('File đề cương nghiên cứu có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
 
             if ($('#filehdld')[0].files[0] && $('#filehdld')[0].files[0].type != 'application/pdf') {
                 toastr.error('File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng chưa đúng định dạng PDF');
                 return false;
+                if ($('#filehdld')[0].files[0].size > 1000000) {
+                    toastr.error('File quyết định tuyển dụng hoặc hợp đồng lao động dài hạn chờ tuyển dụng có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
 
             if ($('#filenn')[0].files[0] && $('#filenn')[0].files[0].type != 'application/pdf') {
                 toastr.error('File ngoại ngữ chưa đúng định dạng PDF');
                 return false;
+                if ($('#filenn')[0].files[0].size > 1000000) {
+                    toastr.error('File ngoại ngữ có kích thước không được lớn hơn 1MB');
+                    return false;
+                }
 
             }
 
             if ($('#filevbdh')[0].files[0] && $('#filevbdh')[0].files[0].type != 'application/pdf') {
                 toastr.error('File scan văn bằng đại học chưa đúng định dạng PDF');
                 return false;
-
-            }
-
-            var arr_filesize = ['filesyll', 'filecvgt', 'filegksk', 'filetgt', 'filebbkh', 'filedcnc', 'filehdld', 'filenn', 'filevbdh'];
-
-            for (let i in arr_filesize) {
-                if ($(`#${arr_filesize[i]}`)[0].files[0] && $(`#${arr_filesize[i]}`)[0].files[0].size > 1000000) {
-                    toastr.error('File có kích thước không được lớn hơn 1MB');
+                if ($('#filevbdh')[0].files[0].size > 1000000) {
+                    toastr.error('File scan văn bằng đại học có kích thước không được lớn hơn 1MB');
                     return false;
                 }
+
             }
+
+            //var arr_filesize = ['filesyll', 'filecvgt', 'filegksk', 'filetgt', 'filebbkh', 'filedcnc', 'filehdld', 'filenn', 'filevbdh'];
+
+            //for (let i in arr_filesize) {
+            //    if ($(`#${arr_filesize[i]}`)[0].files[0] && $(`#${arr_filesize[i]}`)[0].files[0].size > 1000000) {
+            //        toastr.error('File có kích thước không được lớn hơn 1MB');
+            //        return false;
+            //    }
+            //}
 
             //if ($('#filesyll').val() == '') {
             //    toastr.error('Bạn chưa đính kèm ảnh sơ yếu lý lịch');

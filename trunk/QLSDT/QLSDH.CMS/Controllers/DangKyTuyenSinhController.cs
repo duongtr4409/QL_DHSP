@@ -141,7 +141,8 @@ namespace TEMIS.CMS.Controllers
                 int khoaId_NHD2 = 0;
                 int Id_NHD2 = 0;
                 string loaiGV_2 = form["loaiGV_2"] != null && form["ddlKhoa_2"] != "0" ? form["loaiGV_2"] : "";
-                string coquancongtac = form["coquancongtacGV_2"] != null ? form["coquancongtacGV_2"] : "";
+
+                string coquancongtac2 = form["coquancongtacGV_2"] != null && form["coquancongtacGV_2"] != "" && form["loaiGV_2"] != "0" ? form["coquancongtacGV_2"] : "";
                 if (loaiGV_2 == "0")
                 {
                     khoaId_NHD2 = form["ddlKhoa_2"] != null ? int.Parse(form["ddlKhoa_2"]) : 0;
@@ -162,8 +163,6 @@ namespace TEMIS.CMS.Controllers
                     Id_NHD2 = 0;
                     nguoihuongdan2 = form["tenGV_2"] != null ? form["tenGV_2"] : "";
                 }
-
-                string coquancongtac2 = form["coquancongtacGV_2"] != null && form["coquancongtacGV_2"] != "" ? form["coquancongtacGV_2"] : "";
 
 
 
@@ -356,6 +355,8 @@ namespace TEMIS.CMS.Controllers
                 dk.LoaiTotNghiep_VB2 = LoaiTotNghiep_VB2;
                 dk.Url_FileUpload_VB2 = Url_FileUpload_VB2;
 
+                dk.CoQuanCongTac_NHD2 = coquancongtac2;
+
                 //Người hướng dẫn
                 if (khoaId_NHD1 != 0 && Id_NHD1 != 0)
                 {
@@ -371,12 +372,13 @@ namespace TEMIS.CMS.Controllers
                 }
                 else if (nguoihuongdan2 != "")
                 {
+                    dk.KhoaId_NHD2 = 0;
+                    dk.Id_NHD2 = 0;
                     dk.NHD2 = nguoihuongdan2;
-                    dk.CoQuanCongTac_NHD2 = coquancongtac;
+
                 }
 
-                dk.CoQuanCongTac_NHD2 = coquancongtac2;
-
+                
                 dk.Truong_TN_ThacSi = Truong_TN_ThacSi;
                 dk.Nam_TN_ThacSi = Nam_TN_ThacSi;
                 dk.HeDaoTao_ThacSi = HeDaoTao_ThacSi;

@@ -22,6 +22,15 @@
                     @Html.AntiForgeryToken()
                     <form class="form-horizontal form-label-left" novalidate>
                         @Html.HiddenFor(model => Model.Id)
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Code">
+                                Mã giảng viên <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input value="@Model.Code" type="text" id="Code" name="Code" required="required" class="form-control col-md-7 col-xs-12">
+                            </div>
+                        </div>
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hovaten">
                                 Họ và tên <span class="required">*</span>
@@ -90,7 +99,7 @@
                                 Điện thoại  <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input value="@Model.SoDienThoai" type="text" id="SoDienThoai" name="SoDienThoai" required="required" class="form-control col-md-7 col-xs-12">
+                                <input value="@Model.SoDienThoai" type="number" id="SoDienThoai" name="SoDienThoai" required="required" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
                         <div class="item form-group">
@@ -147,9 +156,10 @@
                         <div class="ln_solid"></div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-3">
-                                @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-primary btn-sm" })
+                                @Html.ActionLink("Hủy", "GiangVienNgoaiTruong", null, new { @class = "btn btn-primary btn-sm" })
 
-                                <button id="send" type="submit" class="btn btn-success btn-sm">Cập nhật</button>
+                                <button id="send2" class="btn btn-success btn-sm" type="button">Cập nhật</button>
+                                <button id="send" type="submit"></button>
                             </div>
                         </div>
                     </form>
@@ -161,14 +171,87 @@
 <script src="~/ThemFontend/jquery-ui.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $('#single_cal1').datepicker({
-        format: 'DD.MM.YYYY'
+        format: 'DD-MM-YYYY'
     });
   //  $('#single_cal1').datepicker();
     $(document).ready(function () {
-        debugger
+        // debugger
         $('#GioiTinh').val('@Model.GioiTinh');
         $('#ChucDanh').val(@Model.ChucDanhId);
         $('#HocHamHocVi').val(@Model.HocHamHocViId);
         $('#Khoa').val(@Model.KhoaId);
+        $('#send').attr('style','display:none');
     });
+    $('#send2').click(function (){
+        console.log("zo");
+        var regexPattern = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+        let code = $('#Code').val().trim();
+        let HoTen = $('#HoTen').val().trim();
+        let ngaysinh = $('#single_cal1').val().trim();
+        let GioiTinh = $('#GioiTinh').val();
+        let NoiSinh = $('#NoiSinh').val().trim();
+        let HoKhau = $('#HoKhau').val().trim();
+        let DiaChi = $('#DiaChi').val().trim();
+        let SoDienThoai = $('#SoDienThoai').val().trim();
+        let Email = $('#Email').val().trim();
+        let Khoa = $('#Khoa').val();
+        let ChucDanh = $('#ChucDanh').val();
+        let HocHamHocVi = $('#HocHamHocVi').val();
+        
+        if(!code){
+            toastr.error("Mã giảng viên không được để trống")
+            return false;
+        }if(!HoTen){
+            toastr.error("Họ và tên không được để trống")
+            return false;
+        }if(!ngaysinh){
+            toastr.error("Ngày sinh không được để trống")
+            return false;
+        }
+        if(!regexPattern.test(ngaysinh)){
+            toastr.error("Ngày sinh không đúng định dạng")
+            return false;
+        }
+        if(!GioiTinh){
+            toastr.error("Giới tính không được để trống")
+            return false;
+        }if(!NoiSinh){
+            toastr.error("Nơi sinh không được để trống")
+            return false;
+        }if(!HoKhau){
+            toastr.error("Hộ khẩu không được để trống")
+            return false;
+        }if(!DiaChi){
+            toastr.error("Địa chỉ  không được để trống")
+            return false;
+        }
+        if(!SoDienThoai){
+            toastr.error("Điện thoại không được để trống")
+            return false;
+        }
+        if(+SoDienThoai < 0){
+            toastr.error("Điện thoại không được nhỏ hơn 0")
+            return false;
+        }
+        if(!Email){
+            toastr.error("Email  không được để trống")
+            return false;
+        }
+        if(!Khoa){
+            toastr.error("Khoa  không được để trống")
+            return false;
+        }
+        if(!ChucDanh){
+            toastr.error("Chức danh không được để trống")
+            return false;
+        }
+        if(!HocHamHocVi){
+            toastr.error("Hàm hàm, học vị không được để trống")
+            return false;
+        }
+
+
+        $('#send').trigger("click");
+        
+    })
 </script>

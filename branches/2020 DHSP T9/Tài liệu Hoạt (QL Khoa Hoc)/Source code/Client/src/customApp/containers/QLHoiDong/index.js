@@ -72,6 +72,10 @@ class QLHoiDong extends Component {
 
   onFilter = (value, property) => {
     let oldFilterData = this.state.filterData;
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = {value, property};
     let filterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
@@ -303,7 +307,7 @@ class QLHoiDong extends Component {
           <div className={'scrollable-table'}>
             {TableLoading ? <div className={'loading-div'}><Spin style={{position: "absolute"}}/></div> : ""}
             <table className={'table-scroll'}>
-              {DanhSachHoiDong.map((item, index) => (
+              {(DanhSachHoiDong.length > 0 && DanhSachHoiDong.map((item, index) => (
                 <tbody>
                 <tr>
                   <td rowSpan={item.ThanhVienHoiDong.length} style={{textAlign: 'center', width: '5%'}}>
@@ -342,7 +346,14 @@ class QLHoiDong extends Component {
                   </tr>
                 }) : ""}
                 </tbody>
-              ))}
+              ))) || 
+                <tbody>
+                  <tr>
+                    <td colSpan={6} style={{textAlign:'center'}}>
+                      <span>Không có dữ liệu</span>
+                    </td>
+                  </tr>
+                </tbody>}
             </table>
           </div>
           <div style={{textAlign: "right", marginTop: 20}}>

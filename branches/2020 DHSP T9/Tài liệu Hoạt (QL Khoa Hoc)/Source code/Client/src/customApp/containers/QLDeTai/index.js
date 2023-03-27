@@ -41,6 +41,10 @@ class QLDeTai extends Component {
   onFilter = (value, property) => {
     //get filter data
     let oldFilterData = this.state.filterData;
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = { value, property };
     let filterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
@@ -50,6 +54,7 @@ class QLDeTai extends Component {
         selectedRowKeys: [],
       },
       () => {
+        this.state.filterData.Keyword = this.state.filterData.Keyword.trim();
         changeUrlFilter(this.state.filterData); //change url
         this.props.getList(this.state.filterData); //get list
       }

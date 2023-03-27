@@ -4,6 +4,7 @@
     ViewBag.Title = "Quản lý đợt tuyển sinh";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<KhoaHoc> listKhoahoc = (List<KhoaHoc>)ViewBag.ListKhoaHoc;
+    List<DotTuyenSinh> lstDotTuyensinh = (List<DotTuyenSinh>)ViewBag.lstDotTuyensinh;
 }
 <form action="#" method="post" autocomplete="off">
     <div class="row">
@@ -248,7 +249,7 @@
     $('#btnThem').click(function () {
         var makhoahoc =   $('#makhoahoc').val();
         //var tenkhoa =  $('#tenkhoahoc').val();
-        var tendot = $('#tendot').val();
+        var tendot = $('#tendot').val().trim();
         var ngaybatdau = $('#startDate').val();
         var ngayketthuc = $('#endDate').val();
 
@@ -266,6 +267,13 @@
             return false;
         }
 
+        let currentDotTuyensinh = @Html.Raw(Json.Encode(ViewBag.lstDotTuyensinh));
+         if(currentDotTuyensinh.some(i=>{
+           return  i.idKhoahoc == makhoahoc && i.TenDot == tendot;
+        })){
+            toastr.error("Đợt tuyển sinh đã tồn tại trên hệ thống");
+            return false;
+        }
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
@@ -309,7 +317,13 @@
             toastr.error('Ngày kết thúc tuyển sinh không được để trống');
             return false;
         }
-
+        let currentDotTuyensinh = @Html.Raw(Json.Encode(ViewBag.lstDotTuyensinh));
+         if(currentDotTuyensinh.some(i=>{
+           return  i.idKhoahoc == makhoahoc && i.TenDot == tendot;
+        })){
+            toastr.error("Đợt tuyển sinh đã tồn tại trên hệ thống");
+            return false;
+        }
 
         $("#divProcessing").show();
         $.ajax({

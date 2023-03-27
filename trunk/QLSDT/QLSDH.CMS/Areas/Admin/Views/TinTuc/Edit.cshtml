@@ -84,6 +84,8 @@
 <script type="text/javascript">
       $(document).ready(function() {
           $('#DanhMuc').val(@Model.DanhMuc);
+          $('#TieuDe').prop('maxlength', 500);
+          $('#Summary').prop('maxlength', 500);
     });
     $('#frmCreate').on('submit', function () {
         for (instance in CKEDITOR.instances) {

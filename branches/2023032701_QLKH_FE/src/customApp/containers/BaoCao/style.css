@@ -1,0 +1,36 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: center;
+    font-weight: bold;
+    border: solid 1px #ccc;
+    padding: 5px;
+}
+
+.table td {
+    border: solid 1px #ccc;
+    /*word-break: break-all;*/
+    padding: 5px;
+}
+
+.div-center {
+    text-align: center;
+    width: 100%;
+}
+
+.div-scroll {
+    width: 100%;
+    max-height: 450px;
+    overflow-y: scroll;
+}
+
+.table-header {
+    width: calc(100% - 9px);
+}
+
+.ssssss{
+    page-break-inside: auto;
+}

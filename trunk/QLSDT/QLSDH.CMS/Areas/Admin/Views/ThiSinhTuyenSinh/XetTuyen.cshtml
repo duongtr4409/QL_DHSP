@@ -557,6 +557,8 @@
                 $("#gv2_ten2").hide();
             }
         });
+
+        $("input[type=text]").attr('maxlength', '255');
     });
 
     function loadGV(khoaid, divresult) {
@@ -617,7 +619,7 @@
 
         var loaiGV_2 = $('#loaiGV_2').val();
         var ddlKhoa_2 = $('#ddlKhoa_2').val();
-        var ddlGV_2 = $('#ddlGV_2').val();
+        var ddlGV_2 = $('#ddlGV_2').val() != 0 && $('#ddlGV_2').val() != null && $('#ddlGV_2').val() != undefined ? $('#ddlGV_2').val() : 0;
         var tenGV_2 = $('#tenGV_2').val();
         var coquancongtacGV_2 = $('#coquancongtacGV_2').val();
 

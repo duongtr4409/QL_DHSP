@@ -268,7 +268,7 @@ class QLNhaKhoaHoc extends Component {
               return (
                 <Card.Grid hoverable={false} bordered={false} style={!role.view ? {cursor: "unset"} : {}}>
                   <Link disabled={!role.view}
-                        to={`chi-tiet-nha-khoa-hoc?ref=ql-nha-khoa-hoc?QuyenQuanLy=${QuyenQuanLy}&CanBoID=${item.CanBoID}&CoQuanID=${item.CoQuanID}`}>
+                        to={`chi-tiet-nha-khoa-hoc?ref=ql-nha-khoa-hoc&QuyenQuanLy=${QuyenQuanLy}&CanBoID=${item.CanBoID}&CoQuanID=${item.CoQuanID}`}>
                     <Meta avatar={<Avatar
                       src={item.AnhHoSo && item.AnhHoSo !== "" ? item.AnhHoSo : GioiTinh ? defaultAvatar : defaultAvatar_Female}
                       style={{width: 120, height: 120}}/>} description={this.renderInfoNhaKhoaHoc(item)}/>

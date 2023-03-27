@@ -35,7 +35,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         }
 
         // GET: Admin/GiangVien
-        public async Task<ActionResult> Index(int edit = 0)
+        public async Task<ActionResult> Index()
         {
             NCSViewModel ncsmodel = new NCSViewModel();
             TaiKhoan userLogin = (TaiKhoan)Session[PublicConstant.LOGIN_INFO];
@@ -47,9 +47,9 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             List<OrganizationInfo> listKhoa = await CoreAPI.CoreAPI.GetListKhoa();
             List<ChucDanhAPI> listChucDanh = await CoreAPI.CoreAPI.GetListChucDanh();
             DangKyTuyenSinh dkts = _unitOfWork.GetRepositoryInstance<DangKyTuyenSinh>().GetFirstOrDefaultByParameter(x=>x.Email == userLogin.Username || x.Email == userLogin.Email);
-            if((dkts != null && dkts.Status == PublicConstant.STT_CHODUYET) || edit !=0 )
+            if((dkts != null && dkts.Status == PublicConstant.STT_CHODUYET))
             {
-                return RedirectToAction("CapNhatHoSo", edit);
+                return RedirectToAction("CapNhatHoSo");
             }
             if (dkts != null)
             {
@@ -122,7 +122,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             return View(ncsmodel);
         }
 
-        public async Task<ActionResult> CapNhatHoSo(int edit = 0)
+        public async Task<ActionResult> CapNhatHoSo()
         {
             List<City> listCity = _unitOfWork.GetRepositoryInstance<City>().GetAllRecords().OrderBy(x => x.Name).ToList();
             ViewBag.ListCity = listCity;
@@ -135,7 +135,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
             var user = (TaiKhoan)Session[PublicConstant.LOGIN_INFO];
             var dkts = _unitOfWork.GetRepositoryInstance<DangKyTuyenSinh>().GetFirstOrDefaultByParameter(x => x.Email.Equals(user.Username) || x.Email.Equals(user.Email));
             ViewBag.IdCity = listCity.Where(x => dkts.TinhThanh_CMND.Contains(x.CityCode)).FirstOrDefault().CityCode;
-            if (dkts.Status != 0 && edit == 0)
+            if (dkts.Status != 0)
             {
                 return RedirectToAction("Index");
             }

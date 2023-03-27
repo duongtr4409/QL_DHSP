@@ -159,7 +159,9 @@ class ChiTietNhaKhoaHoc extends Component {
     this.setState({loadingData: true});
     const user = JSON.parse(localStorage.getItem('user'));
     const CanBoID = user.CanBoID;
-    api.ChiTietNhaKhoaHoc({CanBoID: filterData.CanBoID, CoQuanID: filterData.CoQuanID}).then(response => {
+    // api.ChiTietNhaKhoaHoc({CanBoID: 1, CoQuanID: filterData.CoQuanID}).then(response => {
+      api.ChiTietNhaKhoaHoc({CanBoID: (filterData.CanBoID ? filterData.CanBoID : user.CanBoID)
+		, CoQuanID: (filterData.CoQuanID ? filterData.CoQuanID : user.CoQuanID)}).then(response => {
       if (response.data.Status > 0) {
         const ThongTinNhaKhoaHoc = response.data.Data;
         if (ThongTinNhaKhoaHoc && ThongTinNhaKhoaHoc.CanBoID > 0) {

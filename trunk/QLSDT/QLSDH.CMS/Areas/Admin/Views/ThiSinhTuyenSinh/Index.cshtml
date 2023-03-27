@@ -275,7 +275,7 @@
                 <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenhocphan">
-                            Nội dung
+                            Nội dung <span class="required">*</span>
                         </label>
                         <div class="col-md-7 col-sm-7 col-xs-12">
                             <textarea type="text" id="NoiDungPhanHoi" name="NoiDungPhanHoi" required="required" class="form-control col-md-7 col-xs-12"></textarea>
@@ -283,7 +283,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-4 col-sm-4 col-xs-12" for="tenviettat">
-                            Gửi tệp cho NCS
+                            Gửi tệp cho NCS <span class="required">*</span>
                         </label>
                         <div class="col-md-7 col-sm-7 col-xs-12">
                             <input type="file" id="fPhanHoi" name="fPhanHoi" required="required" class="form-control col-md-7 col-xs-12">
@@ -497,14 +497,21 @@
 
     $('#btnGuiPhanHoi').click(function () {
         var id = $('#Idphanhoi').val();
-        var noidungphanhoi = $('#NoiDungPhanHoi').val();
-        $("#divProcessing").show();
+        var noidungphanhoi = $('#NoiDungPhanHoi').val().trim();
+        if(!noidungphanhoi){
+            toastr.error("Nội dung phản hồi không được bỏ trống")
+            return false;
+        }
 
         if (window.FormData !== undefined) {
-
+            
             var fileUpload = $("#fPhanHoi").get(0);
             var files = fileUpload.files;
-
+            if(files.length <= 0){
+                toastr.error("Tệp cho NCS không được bỏ trống")
+                return false;
+            }
+                $("#divProcessing").show();
             // Create FormData object
             var fileData = new FormData();
 

@@ -22,6 +22,7 @@ namespace TEMIS.CMS.Areas.Admin.Controllers
         public ActionResult Index()
         {
             var lstDotTuyensinh = _unitOfWork.GetRepositoryInstance<DotTuyenSinh>().GetAllRecords().OrderBy(o => o.Id).OrderByDescending(o => o.Id).ToList();
+            ViewBag.lstDotTuyensinh = lstDotTuyensinh;
             List<KhoaHoc> list = _unitOfWork.GetRepositoryInstance<KhoaHoc>().GetAllRecords().OrderByDescending(x => x.Id).ToList();
             ViewBag.ListKhoaHoc = list;
             return View();

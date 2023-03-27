@@ -37,6 +37,10 @@ class DonViNghienCuu extends Component {
 
   onSearch = (value, property) => {
     let oldFilterData = this.state.filterData;
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = {value, property};
     let filterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
@@ -212,7 +216,7 @@ class DonViNghienCuu extends Component {
           <BoxFilter>
             <Search placeholder={'Nhập tên đơn vị cần tìm kiếm'} style={{width: 300, marginLeft: 10, marginBottom: 20}}
                     allowClear
-                    onSearch={value => this.onSearch(value, 'Keyword')} defaultValue={filterData.Keyword}/>
+                    onSearch={value => { this.onSearch(value, 'Keyword')}} defaultValue={filterData.Keyword}/>
             {/*<Search placeholder={'Nhập tên đơn vị cần tìm kiếm'} style={{width: 300}}*/}
             {/*        allowClear*/}
             {/*        onSearch={value => this.onSearch(value, 'Keyword')} defaultValue={filterData.Keyword}/>*/}

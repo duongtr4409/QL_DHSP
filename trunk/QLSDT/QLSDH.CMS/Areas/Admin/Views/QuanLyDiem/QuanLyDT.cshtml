@@ -188,7 +188,10 @@
 <script>
     $(document).ready(function () {
         $('#tbldataHP_NCS').dataTable({
-            "pageLength": 25
+            "pageLength": 25,
+            "language": {
+                "emptyTable": "Không có dữ liệu"
+            }
         });
 $('.dataTables_filter input').attr('maxlength', 255)
         $('#tbldataHP_NCS').on("change", ".clbitem", function (event) {

@@ -406,7 +406,10 @@
 <script>
     $(document).ready(function () {
         $('#datatable').dataTable( {
-          "pageLength": 25
+          "pageLength": 25,
+            "language": {
+                "emptyTable": "Không có dữ liệu"
+            }
         });
         $('.dataTables_filter input').attr('maxlength', 255)
         $('#ddlKhoahoc').on('change', function (e) {
@@ -598,10 +601,10 @@
         var tuchon = $('#ddlloaihp_them').val().trim();
         var sotietlythuyet = $('#sotietlt').val().trim();
         var sotietthuchanh = $('#sotietth').val().trim();
-        var khoahocid = $('#ddlKhoahoc_them').val().trim();
+        var khoahocid = $('#ddlKhoahoc_them').val();
         var khoaid = $('#ddlKhoa_them').val().trim();
-        var nganhid = $('#ddlnganh_them').val().trim();
-        var chuyennganhid = $('#ddlchuyennganh_them').val().trim();
+        var nganhid = $('#ddlnganh_them').val();
+        var chuyennganhid = $('#ddlchuyennganh_them').val();
         var sotinchi = $('#sotinchi').val().trim();
         var thuochp = $('#thuochp_them').val().trim();
 
@@ -613,6 +616,12 @@
             toastr.error('Phải chọn ngành');
             return false;
         }
+        
+        if (chuyennganhid == "0" || chuyennganhid == null) {
+            toastr.error('Phải chọn chuyên ngành ngành');
+            return false;
+        }
+
         if (tenhocphan == "") {
             toastr.error('Tên học phần không được để trống');
             return false;
@@ -656,7 +665,13 @@
             toastr.error('Số tiết thực hành không được nhỏ hơn 0');
             return false;
         }
-
+        let currentListHocPhan = @Html.Raw(Json.Encode(ViewBag.listHocPhan));
+         if(currentListHocPhan.some(i=>{
+           return  i.MaHocPhan == mahocphan || i.TenHocPhan == tenhocphan;
+        })){
+            toastr.error("Học phần đã tồn tại");
+            return false;
+        }
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
@@ -683,6 +698,8 @@
                     $('#sotietth').val(0);
                     $('#sotinchi').val(0);
                     $('#thuochp_them').val(1);
+                    setTimeout(function () { location.reload(); }, 2000);
+
                 } else {
                     toastr.error(data);
                 }
@@ -700,12 +717,12 @@
         var tuchon = $('#ddlloaihp_edit').val().trim();
         var sotietlythuyet = $('#sotietlt_edit').val().trim();
         var sotietthuchanh = $('#sotietth_edit').val().trim();
-        var khoahocid = $('#ddlKhoahoc_edit').val().trim();
+        var khoahocid = $('#ddlKhoahoc_edit').val();
         var khoaid = $('#ddlKhoaEdit').val().trim();
-        var nganhid = $('#ddlnganh_edit').val().trim();
-        var chuyennganhid = $('#ddlchuyennganh_edit').val().trim();
+        var nganhid = $('#ddlnganh_edit').val();
+        var chuyennganhid = $('#ddlchuyennganh_edit').val();
         var sotinchi = $('#sotinchi_edit').val().trim();
-        var id = $('#IdEdit').val().trim();
+        var id = $('#IdEdit').val();
         var thuochp = $('#thuochp_edit').val().trim();
 
         if (khoaid == "0" || khoaid == null) {
@@ -761,7 +778,13 @@
             toastr.error('Số tiết thực hành không được nhỏ hơn 0');
             return false;
         }
-
+        let currentListHocPhan = @Html.Raw(Json.Encode(ViewBag.listHocPhan));
+         if(currentListHocPhan.some(i=>{
+           return  i.MaHocPhan == mahocphan || i.TenHocPhan == tenhocphan;
+        })){
+            toastr.error("Học phần đã tồn tại");
+            return false;
+        }
         $("#divProcessing").show();
         $.ajax({
             type: "GET",
@@ -776,6 +799,8 @@
                 $("#divProcessing").hide();
                 if (data == 'OK') {
                     loaddata();
+                    setTimeout(function () { location.reload(); }, 2000);
+
                 } else {
                     toastr.error(data);
                 }
@@ -799,6 +824,8 @@
                 $("#divProcessing").hide();
                 if (data == 'OK') {
                     loaddata();
+                    setTimeout(function () { location.reload(); }, 2000);
+
                 } else {
                     toastr.error(data);
                 }

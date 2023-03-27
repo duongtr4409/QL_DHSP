@@ -122,6 +122,7 @@ namespace Ums.Website.Controllers
         [HttpPost]
         public ActionResult TypeEdit(UserType model)
         {
+            if (!ModelState.IsValid) return View(model);
             var u = _userTypeService.Get(model.Id) ?? new UserType();
             model.CopyTo(u);
             _userTypeService.InsertOrUpdate(u);
@@ -143,6 +144,7 @@ namespace Ums.Website.Controllers
         [Function("USER_GROUP")]
         public object GetGroup(TableModel model)
         {
+            
             var lst = _userGroupService.Gets();
             lst = lst.OrderBy(model.Order);
             return lst.Skip(model.Start).Take(model.Pagesize).AsQueryable().ToTableResult(lst.Count(), model.Draw).ToJson();
@@ -162,6 +164,7 @@ namespace Ums.Website.Controllers
         [HttpPost]
         public ActionResult GroupEdit(UserGroup model)
         {
+            if (!ModelState.IsValid) return View(model);
             var u = _userGroupService.Get(model.Id) ?? new UserGroup();
             model.CopyTo(u);
             _userGroupService.InsertOrUpdate(u);
@@ -172,7 +175,7 @@ namespace Ums.Website.Controllers
         public void GroupDelete(int id)
         {
             var userGroup = _userGroupService.Get(id);
-            _userGroupService.Delete(userGroup);
+            //_userGroupService.Delete(userGroup);
         }
 
         public ActionResult Id(string keyword = "")
@@ -334,7 +337,7 @@ namespace Ums.Website.Controllers
         {
             var u = _staffUserService.Get(id);
             _staffUserService.Delete(u);
-            return RedirectToAction("Account", new { deid = u.Staff.DepartmentId });
+            return RedirectToAction("STAFF", new { deid = u.Staff.DepartmentId });
         }
         #endregion
 

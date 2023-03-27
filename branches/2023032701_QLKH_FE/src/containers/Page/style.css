@@ -1,0 +1,210 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button {
+  font-family: serif;
+  font-weight: 600 !important;
+}
+
+.isoSignInPage {
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /* background: url("../../image/login_bg.png") 100% 100% no-repeat; */
+  background: url("../../image/sign_blur.jpg") 100% 100% no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  font-family: serif;
+}
+
+.main-login {
+  background-color: rgba(255, 255, 255, 0.7);
+  min-height: 400px;
+  width: 500px;
+  border-radius: 10px;
+  padding: 0 10px 15px 10px;
+}
+
+.title-login {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 28px;
+  position: fixed;
+  top: calc(100vh / 2 - 400px);
+  color: #fff;
+}
+
+.title-small {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.title-logo {
+  width: 70px;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  text-align: left;
+  width: 100%;
+  min-height: 220px;
+  border: solid 1px #1d446b;
+  border-radius: 10px;
+  padding: 5px 25px;
+  color: black;
+}
+
+.main-title {
+  width: 100%;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 18pt;
+  text-align: center;
+  color: #1d446b;
+}
+
+.main-body {
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+  /*height: 155px;*/
+}
+
+.row-title {
+  height: 50px;
+  padding: 15px 0;
+  font-weight: bold;
+  color: #1d446b;
+}
+
+.info-login {
+  text-align: left;
+  color: black;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.main-error {
+  padding-top: 5px;
+  text-align: center;
+  color: red;
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.txtLogin {
+  width: 100%;
+}
+
+.btnLogin {
+  text-align: right;
+  margin-top: 10px;
+}
+
+@media only screen and (max-height: 800px) {
+  .main-login {
+    margin-top: 60px;
+  }
+
+  .title-login {
+    top: calc(100vh / 2 - 360px);
+  }
+}
+
+@media only screen and (max-height: 720px) {
+  .main-login {
+    margin-top: 100px;
+  }
+
+  .title-login {
+    top: calc(100vh / 2 - 320px);
+  }
+}
+
+@media only screen and (max-height: 640px) {
+  .main-login {
+    margin-top: 150px;
+  }
+
+  .title-login {
+    top: calc(100vh / 2 - 280px);
+  }
+}
+
+@media only screen and (max-height: 560px) {
+  .title-logo {
+    display: none;
+  }
+
+  .title-login {
+    top: calc(100vh / 2 - 220px);
+  }
+}
+
+@media only screen and (max-height: 430px) {
+  .title-login {
+    display: none;
+  }
+
+  .main-login {
+    margin-top: 0;
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .title-login {
+    font-size: 20px;
+    width: 40%;
+    top: calc(100vh / 2 - 237px);
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+}
+@media only screen and (max-width: 600px) {
+  .title-login > div {
+    font-size: 20px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .title-login {
+    font-size: 20px;
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .title-login {
+    font-size: 14px;
+  }
+
+  .title-small {
+    font-size: 12px;
+  }
+
+  .title-logo img {
+    width: 50px;
+  }
+}
+
+@media only screen and (max-width: 330px) {
+  .row-long {
+    height: 55px;
+  }
+
+  .title-login {
+    font-size: 12px;
+  }
+
+  .title-small {
+    font-size: 10px;
+  }
+}

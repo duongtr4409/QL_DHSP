@@ -101,6 +101,10 @@
     }
 </script>
 <script type="text/javascript">
+    $(document).ready(function() {
+          $('#TieuDe').prop('maxlength', 500);
+          $('#Summary').prop('maxlength', 500);
+    });
     let errorFlag = false;
     function handleFileInput() {
       let file = $("#files").val();

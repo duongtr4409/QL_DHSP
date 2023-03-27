@@ -55,6 +55,10 @@ class QLDeXuat extends Component {
   onFilter = (value, property) => {
     //get filter data
     let oldFilterData = this.state.filterData;
+    if(typeof value == 'string')
+    {
+      value = value.trim();
+    }
     let onFilter = { value, property };
     let filterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
@@ -194,7 +198,7 @@ class QLDeXuat extends Component {
 
   render() {
     const { listDeXuat, TotalRow, role } = this.props;
-
+    console.log("role: ", role);
     const { filterData } = this.state;
     const PageNumber = filterData.PageNumber ? parseInt(filterData.PageNumber) : 1;
     const PageSize = filterData.PageSize ? parseInt(filterData.PageSize) : getDefaultPageSize();
@@ -371,6 +375,7 @@ class QLDeXuat extends Component {
         render: (text, record) => {
           return (
             <div className="text-center">
+              
               {role.duyet && [2, 6].includes(record.TrangThai) ? (
                 <div className="d-inline-block px-1">
                   <Button
@@ -424,6 +429,7 @@ class QLDeXuat extends Component {
         <PageHeader>Quản lý đề xuất</PageHeader>
         <PageAction>
           <div>
+          
             {role.view ? (
               <div className="d-inline-block">
                 <Button

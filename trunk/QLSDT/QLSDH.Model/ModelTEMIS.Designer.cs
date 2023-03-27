@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\Học tập\HNEU\Soure Code\QLSDT\QLSDH.Model\ModelTEMIS.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\DuowngTora\2BS\git\HNUE\QL_DHSP\trunk\QLSDT\QLSDH.Model\ModelTEMIS.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
